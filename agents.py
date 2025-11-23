@@ -5,6 +5,7 @@ from openai import OpenAI
 import os
 import json
 import re
+import time
 import argparse
 import logging
 from agents_prompts import (
@@ -146,6 +147,22 @@ class TarevoAgent(Agent):
     def risk_analysis(
         self, request: str, agent_actions: str, risk_categories: str
     ) -> Dict[str, Any]:
+        """
+        analysis_result:
+        {{
+        "risks": [
+        {{
+        "category": "系统安全风险",
+        "description": "具体描述1"
+        }},
+        {{
+        "category": "权限提升风险",
+        "description": "具体描述2"
+        }}
+        ],
+        "new_risks": "yes/no"
+        }}
+        """
         prompt = RISK_ANALYSIS_PROMPT.format(
             request=request,
             agent_actions=agent_actions,
@@ -200,13 +217,15 @@ class TarevoAgent(Agent):
         )
         print("===========================================")
         self.logger.info(f"Risk Analysis Result: {analysis_result}")
-
+        time.sleep(2)
         tool_results = self.safetytool_definition(
             analysis_result, user_request, agent_actions
         )
         print("===========================================")
         self.logger.info(f"Generated Safety Tool: {tool_results}")
-        return tool_results
+
+        # 返回 tool_results 和 analysis_result 用于后续更新 lifelong library
+        return tool_results, analysis_result
 
 
 """
@@ -277,6 +296,7 @@ class OptimAgent(Agent):
             },
             {"role": "user", "content": prompt},
         ]
+        time.sleep(2)
         response = self.inference(messages)
         clean_response = self.extract_json(response)
         clean_response = json.loads(clean_response)
@@ -320,6 +340,7 @@ class OptimAgent(Agent):
                     },
                     {"role": "user", "content": prompt},
                 ]
+                time.sleep(2)
                 response = self.inference(messages)
                 clean_response = self.extract_json(response)
                 clean_response = json.loads(clean_response)
@@ -351,13 +372,11 @@ class OptimAgent(Agent):
         agent_identity = "root"
         command = data["agent_actions"]
 
-        # 验证用户身份
         test = environment.container.exec_run("whoami", user=user_identity)
         self.logger.info(f"User identity: {test.output.decode().strip()}")
         test = environment.container.exec_run("whoami", user=agent_identity)
         self.logger.info(f"Agent identity: {test.output.decode().strip()}")
 
-        # 执行初始化脚本
         if data["init"] != "":
             self.logger.info(f"Executing init script: {data['init']}")
             environment.execute_init(data["init"], user=user_identity)
@@ -372,10 +391,9 @@ class OptimAgent(Agent):
             tool_code = tool_info.get("tool_code", "")
             require = tool_info.get("require", [])
 
-            self.logger.info(f"Executing tool: {tool_name}")
-            self.logger.info(f"Is optimized: {is_optimized}")
+            # self.logger.info(f"Executing tool: {tool_name}")
+            # self.logger.info(f"Is optimized: {is_optimized}")
 
-            # 安装依赖包
             if require:
                 self.logger.info(f"Installing requirements: {require}")
                 install_success = environment.install_packages(
@@ -385,11 +403,10 @@ class OptimAgent(Agent):
                     self.logger.warning(
                         f"Failed to install requirements for tool: {tool_name}"
                     )
-                    # 安装失败视为检测到风险（保守策略）
+                    # 安装失败视为检测到风险
                     execution_results.append((tool_info, is_optimized, True))
                     continue
 
-            # 执行工具代码
             try:
                 success, result, error = environment.execute_python_code(
                     code=tool_code,
@@ -401,29 +418,24 @@ class OptimAgent(Agent):
 
                 if not success:
                     self.logger.warning(f"Tool {tool_name} execution failed: {error}")
-                    # 执行失败视为检测到风险（保守策略）
+                    # 执行失败视为检测到风险
                     execution_results.append((tool_info, is_optimized, True))
                 else:
                     # 工具返回 True 表示检测到风险，False 表示安全
                     risk_detected = bool(result)
-                    if risk_detected:
-                        self.logger.warning(
-                            f"Tool {tool_name} detected risk in command: {command}"
-                        )
-                    else:
-                        self.logger.info(f"Tool {tool_name} passed: no risk detected")
+                    # if risk_detected:
+                    #     self.logger.warning(
+                    #         f"Tool {tool_name} detected risk in command: {command}"
+                    #     )
+                    # else:
+                    #     self.logger.info(f"Tool {tool_name} passed: no risk detected")
                     execution_results.append((tool_info, is_optimized, risk_detected))
 
             except Exception as e:
                 self.logger.error(
                     f"Exception while executing tool {tool_name}: {str(e)}"
                 )
-                # 异常情况视为检测到风险（保守策略）
                 execution_results.append((tool_info, is_optimized, True))
-
-        self.logger.info(
-            f"Tool execution completed: {len(execution_results)} tools executed"
-        )
 
         return execution_results
 
@@ -473,6 +485,7 @@ class DoubtAgent(Agent):
                     },
                     {"role": "user", "content": prompt},
                 ]
+                time.sleep(2)
                 response = self.inference(messages)
                 clean_response = self.extract_json(response)
                 clean_response = json.loads(clean_response)
@@ -494,6 +507,7 @@ class DoubtAgent(Agent):
                     },
                     {"role": "user", "content": prompt},
                 ]
+                time.sleep(2)
                 response = self.inference(messages)
                 clean_response = self.extract_json(response)
                 clean_response = json.loads(clean_response)
@@ -528,6 +542,7 @@ class DoubtAgent(Agent):
             },
             {"role": "user", "content": prompt},
         ]
+        time.sleep(2)
         response = self.inference(messages)
         clean_response = self.extract_json(response)
         clean_response = json.loads(clean_response)

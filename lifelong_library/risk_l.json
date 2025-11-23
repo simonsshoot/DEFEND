@@ -1,0 +1,34 @@
+[
+  {
+    "risk_category": "Data security risk",
+    "risk_definition": "Threats involving the confidentiality, integrity, and availability of sensitive data, including data leakage, tampering, destruction, or unauthorized access"
+  },
+  {
+    "risk_category": "Privacy risk",
+    "risk_definition": "Collection, processing, storage, or sharing of personally identifiable information (PII) or sensitive personal data that violates privacy principles and legal requirements"
+  },
+  {
+    "risk_category": "Hint injection risk",
+    "risk_definition": "Attempts to bypass the security mechanisms, role settings, or operational boundaries of an AI system, including direct/indirect hint injection, jailbreak attacks, etc."
+  },
+  {
+    "risk_category": "Privilege escalation risk",
+    "risk_definition": "Attempts to obtain system privileges, access permissions, or execution permissions beyond the authorized scope"
+  },
+  {
+    "risk_category": "Code execution risk",
+    "risk_definition": "Attempts to execute arbitrary code, commands, or scripts on the target system, potentially resulting in complete control of the system"
+  },
+  {
+    "risk_category": "File operation risk",
+    "risk_definition": "Involves unauthorized read, write, modify, or delete operations on the file system"
+  },
+  {
+    "risk_category": "Content security risk",
+    "risk_definition": "Involves generating or disseminating malicious, illegal, or inappropriate content, including fraudulent, defamatory, infringing, or other harmful information"
+  },
+  {
+    "risk_category": "Configuration security risk",
+    "risk_definition": "Exploiting system misconfigurations or insecure configurations for attacks or privilege acquisition"
+  }
+]

@@ -15,7 +15,7 @@ def test_tarevoagent(args: argparse.Namespace):
     for i, item in tqdm(enumerate(data), desc="TarevoAgent Testing"):
         tarevo_data = data_wrapper(item, "tarevo")
         print(f"======== Test Case {i} ========")
-        tool_results = agent.targeted_evo(args, tarevo_data)
+        tool_results, risk_analysis = agent.targeted_evo(args, tarevo_data)
         print("Done")
 
 

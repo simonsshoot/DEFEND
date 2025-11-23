@@ -33,13 +33,110 @@ from configs import setup_logger
 logger = setup_logger("pipeline")
 
 
+def update_lifelong_library(
+    args: argparse.Namespace,
+    risk_analysis: Dict[str, Any],
+    tool_set: List[Dict],
+    doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
+):
+    """
+    更新 lifelong library
+    1. 添加新识别的风险到 risks.json
+    2. 添加新生成的工具或覆盖优化后的工具到 safety_tools.json
+    """
+    if risk_analysis.get("new_risks") == "yes":
+        try:
+            with open(args.risk_memory, "r", encoding="utf-8") as f:
+                risk_library = json.load(f)
+
+            # 添加新风险
+            for risk in risk_analysis.get("risks", []):
+                category = risk.get("category")
+                description = risk.get("description")
+
+                if category and category not in risk_library:
+                    risk_library[category] = {
+                        "category": category,
+                        "description": description,
+                    }
+                    logger.info(f"Added new risk category: {category}")
+            with open(args.risk_memory, "w", encoding="utf-8") as f:
+                json.dump(risk_library, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            logger.error(f"Failed to update risk library: {str(e)}")
+
+    try:
+        with open(args.tool_memory, "r", encoding="utf-8") as f:
+            tool_library = json.load(f)
+
+        updated = False
+
+        for item in doubt_tool_result:
+            tool_info, doubt_result, is_optimized, execution_result = item
+
+            if doubt_result.get("is_safe") != "True":
+                continue
+
+            category = tool_info.get("category")
+            tool_name = tool_info.get("tool_name")
+
+            if not category or not tool_name:
+                continue
+
+            if category not in tool_library:
+                tool_library[category] = []
+
+            tool_data = {
+                "tool_name": tool_name,
+                "tool_description": tool_info.get("tool_description", ""),
+                "require": tool_info.get("require", []),
+                "tool_code": tool_info.get("tool_code", ""),
+                "risk_description": tool_info.get("risk_description", ""),
+            }
+
+            if is_optimized:
+                found = False
+                for i, existing_tool in enumerate(tool_library[category]):
+                    if existing_tool.get("tool_name") == tool_name:
+                        tool_library[category][i] = tool_data
+                        logger.info(
+                            f"Updated optimized tool: {tool_name} in category {category}"
+                        )
+                        found = True
+                        updated = True
+                        break
+
+                if not found:
+                    tool_library[category].append(tool_data)
+                    logger.info(
+                        f"Added optimized tool (not found original): {tool_name} in category {category}"
+                    )
+                    updated = True
+            else:
+                exists = any(
+                    t.get("tool_name") == tool_name for t in tool_library[category]
+                )
+
+                if not exists:
+                    tool_library[category].append(tool_data)
+                    logger.info(f"Added new tool: {tool_name} in category {category}")
+                    updated = True
+        if updated:
+            with open(args.tool_memory, "w", encoding="utf-8") as f:
+                json.dump(tool_library, f, indent=2, ensure_ascii=False)
+            logger.info(f"Tool library updated successfully")
+
+    except Exception as e:
+        logger.error(f"Failed to update tool library: {str(e)}")
+
+
 def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
-) -> Tuple[List[Dict], str]:
+) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
     # Step 1: TarevoAgent - 风险分析和工具生成
     tarevoagent = TarevoAgent(args.tarevo_model, args.risk_memory)
     tarevoagent_data = data_wrapper(data, "tarevo")
-    tool_results = tarevoagent.targeted_evo(args, tarevoagent_data)
+    tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarevoagent_data)
 
     # Step 2: OptimAgent - 工具搜索、优化和执行
     optimagent = OptimAgent(args.optim_model, tool_memory_path=args.tool_memory)
@@ -49,11 +146,13 @@ def pipeline(
 
     # Step 3: DoubtAgent - 工具质疑和最终决策
     doubtagent = DoubtAgent(args.doubt_model)
+    """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
     doubt_tool_result = doubtagent.doubt_tool(tool_workflow, feedback, tarevoagent_data)
     tool_set, is_unsafe = doubtagent.doubt_decision(tarevoagent_data, doubt_tool_result)
 
     decision = "unsafe" if is_unsafe else "safe"
-    return tool_set, decision
+
+    return tool_set, decision, risk_analysis, doubt_tool_result
 
 
 def run(args: argparse.Namespace):
@@ -97,21 +196,30 @@ def run(args: argparse.Namespace):
 
         try:
             container = Container()
-            toolset, decision = pipeline(args, item, container)
+            tool_set, decision, risk_analysis, doubt_tool_result = pipeline(
+                args, item, container
+            )
+
+            # 记录结果
             df.at[index, "input"] = item.get("description", "")
             df.at[index, "label"] = item.get("labels", "")
             df.at[index, "agent_actions"] = item.get("agent_actions", "")
             df.at[index, "generated_tools"] = json.dumps(
-                [tool.get("tool_name") for tool in toolset]
+                [tool.get("tool_name") for tool in tool_set]
             )
             df.at[index, "decision"] = decision
             df.at[index, "risk_detected"] = 1 if decision == "unsafe" else 0
+
+            update_lifelong_library(args, risk_analysis, tool_set, doubt_tool_result)
 
             del container
             df.to_csv(result_path, index=False)
 
         except Exception as e:
-            print(f"\nError processing item {index}: {str(e)}")
+            logger.error(f"\nError processing item {index}: {str(e)}")
+            import traceback
+
+            traceback.print_exc()
             # 记录错误但继续处理下一条
             df.at[index, "decision"] = "error"
             df.at[index, "risk_detected"] = -1
