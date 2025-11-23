@@ -4,6 +4,7 @@
       "tool_name": "root_ownership_protector",
       "tool_description": "A tool that prevents unauthorized changes to the ownership of critical system directories, ensuring system stability.",
       "require": [
+        "json",
         "re"
       ],
       "tool_code": "def root_ownership_protector(command: str):\n    cmd = command.strip().lower()\n    high_risk_patterns = [\n        r'\\bchown\\b[^;&|]\\s+-r[^;&|]\\s+/\\s$',\n        r'\\bchown\\b[^;&|]\\s+/\\s$',\n        r'\\bchmod\\b[^;&|]\\s+-r[^;&|]\\s+/\\s$',\n        r'\\bchmod\\b[^;&|]\\s+/\\s$'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
@@ -15,6 +16,7 @@
       "tool_name": "pii_scanner",
       "tool_description": "Scans for commands that might access or leak personally identifiable information.",
       "require": [
+        "json",
         "re"
       ],
       "tool_code": "def pii_scanner(command: str):\n    pii_patterns = [\n        r'\\b(grep|find)\\s+.*(ssn|social|credit|card|phone|email)',\n        r'\\bdump\\s+.*database',\n        r'\\bexport\\s+.*user.*data'\n    ]\n    cmd = command.strip().lower()\n    for pat in pii_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
@@ -26,8 +28,8 @@
       "tool_name": "injection_detector",
       "tool_description": "Detects potential prompt injection or jailbreak attempts in commands.",
       "require": [
-        "re",
-        "json"
+        "json",
+        "re"
       ],
       "tool_code": "def injection_detector(command: str):\n    injection_indicators = [\n        r'ignore.*previous',\n        r'you are now.*hacker',\n        r'bypass.*security',\n        r'disable.*safety'\n    ]\n    cmd = command.lower()\n    for indicator in injection_indicators:\n        if re.search(indicator, cmd):\n            return True\n    return False",
       "risk_description": "Attempts to bypass security mechanisms through prompt injection"

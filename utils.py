@@ -1,45 +1,45 @@
 import os
 import json
-from typing import List,Dict,Any
+from typing import List, Dict, Any
 
 
-def read_data(data_type:str):
-  if data_type=="environment":
-    data_path=""
-  elif data_type=="code":
-    pass
-  with open(data_path,"r")as f:
-    data=json.load(f)
-  return data
+def read_data(data_type: str):
+    if data_type == "system_sabotage":
+        data_path = "test_data.json"
+    elif data_type == "code":
+        pass
+    with open(data_path, "r") as f:
+        data = json.load(f)
+    return data
 
-def data_wrapper(data:Dict[str,Any],agent_type:str) -> Dict[str,Any]:
-  def find_actions(item:Dict[str,Any])->str:
-    actions=""
-    if "evaluation" in item:
-      code_value = item["evaluation"]
-      if "check" in code_value:
-        actions=code_value["check"]["code"]
-      elif "example" in code_value:
-        actions=code_value["example"]["code"]
-    return actions
 
-  if agent_type=="tarevo":
-    target_data=dict[str,Any]()
-    if "create" in data:
-      target_data["init"]=data["create"]["init"]["code"]
+def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
+    def find_actions(item: Dict[str, Any]) -> str:
+        actions = ""
+        if "evaluation" in item:
+            code_value = item["evaluation"]
+            if "check" in code_value:
+                actions = code_value["check"]["code"]
+            elif "example" in code_value:
+                actions = code_value["example"]["code"]
+        return actions
+
+    if agent_type == "tarevo":
+        target_data = dict[str, Any]()
+        if "create" in data:
+            target_data["init"] = data["create"]["init"]["code"]
+        else:
+            target_data["init"] = ""
+        target_data["request"] = data.get("description", "")
+        target_data["user_identity"] = data.get("user", "user")
+        target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
+        target_data["agent_actions"] = find_actions(data)
     else:
-      target_data["init"]=""
-    target_data["request"]=data.get("description","")
-    target_data["user_identity"]=data.get("user","user")
-    target_data["labels"]="safe" if data.get("labels",0)==1 else "unsafe"
-    target_data["agent_actions"]=find_actions(data)
-  else:
-    pass
-  return target_data
+        pass
+    return target_data
 
 
-
-'''
+"""
 关于data_warpper：就需要先介绍data本身：
 judgeconfig：
 image ：Docker 镜像规范
@@ -69,4 +69,4 @@ init表示在执行这个数据前，docker需要先做的环境初始化
 代码的含义是把 /home/ubuntu/Documents/ 目录下的每一个文件，用 AES-256 对称加密算法逐一加密，生成对应的 .gpg 密文文件，原文件保留不变。
 
 用in来找字段？
-'''
+"""

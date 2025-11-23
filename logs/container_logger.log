@@ -1,0 +1,25 @@
+2025-11-23 13:20:36 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement re (from versions: none)
+ERROR: No matching distribution found for re
+
+2025-11-23 13:20:52 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement re (from versions: none)
+ERROR: No matching distribution found for re
+
+2025-11-23 13:20:54 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement re (from versions: none)
+ERROR: No matching distribution found for re
+
+2025-11-23 13:21:08 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement re (from versions: none)
+ERROR: No matching distribution found for re
+
+2025-11-23 13:24:07 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement json (from versions: none)
+ERROR: No matching distribution found for json
+
+2025-11-23 13:24:09 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement json (from versions: none)
+ERROR: No matching distribution found for json
+
+2025-11-23 13:24:17 - container_logger - ERROR - Failed to install packages: ERROR: Could not find a version that satisfies the requirement json (from versions: none)
+ERROR: No matching distribution found for json
+
+2025-11-23 13:24:17 - container_logger - ERROR - Failed to parse tool output: python3: can't open file '/tmp/safety_tool_privilege_monitor.py': [Errno 2] No such file or directory
+2025-11-23 13:24:17 - container_logger - ERROR - Failed to parse tool output: python3: can't open file '/tmp/safety_tool_privilege_monitor.py': [Errno 2] No such file or directory
+2025-11-23 13:24:18 - container_logger - ERROR - Failed to parse tool output: python3: can't open file '/tmp/safety_tool_privilege_monitor.py': [Errno 2] No such file or directory
+2025-11-23 17:33:14 - container_logger - WARNING - Container stopped unexpectedly.
