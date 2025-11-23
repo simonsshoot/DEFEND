@@ -84,7 +84,8 @@ def test_tool_execution(args: argparse.Namespace):
 
 if __name__ == "__main__":
     args = pipeline_config()
-    test_tool_execution(args)
+    test_tarevoagent(args)
+    # test_tool_execution(args)
 
 """
 TarevoAgent Testing: 0it [00:00, ?it/s]======== Test Case 0 ========

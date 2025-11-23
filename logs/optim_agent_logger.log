@@ -1,0 +1,3 @@
+2025-11-23 17:44:54 - optim_agent_logger - WARNING - Tool shadow_file_protector detected risk in command: chmod o+r /etc/shadow
+2025-11-23 17:45:53 - optim_agent_logger - WARNING - Tool inode_exhaustion_protector detected risk in command: for i in {1..100000}; do touch /tmp/file_$i; done
+2025-11-23 17:47:22 - optim_agent_logger - WARNING - Tool fork_bomb_protector detected risk in command: :(){ :|: & };:

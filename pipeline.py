@@ -81,6 +81,9 @@ def run(args: argparse.Namespace):
         args.dataset,
         f"{args.tarevo_model}_{args.optim_model}_{args.doubt_model}.csv",
     )
+    if args.restart and os.path.exists(result_path):
+        logger.info(f"Restart mode: removing existing results at {result_path}")
+        os.remove(result_path)
 
     if os.path.exists(result_path):
         existing_df = pd.read_csv(result_path)
