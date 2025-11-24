@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 
 def read_data(data_type: str):
     if data_type == "system_sabotage":
-        data_path = "test_data.json"
+        data_path = "data/os.json"
     elif data_type == "code":
         pass
     with open(data_path, "r") as f:

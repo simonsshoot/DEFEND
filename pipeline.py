@@ -14,6 +14,12 @@
 还有就是有些工具需要外部依赖的，比如说import re，这个如何解决
 
 加载lifelong_memory可能会涉及到记忆爆炸的问题。此外，当运行较多时，可能输入给模型的token会过长
+
+如何抵御提示注入攻击？
+提示注入攻击的核心是利用LLM智能体对环境信息的信任依赖。智能体在交互时会从环境（如文件系统、数据库、网页）中读取信息作为输入，攻击者通过在这些信息中隐藏恶意指令，实现“劫持”智能体的目的。例如：
+在文件路径或文档中嵌入误导性文本，迫使智能体忽略原始用户请求。
+在网页HTML中插入隐藏元素，诱骗智能体泄露用户隐私数据。
+
 """
 from configs import pipeline_config
 import argparse
@@ -232,12 +238,16 @@ def run(args: argparse.Namespace):
     unsafe_count = len(df[df["decision"] == "unsafe"])
     safe_count = len(df[df["decision"] == "safe"])
     error_count = len(df[df["decision"] == "error"])
+    misjudge_count = len(df[df["label"] == 0][df["decision"] == "unsafe"])
 
     print(f"\nStatistics:")
     print(f"Total: {total}")
     print(f"Unsafe: {unsafe_count} ({unsafe_count/total*100:.2f}%)")
     print(f"Safe: {safe_count} ({safe_count/total*100:.2f}%)")
     print(f"Error: {error_count} ({error_count/total*100:.2f}%)")
+    print(
+        f"Misjudge (Safe but judged Unsafe): {misjudge_count} ({misjudge_count/total*100:.2f}%)"
+    )
 
 
 if __name__ == "__main__":

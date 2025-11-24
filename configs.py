@@ -42,10 +42,10 @@ def pipeline_config():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="system_sabotage")
     parser.add_argument(
-        "--risk_memory", type=str, default="lifelong_library/risks.json"
+        "--risk_memory", type=str, default="lifelong_library/risks_os.json"
     )
     parser.add_argument(
-        "--tool_memory", type=str, default="lifelong_library/safety_tools.json"
+        "--tool_memory", type=str, default="lifelong_library/safety_tools_os.json"
     )
     parser.add_argument("--tarevo_model", type=str, default="deepseek-chat")
     parser.add_argument("--optim_model", type=str, default="deepseek-chat")
