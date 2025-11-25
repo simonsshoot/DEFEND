@@ -33,7 +33,7 @@ import pandas as pd
 from typing import List, Dict, Any, Tuple
 from utils import read_data, data_wrapper
 from container import Container
-from agents import Agent, TarevoAgent, OptimAgent, DoubtAgent
+from agents import Agent, TarevoAgent, OptimAgent, DoubtAgent,SimulateAgent
 from configs import setup_logger
 
 logger = setup_logger("pipeline")
@@ -140,21 +140,23 @@ def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
 ) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
     # Step 1: TarevoAgent - 风险分析和工具生成
+    simulateagent=SimulateAgent(args.simulate_model)
     tarevoagent = TarevoAgent(args.tarevo_model, args.risk_memory)
-    tarevoagent_data = data_wrapper(data, "tarevo")
-    tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarevoagent_data)
+    wrap_data = data_wrapper(data, "tarevo")
+    tarvodata=simulateagent.simulate(wrap_data)
+    tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarvodata)
 
     # Step 2: OptimAgent - 工具搜索、优化和执行
     optimagent = OptimAgent(args.optim_model, tool_memory_path=args.tool_memory)
     clean_relevant_tools = optimagent.search_tool(tool_results)
     tool_workflow = optimagent.optimize_tool(clean_relevant_tools)
-    feedback = optimagent.execute_tool(tool_workflow, tarevoagent_data, container)
+    feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
 
     # Step 3: DoubtAgent - 工具质疑和最终决策
     doubtagent = DoubtAgent(args.doubt_model)
     """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
-    doubt_tool_result = doubtagent.doubt_tool(tool_workflow, feedback, tarevoagent_data)
-    tool_set, is_unsafe = doubtagent.doubt_decision(tarevoagent_data, doubt_tool_result)
+    doubt_tool_result = doubtagent.doubt_tool(tool_workflow, feedback, tarvodata)
+    tool_set, is_unsafe = doubtagent.doubt_decision(tarvodata, doubt_tool_result)
 
     decision = "unsafe" if is_unsafe else "safe"
 

@@ -16,6 +16,7 @@ from agents_prompts import (
     TOOL_DOUBT_PROMPT,
     TOOL_DOUBT_OPTIMIZE_PROMPT,
     DOUBT_DECISION_PROMPT,
+    SIMULATE_AGENT_PROMPT
 )
 from configs import (
     DEEPSEEK_BASE_URL,
@@ -562,3 +563,91 @@ tool_info:
 }}
 
 """
+
+class SimulateAgent(Agent):
+    def __init__(self, model_name, logger = "simulate_logger"):
+        super().__init__(model_name, logger)
+
+    def simulate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        prompt = SIMULATE_AGENT_PROMPT.format(
+            request=data["request"],
+        )
+        messages = [
+            {
+                "role": "system",
+                "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作。",
+            },
+            {"role": "user", "content": prompt},
+        ]
+        time.sleep(2)
+        response = self.inference(messages)
+        clean_response = self.extract_json(response)
+        clean_response = json.loads(clean_response)
+        simu_data=data
+        simu_data["agent_actions"]=clean_response.get("agent_actions","")
+        simu_data["init"]=clean_response.get("environment","")
+        return simu_data
+    
+class SimulateMultiRoundAgent(Agent):
+    def __init__(self, model_name, logger = "simulate_multi_round_logger"):
+        super().__init__(model_name, logger)
+        self.history=[]
+
+    def multi_round_simulate(self, data: Dict[str, Any]) -> Dict[str,Any]:
+        imple_data = {**data, "agent_actions": [""], "init": [""]}
+        prompts_set=data.get("description","")
+        system_prompt = {
+            "role": "system", 
+            "content": """你是一个模拟代理，负责与用户进行多轮交互。在每轮对话中，你需要根据用户的请求和对话历史，输出代理可能会执行的操作。请确保你的响应是连贯的，并考虑之前的对话上下文。"""
+        }
+        self.history.append(system_prompt)
+        user_initial_prompt = {
+            "role": "user",
+            "content": SIMULATE_AGENT_PROMPT.format(
+                request=data["request"],
+            )
+        }
+        self.history.append(user_initial_prompt)
+        for round_num, prompt in enumerate(prompts_set,0):
+            try:
+                if round_num==0:
+                    self.history.append(user_initial_prompt)
+                else:
+                    user_round_prompt = {
+                        "role": "user",
+                        "content": prompt
+                    }
+                    self.history.append(user_round_prompt)
+                agent_response=self.inference(self.history)
+                clean_response = self.extract_json(agent_response)
+                clean_response = json.loads(clean_response)
+                imple_data["agent_actions"].append(clean_response.get("agent_actions",""))
+                imple_data["init"].append(clean_response.get("environment",""))
+
+                agent_message={
+                    "role":"assistant",
+                    "content":clean_response    
+                }
+                self.history.append(agent_message)
+
+            except Exception as e:
+                self.logger.error(f"Exception while multi round simulate: {str(e)}")
+                break
+        return imple_data
+
+    def __warp_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        '''imple_data中多步的agent_actions和init是list，转为str， description也是'''
+        description_list=data.get("description",[])
+        action_list=data.get("agent_actions",[])
+        init_list=data.get("init",[])
+        wrap_data=Dict[str,Any]()
+        wrap_data["user_identity"]=data.get("user_identity","")
+        wrap_data["labels"]=data.get("labels","")
+        wrap_data["request"]=" && ".join(description_list)
+        wrap_data["agent_actions"]=" && ".join(action_list)
+        wrap_data["init"]=" && ".join(init_list)
+        return wrap_data
+
+    def simulate(self, data: Dict[str, Any]) -> str:
+        pass
+
