@@ -33,7 +33,7 @@ import pandas as pd
 from typing import List, Dict, Any, Tuple
 from utils import read_data, data_wrapper
 from container import Container
-from agents import Agent, TarevoAgent, OptimAgent, DoubtAgent,SimulateAgent
+from agents import Agent, TarevoAgent, OptimAgent, DoubtAgent, SimulateAgent
 from configs import setup_logger
 
 logger = setup_logger("pipeline")
@@ -140,10 +140,10 @@ def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
 ) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
     # Step 1: TarevoAgent - 风险分析和工具生成
-    simulateagent=SimulateAgent(args.simulate_model)
+    simulateagent = SimulateAgent(args.simulate_model)
     tarevoagent = TarevoAgent(args.tarevo_model, args.risk_memory)
-    wrap_data = data_wrapper(data, "tarevo")
-    tarvodata=simulateagent.simulate(wrap_data)
+    wrap_data = data_wrapper(data, args.dataset)
+    tarvodata = simulateagent.simulate(wrap_data)
     tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarvodata)
 
     # Step 2: OptimAgent - 工具搜索、优化和执行
@@ -195,6 +195,13 @@ def run(args: argparse.Namespace):
     if os.path.exists(result_path):
         existing_df = pd.read_csv(result_path)
         df = existing_df
+
+    if not os.path.exists(args.risk_memory):
+        with open(args.risk_memory, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=2, ensure_ascii=False)
+    if not os.path.exists(args.tool_memory):
+        with open(args.tool_memory, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=2, ensure_ascii=False)
 
     for index, item in tqdm(enumerate(data), desc="Pipeline Running", total=len(data)):
         if df.iloc[index]["decision"] is not None and pd.notna(

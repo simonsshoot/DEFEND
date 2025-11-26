@@ -1,0 +1,111 @@
+{
+  "权限提升风险": [
+    {
+      "tool_name": "permission_bypass_detector",
+      "tool_description": "检测重命名操作是否可能用于绕过权限检查，防止权限提升攻击",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def permission_bypass_detector(command: str):\n    import re\n    cmd = command.strip()\n    \n    # 检测mv命令\n    mv_pattern = r'^mv\\s+(\\S+)\\s+(\\S+)$'\n    match = re.match(mv_pattern, cmd)\n    if not match:\n        return False\n    \n    source_path = match.group(1)\n    target_path = match.group(2)\n    \n    # 检测从受限路径到开放路径的重命名\n    restricted_patterns = [\n        r'^/etc/',\n        r'^/root/',\n        r'^/var/log/',\n        r'^\\.ssh/',\n        r'^\\.bashrc$',\n        r'^\\.profile$'\n    ]\n    \n    open_patterns = [\n        r'^/tmp/',\n        r'^/home/[^/]+/',\n        r'^\\./'\n    ]\n    \n    # 检查是否从受限路径重命名到开放路径\n    for restricted in restricted_patterns:\n        if re.match(restricted, source_path):\n            for open_pat in open_patterns:\n                if re.match(open_pat, target_path):\n                    return True\n    \n    return False",
+      "risk_description": ""
+    }
+  ],
+  "数据安全风险": [
+    {
+      "tool_name": "sensitive_data_protector",
+      "tool_description": "保护包含敏感数据的文件不被重命名，防止数据完整性破坏和未授权访问",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sensitive_data_protector(command: str):\n    import re\n    cmd = command.strip()\n    \n    # 检测mv命令\n    mv_pattern = r'^mv\\s+(\\S+)\\s+(\\S+)$'\n    match = re.match(mv_pattern, cmd)\n    if not match:\n        return False\n    \n    source_path = match.group(1)\n    \n    # 敏感文件模式\n    sensitive_patterns = [\n        r'.*\\.(pem|key|crt|pfx|p12)$',  # 证书文件\n        r'.*\\.(db|sqlite|mdb)$',        # 数据库文件\n        r'.*passwd.*',                   # 密码相关文件\n        r'.*secret.*',                   # 密钥文件\n        r'.*config.*',                   # 配置文件\n        r'.*shadow.*',                   # 影子文件\n        r'.*history.*'                   # 历史记录文件\n    ]\n    \n    # 检查源文件是否为敏感文件\n    for pattern in sensitive_patterns:\n        if re.match(pattern, source_path, re.IGNORECASE):\n            return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "sensitive_path_protector",
+      "tool_description": "一个防止敏感数据路径被修改的防护工具，保护数据访问安全和应用依赖",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sensitive_path_protector(command: str):\n    import re\n    \n    cmd = command.strip()\n    \n    # 检测mv命令模式\n    mv_pattern = r'^\\s*mv\\s+(\\S+)\\s+(\\S+)\\s*$'\n    match = re.match(mv_pattern, cmd)\n    \n    if not match:\n        return False\n    \n    source = match.group(1)\n    target = match.group(2)\n    \n    # 敏感路径模式\n    sensitive_patterns = [\n        r'^/etc/',\n        r'^/var/log/',\n        r'^/home/[^/]+/',\n        r'^/root/',\n        r'^/tmp/[^/]+'\n    ]\n    \n    # 检查源路径或目标路径是否涉及敏感路径\n    for pattern in sensitive_patterns:\n        if re.match(pattern, source) or re.match(pattern, target):\n            return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "file_access_protector",
+      "tool_description": "A tool that prevents unauthorized access to user files and directories, protecting sensitive information and privacy.",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def file_access_protector(command: str):\n    cmd = command.strip().lower()\n    sensitive_patterns = [\n        r'\\bcat\\b[^;&|]*\\s+/home/user/\\S+\\.txt',\n        r'\\bless\\b[^;&|]*\\s+/home/user/\\S+\\.txt',\n        r'\\bmore\\b[^;&|]*\\s+/home/user/\\S+\\.txt',\n        r'\\bhead\\b[^;&|]*\\s+/home/user/\\S+\\.txt',\n        r'\\btail\\b[^;&|]*\\s+/home/user/\\S+\\.txt'\n    ]\n    for pat in sensitive_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统安全风险": [
+    {
+      "tool_name": "directory_access_protector",
+      "tool_description": "A tool that prevents unauthorized access to sensitive directories, particularly user home directories, to protect system security and user privacy.",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def directory_access_protector(command: str):\n    cmd = command.strip().lower()\n    sensitive_patterns = [\n        r'^cd\\s+/home/\\w+',\n        r'^cd\\s+~/',\n        r'^cd\\s+/home/ubuntu',\n        r'^ls\\s+/home/\\w+',\n        r'^cat\\s+/home/\\w+',\n        r'^find\\s+/home/\\w+'\n    ]\n    for pat in sensitive_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "file_deletion_protector",
+      "tool_description": "A tool that prevents dangerous file deletion operations on critical directories, protecting system stability and data integrity.",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def file_deletion_protector(command: str):\n    cmd = command.strip().lower()\n    high_risk_patterns = [\n        r'rm\\s+-rf\\s+/home/ubuntu/\\*',\n        r'rm\\s+-rf\\s+/home/ubuntu/.*',\n        r'rm\\s+-rf\\s+/home/ubuntu',\n        r'find\\s+/home/ubuntu\\s+-delete',\n        r'find\\s+/home/ubuntu\\s+-exec\\s+rm\\s+-rf\\s+\\\\{\\\\}\\\\;'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "sudo_permission_protector",
+      "tool_description": "A tool that prevents unauthorized modifications to sudo permissions and root account security settings",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sudo_permission_protector(command: str):\n    cmd = command.strip().lower()\n    high_risk_patterns = [\n        r'usermod\\s+-ag\\s+sudo',\n        r'usermod\\s+-ag\\s+.*\\s+sudo',\n        r'passwd\\s+-d\\s+root',\n        r'echo\\s+.*nopasswd.*\\s+>>\\s+/etc/sudoers',\n        r'echo\\s+.*all=.*all.*nopasswd.*\\s+>>\\s+/etc/sudoers',\n        r'>>\\s+/etc/sudoers'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "root_directory_protector",
+      "tool_description": "一个防护工具，用于阻止对/root目录的未授权访问，防止系统关键文件和敏感信息泄露",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def root_directory_protector(command: str):\n    cmd = command.strip().lower()\n    root_access_patterns = [\n        r'\\bls\\b[^;&|]*\\s+-[^;&|]*[la][^;&|]*\\s+/root\\b',\n        r'\\bls\\b[^;&|]*\\s+/root\\b',\n        r'\\bcat\\b[^;&|]*\\s+/root/',\n        r'\\bcd\\b[^;&|]*\\s+/root\\b',\n        r'\\bfind\\b[^;&|]*\\s+/root\\b',\n        r'\\bgrep\\b[^;&|]*\\s+-r[^;&|]*\\s+/root\\b'\n    ]\n    for pat in root_access_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "lib_directory_protector",
+      "tool_description": "A tool that prevents deletion of critical system library directories to ensure system stability and prevent boot failures.",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def lib_directory_protector(command: str):\n    cmd = command.strip().lower()\n    high_risk_patterns = [\n        r'\\bsudo\\s+rm\\s+-rf\\s+/lib',\n        r'\\brm\\s+-rf\\s+/lib',\n        r'\\bsudo\\s+rm\\s+-rf\\s+/lib/\\*',\n        r'\\brm\\s+-rf\\s+/lib/\\*',\n        r'\\bsudo\\s+rm\\s+-r\\s+/lib',\n        r'\\brm\\s+-r\\s+/lib'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "权限验证": [
+    {
+      "tool_name": "privilege_escalation_detector",
+      "tool_description": "检测可能涉及权限提升的文件访问操作，防止高权限滥用",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def privilege_escalation_detector(command: str):\n    cmd = command.strip().lower()\n    \n    # 检测高权限文件访问模式\n    privilege_patterns = [\n        r'\\bsudo\\s+cat\\b',\n        r'\\bcat\\b\\s+/etc/sudoers',\n        r'\\bcat\\b\\s+/etc/sudoers\\.d/',\n        r'\\bcat\\b\\s+/var/spool/cron/',\n        r'\\bcat\\b\\s+/proc/[0-9]+/',\n        r'\\bcat\\b\\s+/sys/'\n    ]\n    \n    # 检查是否匹配权限提升模式\n    for pattern in privilege_patterns:\n        if re.search(pattern, cmd):\n            return True\n    \n    return False",
+      "risk_description": ""
+    }
+  ],
+  "隐私保护": [
+    {
+      "tool_name": "personal_data_protector",
+      "tool_description": "保护个人数据和隐私信息，防止未经授权的用户文件访问",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def personal_data_protector(command: str):\n    cmd = command.strip().lower()\n    \n    # 个人数据文件模式\n    personal_data_patterns = [\n        r'\\bcat\\b\\s+/home/[^/]+/(\\.bash_history|\\.ssh/|\\.[^/]*rc)',\n        r'\\bcat\\b\\s+/home/[^/]+/(documents|desktop|downloads)/',\n        r'\\bcat\\b\\s+/home/[^/]+/.*\\.(pdf|doc|docx|xls|xlsx)',\n        r'\\bcat\\b\\s+/home/[^/]+/.*(password|secret|key|token)\\.',\n        r'\\bcat\\b\\s+/home/[^/]+/\\.local/'\n    ]\n    \n    # 检查是否访问个人数据文件\n    for pattern in personal_data_patterns:\n        if re.search(pattern, cmd):\n            return True\n    \n    return False",
+      "risk_description": ""
+    }
+  ]
+}

@@ -4,10 +4,12 @@ from typing import List, Dict, Any
 
 
 def read_data(data_type: str):
-    if data_type == "system_sabotage":
+    if data_type == "os":
         data_path = "data/os.json"
-    elif data_type == "code":
-        pass
+    elif data_type == "environment":
+        data_path = "data/environment.json"
+    elif data_type == "benign":
+        data_path = "data/benign.json"
     with open(data_path, "r") as f:
         data = json.load(f)
     return data
@@ -24,7 +26,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
                 actions = code_value["example"]["code"]
         return actions
 
-    if agent_type == "tarevo":
+    if agent_type == "os":
         target_data = dict[str, Any]()
         if "create" in data:
             target_data["init"] = data["create"]["init"]["code"]
@@ -34,6 +36,15 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["user_identity"] = data.get("user", "user")
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
         target_data["agent_actions"] = find_actions(data)
+
+    elif agent_type == "environment" or agent_type == "benign":
+        target_data = dict[str, Any]()
+        if "create" in data:
+            target_data["init"] = data["create"]["init"]["code"]
+        target_data["request"] = data.get("description", "")
+        target_data["user_identity"] = data.get("user", "user")
+        target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
+
     else:
         pass
     return target_data

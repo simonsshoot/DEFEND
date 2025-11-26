@@ -40,13 +40,17 @@ def setup_logger(logger_name: str = "general_logger") -> logging.Logger:
 def pipeline_config():
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=str, default="system_sabotage")
+    #
+    parser.add_argument("--dataset", type=str, default="benign")
     parser.add_argument(
-        "--risk_memory", type=str, default="lifelong_library/risks_os.json"
+        "--risk_memory", type=str, default="lifelong_library/risks_benign.json"
     )
     parser.add_argument(
-        "--tool_memory", type=str, default="lifelong_library/safety_tools_os.json"
+        "--tool_memory",
+        type=str,
+        default="lifelong_library/safety_tools_benign.json",
     )
+    parser.add_argument("--simulate_model", type=str, default="deepseek-chat")
     parser.add_argument("--tarevo_model", type=str, default="deepseek-chat")
     parser.add_argument("--optim_model", type=str, default="deepseek-chat")
     parser.add_argument("--doubt_model", type=str, default="deepseek-chat")
