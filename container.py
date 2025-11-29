@@ -149,6 +149,7 @@ class Container:
         code: str,
         function_name: str,
         command: str,
+        user_level: str = "user",
         require: list = None,
         user: str = "root",
     ) -> tuple:
@@ -159,6 +160,7 @@ class Container:
           code: Python 函数代码
           function_name: 函数名称
           command: 要传递给函数的命令参数
+          user_level: 用户权限级别 (root/user)
           require: 需要导入的模块列表
           user: 执行用户
 
@@ -172,14 +174,15 @@ class Container:
                 import_lines.append(f"import {module}")
         imports = "\n".join(import_lines)
 
-        # 创建完整的 Python 脚本
+        # 创建完整的 Python 脚本，传递 command 和 user_level 两个参数
         command_repr = repr(command)
+        user_level_repr = repr(user_level)
         full_script = f"""{imports}
 
 {code}
 
 try:
-    result = {function_name}({command_repr})
+    result = {function_name}({command_repr}, {user_level_repr})
     print(json.dumps({{"success": True, "result": result, "error": None}}))
 except Exception as e:
     print(json.dumps({{"success": False, "result": None, "error": str(e)}}))

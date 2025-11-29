@@ -33,7 +33,9 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         else:
             target_data["init"] = ""
         target_data["request"] = data.get("description", "")
-        target_data["user_identity"] = data.get("user", "user")
+        target_data["user_identity"] = data.get("user", "user") 
+        user_identity = data.get("user", "user")
+        target_data["user_level"] = data.get("user_level", "root" if user_identity == "root" else "user")
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
         target_data["agent_actions"] = find_actions(data)
 
@@ -43,6 +45,8 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
             target_data["init"] = data["create"]["init"]["code"]
         target_data["request"] = data.get("description", "")
         target_data["user_identity"] = data.get("user", "user")
+        user_identity = data.get("user", "user")
+        target_data["user_level"] = data.get("user_level", "root" if user_identity == "root" else "user")
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
     else:

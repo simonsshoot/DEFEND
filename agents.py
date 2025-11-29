@@ -132,10 +132,11 @@ class Agent:
 
 class TarevoAgent(Agent):
     def __init__(
-        self, model_name, risk_memory_path: str = "lifelong_library/risks.json"
+        self, model_name, risk_memory_path: str = "lifelong_library/risks.json", permission_policy_path: str = "permission_policy.json"
     ):
         super().__init__(model_name, logger="tarevo_agent_logger")
         self.risk_memory_path = risk_memory_path
+        self.permission_policy_path = permission_policy_path
 
     def __load_riskmemory(self):
         with open(self.risk_memory_path, "r") as f:
@@ -145,8 +146,36 @@ class TarevoAgent(Agent):
         )
         return risk_categories_str
 
+    def __load_permission_policy(self, user_level: str):
+        """加载指定用户级别的权限策略"""
+        try:
+            with open(self.permission_policy_path, "r", encoding="utf-8") as f:
+                policy = json.load(f)
+            
+            # 提取特定用户级别的策略和通用指南
+            user_policy = policy.get("user_levels", {}).get(user_level, {})
+            general_guidelines = policy.get("general_assessment_guidelines", {})
+            
+            # 如果找不到指定的用户级别，记录警告并返回空策略
+            if not user_policy:
+                self.logger.warning(f"User level '{user_level}' not found in permission policy. Using empty policy.")
+                user_policy = {"level": user_level, "description": "Unknown user level", "authority_scope": {}, "safety_principles": []}
+            
+            policy_str = json.dumps({
+                "user_level_policy": user_policy,
+                "general_guidelines": general_guidelines
+            }, indent=2, ensure_ascii=False)
+            
+            return policy_str
+        except FileNotFoundError:
+            self.logger.error(f"Permission policy file not found: {self.permission_policy_path}")
+            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse permission policy JSON: {str(e)}")
+            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+
     def risk_analysis(
-        self, request: str, agent_actions: str, risk_categories: str
+        self, request: str, agent_actions: str, risk_categories: str, user_level: str = "user"
     ) -> Dict[str, Any]:
         """
         analysis_result:
@@ -164,10 +193,14 @@ class TarevoAgent(Agent):
         "new_risks": "yes/no"
         }}
         """
+        permission_policy = self.__load_permission_policy(user_level)
+        
         prompt = RISK_ANALYSIS_PROMPT.format(
             request=request,
             agent_actions=agent_actions,
             risk_categories=risk_categories,
+            user_level=user_level,
+            permission_policy=permission_policy,
         )
         messages = [
             {
@@ -184,12 +217,16 @@ class TarevoAgent(Agent):
         return analysis_result
 
     def safetytool_definition(
-        self, risk: Dict[str, Any], user_request: str, agent_actions: str
+        self, risk: Dict[str, Any], user_request: str, agent_actions: str, user_level: str = "user"
     ) -> Dict[str, Any]:
+        permission_policy = self.__load_permission_policy(user_level)
+        
         prompt = TOOL_PLAN_PROMPT.format(
             request=user_request,
             agent_actions=agent_actions,
             risk_analysis=json.dumps(risk, indent=2, ensure_ascii=False),
+            user_level=user_level,
+            permission_policy=permission_policy,
         )
         messages = [
             {
@@ -207,7 +244,8 @@ class TarevoAgent(Agent):
         """目标进化"""
         user_request = data["request"]
         agent_actions = data["agent_actions"]
-        user_identity = data["user_identity"]
+        user_identity = data.get("user_identity", "user")  # 默认为普通用户
+        user_level = data.get("user_level", "user")  # 新增：从数据中获取用户权限级别
         init_script = data["init"]
         label = data["labels"]
 
@@ -215,12 +253,13 @@ class TarevoAgent(Agent):
             request=user_request,
             agent_actions=agent_actions,
             risk_categories=self.__load_riskmemory(),
+            user_level=user_level,
         )
         print("===========================================")
         self.logger.info(f"Risk Analysis Result: {analysis_result}")
         time.sleep(2)
         tool_results = self.safetytool_definition(
-            analysis_result, user_request, agent_actions
+            analysis_result, user_request, agent_actions, user_level
         )
         print("===========================================")
         self.logger.info(f"Generated Safety Tool: {tool_results}")
@@ -238,7 +277,7 @@ tool_result:
 "tool_name": "root_ownership_protector",
 "tool_description": "A tool that prevents unauthorized changes to the ownership of critical system directories, ensuring system stability.",
 "require": ["re"],
-"tool_code": "def root_ownership_protector(command: str):\\n cmd = command.strip().lower()\\n high_risk_patterns = [\\n r'\\bchown\\b[^;&|]\\s+-r[^;&|]\\s+/\\s$',\\n r'\\bchown\\b[^;&|]\\s+/\\s$',\\n r'\\bchmod\\b[^;&|]\\s+-r[^;&|]\\s+/\\s$',\\n r'\\bchmod\\b[^;&|]\\s+/\\s$'\\n ]\\n for pat in high_risk_patterns:\\n if re.search(pat, cmd):\\n return True\\n return False"
+"tool_code": "def root_ownership_protector(command: str, user_level: str):\\n    cmd = command.strip().lower()\\n    if user_level == 'root':\\n        # For root: block recursive ops on /\\n        if re.search(r'\\\\bchown\\\\b[^;&|]*-[rR][^;&|]*/\\\\s*$', cmd):\\n            return True\\n    elif user_level == 'user':\\n        # For user: block all chown/chmod\\n        if re.search(r'\\\\b(chown|chmod)\\\\b', cmd):\\n            return True\\n    return False"
 }}
 ]
 }}
@@ -372,6 +411,7 @@ class OptimAgent(Agent):
         user_identity = data["user_identity"]
         agent_identity = "root"
         command = data["agent_actions"]
+        user_level = data.get("user_level", "user")  # 获取用户权限级别
 
         test = environment.container.exec_run("whoami", user=user_identity)
         self.logger.info(f"User identity: {test.output.decode().strip()}")
@@ -413,6 +453,7 @@ class OptimAgent(Agent):
                     code=tool_code,
                     function_name=tool_name,
                     command=command,
+                    user_level=user_level,  # 传递用户权限级别
                     require=require,
                     user=user_identity,
                 )
@@ -443,18 +484,68 @@ class OptimAgent(Agent):
     def debug_tool(self):
         pass
 
+    def execute_action(self,data:Dict[str,Any],environment:Container)->List[str]:
+        command=data["agent_actions"]
+        agent_identity = "root"
+        user_identity = data["user_identity"]
+        test = environment.container.exec_run("whoami", user=user_identity)
+        self.logger.info(f"User identity: {test.output.decode().strip()}")
+
+        if data["init"] != "":
+            self.logger.info(f"Executing init script: {data['init']}")
+            environment.execute_init(data["init"], user=user_identity)
+        # command=command.split(" && ")
+        # 不对，exec_run是在已经运行着的那个容器里，再启动一条新进程
+        result=[]
+        result.append(environment.container.exec_run(command, user=agent_identity).output.decode("utf-8").strip())
+        return result
+        # result=[]
+        # for cmd in command:
+        #     result.append(environment.container.exec_run(cmd, user=agent_identity).output.decode("utf-8").strip())
+        # return result
+
+
 
 class DoubtAgent(Agent):
     def __init__(
-        self, model_name, tool_memory_path: str = "lifelong_library/tool_memory.json"
+        self, model_name, tool_memory_path: str = "lifelong_library/tool_memory.json", permission_policy_path: str = "permission_policy.json"
     ):
         super().__init__(model_name, logger="double_agent_logger")
         self.tool_memory_path = tool_memory_path
+        self.permission_policy_path = permission_policy_path
 
     def __load_toolmemory(self):
         with open(self.tool_memory_path, "r") as f:
             tool_categories_json = json.load(f)
         return tool_categories_json
+
+    def __load_permission_policy(self, user_level: str):
+        """加载指定用户级别的权限策略"""
+        try:
+            with open(self.permission_policy_path, "r", encoding="utf-8") as f:
+                policy = json.load(f)
+            
+            # 提取特定用户级别的策略和通用指南
+            user_policy = policy.get("user_levels", {}).get(user_level, {})
+            general_guidelines = policy.get("general_assessment_guidelines", {})
+            
+            # 如果找不到指定的用户级别，记录警告并返回空策略
+            if not user_policy:
+                self.logger.warning(f"User level '{user_level}' not found in permission policy. Using empty policy.")
+                user_policy = {"level": user_level, "description": "Unknown user level", "authority_scope": {}, "safety_principles": []}
+            
+            policy_str = json.dumps({
+                "user_level_policy": user_policy,
+                "general_guidelines": general_guidelines
+            }, indent=2, ensure_ascii=False)
+            
+            return policy_str
+        except FileNotFoundError:
+            self.logger.error(f"Permission policy file not found: {self.permission_policy_path}")
+            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse permission policy JSON: {str(e)}")
+            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
 
     def search_original_tool(self, optimized_tool: Dict[str, Any]) -> Dict[str, Any]:
         tool_memory = self.__load_toolmemory()
@@ -471,6 +562,9 @@ class DoubtAgent(Agent):
         data: Dict[str, Any],
     ) -> List[Tuple[Dict, Dict, bool, bool]]:
         doubt_results = []
+        user_level = data.get("user_level", "user")
+        permission_policy = self.__load_permission_policy(user_level)
+        
         for item in feedback:
             tool_info, is_optimized, execution_result = item
             if not is_optimized:
@@ -478,6 +572,8 @@ class DoubtAgent(Agent):
                     request=data["request"],
                     agent_actions=data["agent_actions"],
                     tool=json.dumps(tool_info, indent=2, ensure_ascii=False),
+                    user_level=user_level,
+                    permission_policy=permission_policy,
                 )
                 messages = [
                     {
@@ -500,6 +596,8 @@ class DoubtAgent(Agent):
                     optimized_tool=json.dumps(
                         origin_tool, indent=2, ensure_ascii=False
                     ),
+                    user_level=user_level,
+                    permission_policy=permission_policy,
                 )
                 messages = [
                     {
@@ -521,8 +619,12 @@ class DoubtAgent(Agent):
         self,
         data: Dict[str, Any],
         doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
+        action_result: str
     ) -> Tuple[List[Dict], bool]:
         tool_set = []
+        user_level = data.get("user_level", "user")
+        permission_policy = self.__load_permission_policy(user_level)
+        
         for item in doubt_tool_result:
             tool_set.append(item[0])
         for item in doubt_tool_result:
@@ -535,6 +637,9 @@ class DoubtAgent(Agent):
             request=data["request"],
             agent_actions=data["agent_actions"],
             approved_tools=json.dumps(tool_set, indent=2, ensure_ascii=False),
+            action_result=action_result,
+            user_level=user_level,
+            permission_policy=permission_policy,
         )
         messages = [
             {

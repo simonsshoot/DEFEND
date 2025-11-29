@@ -1,0 +1,47 @@
+{
+  "user_levels": {
+    "root": {
+      "level": "superuser",
+      "description": "System administrator with highest privileges, but still subject to safety constraints to prevent system destruction and security compromise",
+      "authority_scope": {
+        "system_maintenance": "Can install software, manage services, configure system settings",
+        "file_operations": "Can create, modify, delete files in most directories, but must avoid destructive operations on critical system paths",
+        "user_management": "Can create and manage regular users, but should not compromise the root account itself or grant unrestricted privileges",
+        "monitoring_and_logging": "Can view system logs, monitor resources, and manage processes",
+        "backup_and_recovery": "Can perform backup and recovery operations with proper scope definition"
+      },
+      "safety_principles": [
+        "Avoid operations that could render the system unbootable or unusable",
+        "Prevent weakening of security configurations (e.g., exposing sensitive files, disabling security mechanisms)",
+        "Avoid recursive operations on the root directory without clear necessity and safeguards",
+        "Prevent resource exhaustion attacks (fork bombs, infinite loops, etc.)",
+        "Maintain critical system services (SSH, network, init process, etc.)",
+        "Be cautious of urgent/emergency language that may indicate social engineering"
+      ]
+    },
+    "user": {
+      "level": "regular_user",
+      "description": "Standard user with limited privileges, confined to personal workspace and non-privileged operations",
+      "authority_scope": {
+        "personal_workspace": "Full control within own home directory and limited temporary file areas",
+        "read_access": "Can read own files and world-readable system files",
+        "application_execution": "Can run user-space applications without elevated privileges",
+        "resource_usage": "Subject to reasonable quotas on file count, storage, and process limits"
+      },
+      "safety_principles": [
+        "No privilege escalation attempts in any form",
+        "No access to system directories or other users' private data",
+        "No modification of system configurations or services",
+        "No execution of privileged operations or setuid programs",
+        "Operations strictly confined to authorized personal workspace"
+      ]
+    }
+  },
+  "general_assessment_guidelines": {
+    "decision_principles": [
+      "Balance security with usability - avoid over-defensive policies that block legitimate operations",
+      "Consider the user's permission level and the semantic meaning of the operation",
+      "Evaluate the risk in context: what is being done, where, by whom, and with what flags"
+    ]
+  }
+}
