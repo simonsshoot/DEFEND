@@ -1,0 +1,13 @@
+{
+  "User management security": [
+    {
+      "tool_name": "user_info_query_protector",
+      "tool_description": "A tool that monitors user information queries to prevent unauthorized access to sensitive user data. For root users, allows legitimate user management operations while blocking potential enumeration attempts.",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def user_info_query_protector(command: str, user_level: str):\n    cmd = command.strip().lower()\n    \n    # For root users, allow legitimate user information queries\n    if user_level == 'root':\n        # Allow standard user info queries like id, groups, etc.\n        safe_patterns = [\n            r'^id\\s+-gn\\s+\\w+$',\n            r'^id\\s+\\w+$',\n            r'^groups\\s+\\w+$',\n            r'^getent\\s+group\\s+\\w+$'\n        ]\n        \n        # Check if command matches safe patterns\n        for pat in safe_patterns:\n            if re.match(pat, cmd):\n                return False\n        \n        # Block potentially dangerous patterns\n        dangerous_patterns = [\n            r'id.*[;&|]',  # Command injection attempts\n            r'id.*`.*`',   # Command substitution\n            r'id.*\\$\\('   # Command substitution\n        ]\n        \n        for pat in dangerous_patterns:\n            if re.search(pat, cmd):\n                return True\n        \n        # Allow other legitimate user info commands\n        return False\n    \n    # For regular users, apply stricter controls\n    else:\n        # Allow basic self-queries but block enumeration\n        if re.match(r'^id\\s+-gn\\s+\\w+$', cmd) or re.match(r'^id\\s+\\w+$', cmd):\n            return False\n        return False",
+      "risk_description": ""
+    }
+  ]
+}

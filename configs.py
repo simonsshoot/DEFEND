@@ -43,18 +43,18 @@ def pipeline_config():
     #
     parser.add_argument("--dataset", type=str, default="benign")
     parser.add_argument(
-        "--risk_memory", type=str, default="lifelong_library/risks_benign.json"
+        "--risk_memory", type=str, default="lifelong_library/risks_newbenign.json"
     )
     parser.add_argument(
         "--tool_memory",
         type=str,
-        default="lifelong_library/safety_tools_benign.json",
+        default="lifelong_library/safety_tools_newbenign.json",
     )
     parser.add_argument(
-        "--permission_policy", 
-        type=str, 
+        "--permission_policy",
+        type=str,
         default="permission_policy.json",
-        help="Path to the permission policy JSON file"
+        help="Path to the permission policy JSON file",
     )
     parser.add_argument("--simulate_model", type=str, default="deepseek-chat")
     parser.add_argument("--tarevo_model", type=str, default="deepseek-chat")
