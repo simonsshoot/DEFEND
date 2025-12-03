@@ -143,22 +143,38 @@ def update_lifelong_library(
         logger.error(f"Failed to update tool library: {str(e)}")
 
 
+def get_present_tools(datset: str, data: Dict[str, Any]) -> List[Dict]:
+    """
+    根据数据集名称，返回对应的现有工具列表(这里的工具是执行工具，不是安全工具)
+    """
+    if datset == "agentsafebench":
+        # TODO
+        pass
+    else:
+        return []
+
+
 def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
 ) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
     # Step 1: TarevoAgent - 风险分析和工具生成
+    wrap_data = data_wrapper(data, args.dataset)
+    present_tools = get_present_tools(args.dataset, wrap_data)
     simulateagent = SimulateAgent(args.simulate_model)
     tarevoagent = TarevoAgent(
         args.tarevo_model, args.risk_memory, args.permission_policy
     )
-    wrap_data = data_wrapper(data, args.dataset)
-    tarvodata = simulateagent.simulate(wrap_data)
+    # new add
+    # TODO：完善simulate和tarevodata，agent_actions可能包含现有工具调用
+    tarvodata = simulateagent.simulate(wrap_data, present_tools)
 
     if "user_level" not in tarvodata:
         user_identity = tarvodata.get("user_identity", "user")
         tarvodata["user_level"] = "root" if user_identity == "root" else "user"
-
-    tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarvodata)
+    # new add
+    tool_results, risk_analysis = tarevoagent.targeted_evo(
+        args, tarvodata, present_tools
+    )
 
     # Step 2: OptimAgent - 工具搜索、优化和执行
     optimagent = OptimAgent(args.optim_model, tool_memory_path=args.tool_memory)
@@ -166,8 +182,11 @@ def pipeline(
     tool_workflow = optimagent.optimize_tool(clean_relevant_tools)
 
     sandboxagent = SandBoxAgent(args.sandbox_model)
-    feedback = sandboxagent.sandbox_execute_tool(tool_workflow, tarvodata)
-    agent_action_result = sandboxagent.sandbox_execute_action(tarvodata)
+    # new add
+    feedback = sandboxagent.sandbox_execute_tool(
+        tool_workflow, tarvodata, present_tools
+    )
+    agent_action_result = sandboxagent.sandbox_execute_action(tarvodata, present_tools)
     # feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
     # agent_action_result = optimagent.execute_action(tarvodata, container)
 
@@ -176,7 +195,10 @@ def pipeline(
     # Step 3: DoubtAgent - 工具质疑和最终决策
     doubtagent = DoubtAgent(args.doubt_model, args.tool_memory, args.permission_policy)
     """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
-    doubt_tool_result = doubtagent.doubt_tool(tool_workflow, feedback, tarvodata)
+    # new add
+    doubt_tool_result = doubtagent.doubt_tool(
+        tool_workflow, feedback, tarvodata, present_tools
+    )
     tool_set, is_unsafe = doubtagent.doubt_decision(
         tarvodata, doubt_tool_result, final_result
     )
