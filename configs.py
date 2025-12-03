@@ -64,3 +64,13 @@ def pipeline_config():
     parser.add_argument("--restart", action="store_true")
     args = parser.parse_args()
     return args
+
+
+def agentsafebench_config():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, default="deepseek-chat")
+    parser.add_argument("--greedy", type=int, default=1)
+    parser.add_argument("--regen_exceed", type=int, default=0)
+    parser.add_argument("--extra_info", type=str, default="")
+    parser.add_argument("--allow_empty", type=int, default=0)
+    return parser.parse_args()

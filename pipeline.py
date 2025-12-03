@@ -141,14 +141,16 @@ def pipeline(
 ) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
     # Step 1: TarevoAgent - 风险分析和工具生成
     simulateagent = SimulateAgent(args.simulate_model)
-    tarevoagent = TarevoAgent(args.tarevo_model, args.risk_memory, args.permission_policy)
+    tarevoagent = TarevoAgent(
+        args.tarevo_model, args.risk_memory, args.permission_policy
+    )
     wrap_data = data_wrapper(data, args.dataset)
     tarvodata = simulateagent.simulate(wrap_data)
 
     if "user_level" not in tarvodata:
         user_identity = tarvodata.get("user_identity", "user")
         tarvodata["user_level"] = "root" if user_identity == "root" else "user"
-    
+
     tool_results, risk_analysis = tarevoagent.targeted_evo(args, tarvodata)
 
     # Step 2: OptimAgent - 工具搜索、优化和执行
@@ -156,14 +158,16 @@ def pipeline(
     clean_relevant_tools = optimagent.search_tool(tool_results)
     tool_workflow = optimagent.optimize_tool(clean_relevant_tools)
     feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
-    agent_action_result=optimagent.execute_action(tarvodata, container)
-    final_result=agent_action_result[-1] if len(agent_action_result)>0 else ""
+    agent_action_result = optimagent.execute_action(tarvodata, container)
+    final_result = agent_action_result[-1] if len(agent_action_result) > 0 else ""
 
     # Step 3: DoubtAgent - 工具质疑和最终决策
     doubtagent = DoubtAgent(args.doubt_model, args.tool_memory, args.permission_policy)
     """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
     doubt_tool_result = doubtagent.doubt_tool(tool_workflow, feedback, tarvodata)
-    tool_set, is_unsafe = doubtagent.doubt_decision(tarvodata, doubt_tool_result, final_result)
+    tool_set, is_unsafe = doubtagent.doubt_decision(
+        tarvodata, doubt_tool_result, final_result
+    )
 
     decision = "unsafe" if is_unsafe else "safe"
 
@@ -209,9 +213,10 @@ def run(args: argparse.Namespace):
     if not os.path.exists(args.tool_memory):
         with open(args.tool_memory, "w", encoding="utf-8") as f:
             json.dump({}, f, indent=2, ensure_ascii=False)
-    
-    new_tool_generated=0
-    optimized_tool=0
+
+    new_tool_generated = 0
+    optimized_tool = 0
+    fail_count = 0
 
     for index, item in tqdm(enumerate(data), desc="Pipeline Running", total=len(data)):
         if df.iloc[index]["decision"] is not None and pd.notna(
@@ -228,9 +233,11 @@ def run(args: argparse.Namespace):
                 tool_info, doubt_result, is_optimized, execution_result = result
                 if doubt_result.get("is_safe") == "True":
                     if is_optimized:
-                        optimized_tool+=1
+                        optimized_tool += 1
                     else:
-                        new_tool_generated+=1
+                        new_tool_generated += 1
+                elif doubt_result.get("is_safe") == "False":
+                    fail_count += 1
 
             # 记录结果
             df.at[index, "input"] = item.get("description", "")
@@ -275,8 +282,17 @@ def run(args: argparse.Namespace):
         f"Misjudge (Safe but judged Unsafe): {misjudge_count} ({misjudge_count/total*100:.2f}%)"
     )
     # 重用率：所有生成的工具中，有多少是优化过的 和新生成工具率反过来？
-    print(f"Newly generated tool ratio: {new_tool_generated}/{(new_tool_generated+optimized_tool)*100:.2f}%")
-    print(f"Optimized tool ratio: {optimized_tool}/{(new_tool_generated+optimized_tool)*100:.2f}%")
+    total = new_tool_generated + optimized_tool + fail_count
+    if total > 0:
+        print(
+            f"Newly generated tool ratio: {new_tool_generated}/{total} ({new_tool_generated/total*100:.2f}%)"
+        )
+        print(
+            f"Optimized tool ratio: {optimized_tool}/{total} ({optimized_tool/total*100:.2f}%)"
+        )
+        print(f"Failed tool ratio: {fail_count}/{total} ({fail_count/total*100:.2f}%)")
+    else:
+        print("No tools generated.")
 
 
 if __name__ == "__main__":

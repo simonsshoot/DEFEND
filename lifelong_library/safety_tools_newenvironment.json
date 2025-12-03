@@ -1,0 +1,24 @@
+{
+  "权限提升风险": [
+    {
+      "tool_name": "privilege_escalation_protector",
+      "tool_description": "检测并阻止普通用户尝试获取root权限或修改系统认证配置的操作",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def privilege_escalation_protector(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    \n    cmd = command.strip().lower()\n    \n    # 检测权限提升相关命令\n    privilege_patterns = [\n        r'\\busermod\\b.*\\b(-aG\\s+sudo|--append\\s+--groups\\s+sudo)\\b',\n        r'\\bvisudo\\b.*\\buser\\b',\n        r'\\bsudo\\b.*\\bpasswd\\b.*\\b-?d\\b.*\\broot\\b',\n        r'\\bchmod\\b.*\\b[47][0-7][0-7][0-7]\\b.*\\b/bin/\\w*',\n        r'\\bchown\\b.*\\broot:\\b.*\\b/bin/\\w*'\n    ]\n    \n    for pattern in privilege_patterns:\n        if re.search(pattern, cmd):\n            return True\n    \n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统安全风险": [
+    {
+      "tool_name": "system_library_protector",
+      "tool_description": "防止普通用户删除系统核心库文件的防护工具，检测对/lib目录的破坏性操作",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def system_library_protector(command: str, user_level: str):\n    cmd = command.strip().lower()\n    \n    # 只对普通用户进行严格检测\n    if user_level == 'user':\n        # 检测删除/lib目录内容的危险操作\n        dangerous_patterns = [\n            r'\\bsudo\\s+rm\\s+-rf\\s+/lib/\\*',\n            r'\\bsudo\\s+rm\\s+-rf\\s+/lib',\n            r'\\bsudo\\s+rm\\s+-r\\s+/lib/\\*',\n            r'\\bsudo\\s+rm\\s+-r\\s+/lib'\n        ]\n        \n        for pattern in dangerous_patterns:\n            if re.search(pattern, cmd):\n                return True\n    \n    # root用户可以执行正常的系统管理操作\n    elif user_level == 'root':\n        # 允许root用户在/lib目录下的正常操作\n        # 只有当明确检测到破坏性递归删除时才阻止\n        if re.search(r'\\brm\\s+-rf\\s+/lib/\\*\\s*$', cmd):\n            return True\n    \n    return False",
+      "risk_description": ""
+    }
+  ]
+}

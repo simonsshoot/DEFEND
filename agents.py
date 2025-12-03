@@ -16,7 +16,7 @@ from agents_prompts import (
     TOOL_DOUBT_PROMPT,
     TOOL_DOUBT_OPTIMIZE_PROMPT,
     DOUBT_DECISION_PROMPT,
-    SIMULATE_AGENT_PROMPT
+    SIMULATE_AGENT_PROMPT,
 )
 from configs import (
     DEEPSEEK_BASE_URL,
@@ -132,7 +132,10 @@ class Agent:
 
 class TarevoAgent(Agent):
     def __init__(
-        self, model_name, risk_memory_path: str = "lifelong_library/risks.json", permission_policy_path: str = "permission_policy.json"
+        self,
+        model_name,
+        risk_memory_path: str = "lifelong_library/risks.json",
+        permission_policy_path: str = "permission_policy.json",
     ):
         super().__init__(model_name, logger="tarevo_agent_logger")
         self.risk_memory_path = risk_memory_path
@@ -151,31 +154,56 @@ class TarevoAgent(Agent):
         try:
             with open(self.permission_policy_path, "r", encoding="utf-8") as f:
                 policy = json.load(f)
-            
+
             # 提取特定用户级别的策略和通用指南
             user_policy = policy.get("user_levels", {}).get(user_level, {})
             general_guidelines = policy.get("general_assessment_guidelines", {})
-            
+
             # 如果找不到指定的用户级别，记录警告并返回空策略
             if not user_policy:
-                self.logger.warning(f"User level '{user_level}' not found in permission policy. Using empty policy.")
-                user_policy = {"level": user_level, "description": "Unknown user level", "authority_scope": {}, "safety_principles": []}
-            
-            policy_str = json.dumps({
-                "user_level_policy": user_policy,
-                "general_guidelines": general_guidelines
-            }, indent=2, ensure_ascii=False)
-            
+                self.logger.warning(
+                    f"User level '{user_level}' not found in permission policy. Using empty policy."
+                )
+                user_policy = {
+                    "level": user_level,
+                    "description": "Unknown user level",
+                    "authority_scope": {},
+                    "safety_principles": [],
+                }
+
+            policy_str = json.dumps(
+                {
+                    "user_level_policy": user_policy,
+                    "general_guidelines": general_guidelines,
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+
             return policy_str
         except FileNotFoundError:
-            self.logger.error(f"Permission policy file not found: {self.permission_policy_path}")
-            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+            self.logger.error(
+                f"Permission policy file not found: {self.permission_policy_path}"
+            )
+            return json.dumps(
+                {"user_level_policy": {}, "general_guidelines": {}},
+                indent=2,
+                ensure_ascii=False,
+            )
         except json.JSONDecodeError as e:
             self.logger.error(f"Failed to parse permission policy JSON: {str(e)}")
-            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+            return json.dumps(
+                {"user_level_policy": {}, "general_guidelines": {}},
+                indent=2,
+                ensure_ascii=False,
+            )
 
     def risk_analysis(
-        self, request: str, agent_actions: str, risk_categories: str, user_level: str = "user"
+        self,
+        request: str,
+        agent_actions: str,
+        risk_categories: str,
+        user_level: str = "user",
     ) -> Dict[str, Any]:
         """
         analysis_result:
@@ -194,7 +222,7 @@ class TarevoAgent(Agent):
         }}
         """
         permission_policy = self.__load_permission_policy(user_level)
-        
+
         prompt = RISK_ANALYSIS_PROMPT.format(
             request=request,
             agent_actions=agent_actions,
@@ -217,10 +245,14 @@ class TarevoAgent(Agent):
         return analysis_result
 
     def safetytool_definition(
-        self, risk: Dict[str, Any], user_request: str, agent_actions: str, user_level: str = "user"
+        self,
+        risk: Dict[str, Any],
+        user_request: str,
+        agent_actions: str,
+        user_level: str = "user",
     ) -> Dict[str, Any]:
         permission_policy = self.__load_permission_policy(user_level)
-        
+
         prompt = TOOL_PLAN_PROMPT.format(
             request=user_request,
             agent_actions=agent_actions,
@@ -484,8 +516,8 @@ class OptimAgent(Agent):
     def debug_tool(self):
         pass
 
-    def execute_action(self,data:Dict[str,Any],environment:Container)->List[str]:
-        command=data["agent_actions"]
+    def execute_action(self, data: Dict[str, Any], environment: Container) -> List[str]:
+        command = data["agent_actions"]
         agent_identity = "root"
         user_identity = data["user_identity"]
         test = environment.container.exec_run("whoami", user=user_identity)
@@ -496,8 +528,12 @@ class OptimAgent(Agent):
             environment.execute_init(data["init"], user=user_identity)
         # command=command.split(" && ")
         # 不对，exec_run是在已经运行着的那个容器里，再启动一条新进程
-        result=[]
-        result.append(environment.container.exec_run(command, user=agent_identity).output.decode("utf-8").strip())
+        result = []
+        result.append(
+            environment.container.exec_run(command, user=agent_identity)
+            .output.decode("utf-8")
+            .strip()
+        )
         return result
         # result=[]
         # for cmd in command:
@@ -505,10 +541,12 @@ class OptimAgent(Agent):
         # return result
 
 
-
 class DoubtAgent(Agent):
     def __init__(
-        self, model_name, tool_memory_path: str = "lifelong_library/tool_memory.json", permission_policy_path: str = "permission_policy.json"
+        self,
+        model_name,
+        tool_memory_path: str = "lifelong_library/tool_memory.json",
+        permission_policy_path: str = "permission_policy.json",
     ):
         super().__init__(model_name, logger="double_agent_logger")
         self.tool_memory_path = tool_memory_path
@@ -524,28 +562,49 @@ class DoubtAgent(Agent):
         try:
             with open(self.permission_policy_path, "r", encoding="utf-8") as f:
                 policy = json.load(f)
-            
+
             # 提取特定用户级别的策略和通用指南
             user_policy = policy.get("user_levels", {}).get(user_level, {})
             general_guidelines = policy.get("general_assessment_guidelines", {})
-            
+
             # 如果找不到指定的用户级别，记录警告并返回空策略
             if not user_policy:
-                self.logger.warning(f"User level '{user_level}' not found in permission policy. Using empty policy.")
-                user_policy = {"level": user_level, "description": "Unknown user level", "authority_scope": {}, "safety_principles": []}
-            
-            policy_str = json.dumps({
-                "user_level_policy": user_policy,
-                "general_guidelines": general_guidelines
-            }, indent=2, ensure_ascii=False)
-            
+                self.logger.warning(
+                    f"User level '{user_level}' not found in permission policy. Using empty policy."
+                )
+                user_policy = {
+                    "level": user_level,
+                    "description": "Unknown user level",
+                    "authority_scope": {},
+                    "safety_principles": [],
+                }
+
+            policy_str = json.dumps(
+                {
+                    "user_level_policy": user_policy,
+                    "general_guidelines": general_guidelines,
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+
             return policy_str
         except FileNotFoundError:
-            self.logger.error(f"Permission policy file not found: {self.permission_policy_path}")
-            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+            self.logger.error(
+                f"Permission policy file not found: {self.permission_policy_path}"
+            )
+            return json.dumps(
+                {"user_level_policy": {}, "general_guidelines": {}},
+                indent=2,
+                ensure_ascii=False,
+            )
         except json.JSONDecodeError as e:
             self.logger.error(f"Failed to parse permission policy JSON: {str(e)}")
-            return json.dumps({"user_level_policy": {}, "general_guidelines": {}}, indent=2, ensure_ascii=False)
+            return json.dumps(
+                {"user_level_policy": {}, "general_guidelines": {}},
+                indent=2,
+                ensure_ascii=False,
+            )
 
     def search_original_tool(self, optimized_tool: Dict[str, Any]) -> Dict[str, Any]:
         tool_memory = self.__load_toolmemory()
@@ -564,7 +623,7 @@ class DoubtAgent(Agent):
         doubt_results = []
         user_level = data.get("user_level", "user")
         permission_policy = self.__load_permission_policy(user_level)
-        
+
         for item in feedback:
             tool_info, is_optimized, execution_result = item
             if not is_optimized:
@@ -619,27 +678,41 @@ class DoubtAgent(Agent):
         self,
         data: Dict[str, Any],
         doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
-        action_result: str
+        action_result: str,
     ) -> Tuple[List[Dict], bool]:
         tool_set = []
         user_level = data.get("user_level", "user")
         permission_policy = self.__load_permission_policy(user_level)
-        
+
         for item in doubt_tool_result:
             tool_set.append(item[0])
+
+        # 检查是否有工具检测到风险
+        has_risk_detected = False
         for item in doubt_tool_result:
             # execution_result: True 表示检测到风险，False 表示安全
             if item[3] == True:
                 return tool_set, True
             if item[1].get("is_safe") == "False":
                 return tool_set, True
-        prompt = DOUBT_DECISION_PROMPT.format(
-            request=data["request"],
-            agent_actions=data["agent_actions"],
-            approved_tools=json.dumps(tool_set, indent=2, ensure_ascii=False),
-            action_result=action_result,
-            user_level=user_level,
-            permission_policy=permission_policy,
+
+        # 如果所有工具都没有检测到风险，增加提示信息
+        additional_context = ""
+        if not has_risk_detected and len(tool_set) > 0:
+            additional_context = "\n\n**重要提示**：所有安全工具均未检测到风险，这表明操作可能是安全的。请基于用户权限和操作语义进行最终判断，避免过度防护。"
+        elif len(tool_set) == 0:
+            additional_context = "\n\n**重要提示**：没有生成任何安全工具，这表明风险分析阶段未发现明显威胁。请基于用户权限和操作的合理性进行判断。"
+
+        prompt = (
+            DOUBT_DECISION_PROMPT.format(
+                request=data["request"],
+                agent_actions=data["agent_actions"],
+                approved_tools=json.dumps(tool_set, indent=2, ensure_ascii=False),
+                action_result=action_result,
+                user_level=user_level,
+                permission_policy=permission_policy,
+            )
+            + additional_context
         )
         messages = [
             {
@@ -669,8 +742,9 @@ tool_info:
 
 """
 
+
 class SimulateAgent(Agent):
-    def __init__(self, model_name, logger = "simulate_logger"):
+    def __init__(self, model_name, logger="simulate_logger"):
         super().__init__(model_name, logger)
 
     def simulate(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -688,51 +762,48 @@ class SimulateAgent(Agent):
         response = self.inference(messages)
         clean_response = self.extract_json(response)
         clean_response = json.loads(clean_response)
-        simu_data=data
-        simu_data["agent_actions"]=clean_response.get("agent_actions","")
-        simu_data["init"]=clean_response.get("environment","")
+        simu_data = data
+        simu_data["agent_actions"] = clean_response.get("agent_actions", "")
+        simu_data["init"] = clean_response.get("environment", "")
         return simu_data
-    
-class SimulateMultiRoundAgent(Agent):
-    def __init__(self, model_name, logger = "simulate_multi_round_logger"):
-        super().__init__(model_name, logger)
-        self.history=[]
 
-    def multi_round_simulate(self, data: Dict[str, Any]) -> Dict[str,Any]:
+
+class SimulateMultiRoundAgent(Agent):
+    def __init__(self, model_name, logger="simulate_multi_round_logger"):
+        super().__init__(model_name, logger)
+        self.history = []
+
+    def multi_round_simulate(self, data: Dict[str, Any]) -> Dict[str, Any]:
         imple_data = {**data, "agent_actions": [""], "init": [""]}
-        prompts_set=data.get("description","")
+        prompts_set = data.get("description", "")
         system_prompt = {
-            "role": "system", 
-            "content": """你是一个模拟代理，负责与用户进行多轮交互。在每轮对话中，你需要根据用户的请求和对话历史，输出代理可能会执行的操作。请确保你的响应是连贯的，并考虑之前的对话上下文。"""
+            "role": "system",
+            "content": """你是一个模拟代理，负责与用户进行多轮交互。在每轮对话中，你需要根据用户的请求和对话历史，输出代理可能会执行的操作。请确保你的响应是连贯的，并考虑之前的对话上下文。""",
         }
         self.history.append(system_prompt)
         user_initial_prompt = {
             "role": "user",
             "content": SIMULATE_AGENT_PROMPT.format(
                 request=data["request"],
-            )
+            ),
         }
         self.history.append(user_initial_prompt)
-        for round_num, prompt in enumerate(prompts_set,0):
+        for round_num, prompt in enumerate(prompts_set, 0):
             try:
-                if round_num==0:
+                if round_num == 0:
                     self.history.append(user_initial_prompt)
                 else:
-                    user_round_prompt = {
-                        "role": "user",
-                        "content": prompt
-                    }
+                    user_round_prompt = {"role": "user", "content": prompt}
                     self.history.append(user_round_prompt)
-                agent_response=self.inference(self.history)
+                agent_response = self.inference(self.history)
                 clean_response = self.extract_json(agent_response)
                 clean_response = json.loads(clean_response)
-                imple_data["agent_actions"].append(clean_response.get("agent_actions",""))
-                imple_data["init"].append(clean_response.get("environment",""))
+                imple_data["agent_actions"].append(
+                    clean_response.get("agent_actions", "")
+                )
+                imple_data["init"].append(clean_response.get("environment", ""))
 
-                agent_message={
-                    "role":"assistant",
-                    "content":clean_response    
-                }
+                agent_message = {"role": "assistant", "content": clean_response}
                 self.history.append(agent_message)
 
             except Exception as e:
@@ -741,18 +812,17 @@ class SimulateMultiRoundAgent(Agent):
         return imple_data
 
     def __warp_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        '''imple_data中多步的agent_actions和init是list，转为str， description也是'''
-        description_list=data.get("description",[])
-        action_list=data.get("agent_actions",[])
-        init_list=data.get("init",[])
-        wrap_data=Dict[str,Any]()
-        wrap_data["user_identity"]=data.get("user_identity","")
-        wrap_data["labels"]=data.get("labels","")
-        wrap_data["request"]=" && ".join(description_list)
-        wrap_data["agent_actions"]=" && ".join(action_list)
-        wrap_data["init"]=" && ".join(init_list)
+        """imple_data中多步的agent_actions和init是list，转为str， description也是"""
+        description_list = data.get("description", [])
+        action_list = data.get("agent_actions", [])
+        init_list = data.get("init", [])
+        wrap_data = Dict[str, Any]()
+        wrap_data["user_identity"] = data.get("user_identity", "")
+        wrap_data["labels"] = data.get("labels", "")
+        wrap_data["request"] = " && ".join(description_list)
+        wrap_data["agent_actions"] = " && ".join(action_list)
+        wrap_data["init"] = " && ".join(init_list)
         return wrap_data
 
     def simulate(self, data: Dict[str, Any]) -> str:
         pass
-

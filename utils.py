@@ -10,6 +10,8 @@ def read_data(data_type: str):
         data_path = "data/environment.json"
     elif data_type == "benign":
         data_path = "data/benign.json"
+    elif data_type == "agentsafebench":
+        data_path = "/home/beihang/yx/DEFEND/agentsafebench/data/test_data.json"
     with open(data_path, "r") as f:
         data = json.load(f)
     return data
@@ -33,9 +35,11 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         else:
             target_data["init"] = ""
         target_data["request"] = data.get("description", "")
-        target_data["user_identity"] = data.get("user", "user") 
+        target_data["user_identity"] = data.get("user", "user")
         user_identity = data.get("user", "user")
-        target_data["user_level"] = data.get("user_level", "root" if user_identity == "root" else "user")
+        target_data["user_level"] = data.get(
+            "user_level", "root" if user_identity == "root" else "user"
+        )
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
         target_data["agent_actions"] = find_actions(data)
 
@@ -46,7 +50,9 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["request"] = data.get("description", "")
         target_data["user_identity"] = data.get("user", "user")
         user_identity = data.get("user", "user")
-        target_data["user_level"] = data.get("user_level", "root" if user_identity == "root" else "user")
+        target_data["user_level"] = data.get(
+            "user_level", "root" if user_identity == "root" else "user"
+        )
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
     else:
