@@ -33,7 +33,14 @@ import pandas as pd
 from typing import List, Dict, Any, Tuple
 from utils import read_data, data_wrapper
 from container import Container
-from agents import Agent, TarevoAgent, OptimAgent, DoubtAgent, SimulateAgent
+from agents import (
+    Agent,
+    TarevoAgent,
+    OptimAgent,
+    DoubtAgent,
+    SimulateAgent,
+    SandBoxAgent,
+)
 from configs import setup_logger
 
 logger = setup_logger("pipeline")
@@ -157,8 +164,13 @@ def pipeline(
     optimagent = OptimAgent(args.optim_model, tool_memory_path=args.tool_memory)
     clean_relevant_tools = optimagent.search_tool(tool_results)
     tool_workflow = optimagent.optimize_tool(clean_relevant_tools)
-    feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
-    agent_action_result = optimagent.execute_action(tarvodata, container)
+
+    sandboxagent = SandBoxAgent(args.sandbox_model)
+    feedback = sandboxagent.sandbox_execute_tool(tool_workflow, tarvodata)
+    agent_action_result = sandboxagent.sandbox_execute_action(tarvodata)
+    # feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
+    # agent_action_result = optimagent.execute_action(tarvodata, container)
+
     final_result = agent_action_result[-1] if len(agent_action_result) > 0 else ""
 
     # Step 3: DoubtAgent - 工具质疑和最终决策

@@ -55,7 +55,8 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         )
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
-    else:
+    elif agent_type == "agentsafebench":
+        # TODO
         pass
     return target_data
 

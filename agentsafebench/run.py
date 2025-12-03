@@ -9,7 +9,12 @@ from copy import deepcopy
 from typing import Dict, Any, List
 from safebench_prompt import BASIC_SYS_PROMPT, NO_TOOL_SYS_PROMPT
 from environments.EnvManager import EnvManager
-from tool_utils import ToolAgent
+from tool_utils import (
+    ToolAgent,
+    log_exceed_round_samples,
+    log_error_samples,
+    JudgeAgent,
+)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from configs import agentsafebench_config, setup_logger
@@ -60,21 +65,27 @@ def get_system_prompt(item):
             return BASIC_SYS_PROMPT
 
 
-def execute_task(item: Dict[str, Any], toolagent: Agent, allow_empty: int = 0):
+def execute_task(task_item: Dict[str, Any], toolagent: Agent, allow_empty: int = 0):
     max_rounds = 5
     rounds = 0
     final_result = None
-    user_request = item.get("instruction", "")
-    environment = item.get("environment", "")
+    user_request = task_item.get("instruction", "")
+    environment = task_item.get("environment", "")
     tool_descs = []
-    messages = [{"role": "user", "content": get_system_prompt(item)}]
-    if item["environments"] and item["environments"][0]["name"] != "":
-        env, tool_descs = parse_envs(item["environments"])
-        for item in tool_descs:
-            item["type"] = "object"
 
-        for i, item in enumerate(tool_descs):
-            newitem = {"type": "function", "function": item}
+    # 初始化消息：系统提示词 + 用户指令
+    messages = [
+        {"role": "system", "content": get_system_prompt(task_item)},
+        {"role": "user", "content": user_request},
+    ]
+
+    if task_item["environments"] and task_item["environments"][0]["name"] != "":
+        env, tool_descs = parse_envs(task_item["environments"])
+        for tool_desc in tool_descs:
+            tool_desc["type"] = "object"
+
+        for i, tool_desc in enumerate(tool_descs):
+            newitem = {"type": "function", "function": tool_desc}
             tool_descs[i] = newitem
 
     while rounds < max_rounds:
@@ -85,18 +96,22 @@ def execute_task(item: Dict[str, Any], toolagent: Agent, allow_empty: int = 0):
         if completion["type"] == "tool":
             tool_call_id = completion["tool_call_id"]
             tool_name = completion["tool_name"]
-            tool_args = completion["tool_args"]
+            tool_args = completion["arguments"]
 
-            tool_call_results = None
-            for env_idx, env in enumerate(env):
-                provided_tools = item["environments"][env_idx]["tools"]
-                if tool_name not in provided_tools or not env.has_tool(tool_name):
+            tool_call_result = None
+            for env_idx, env_instance in enumerate(env):
+                provided_tools = task_item["environments"][env_idx]["tools"]
+                if tool_name not in provided_tools or not env_instance.has_tool(
+                    tool_name
+                ):
                     continue
-                tool_call_results = env.call_tool(tool_name, deepcopy(tool_args))
+                tool_call_result = env_instance.call_tool(
+                    tool_name, deepcopy(tool_args)
+                )
                 break
             if tool_call_result is None:
                 tool_call_result = {
-                    "sucess": False,
+                    "success": False,
                     "message": f"Tool {tool_name} not found in the provided environments.",
                 }
 
@@ -131,7 +146,7 @@ def execute_task(item: Dict[str, Any], toolagent: Agent, allow_empty: int = 0):
         """
         完整的agent互相作用，包括工具调用
         """
-    info = {"id": item["id"]}
+    info = {"id": task_item["id"]}
     if final_result is None:
         if rounds >= max_rounds:
             """记录超出最大回合数的对话样本"""
@@ -148,10 +163,14 @@ def execute_task(item: Dict[str, Any], toolagent: Agent, allow_empty: int = 0):
 def run(args: argparse.Namespace):
     data = read_data("agentsafebench")
     toolagent = ToolAgent(model_name=args.model_name)
+    judgeagent = JudgeAgent(model_name=args.judge_model_name)
     success_count = 0
     fail_count = 0
     exceed_count = 0
+    judge_safe_count = 0
+    judge_unsafe_count = 0
     total_count = len(data)
+    print(f"Total Tasks: {total_count}")
     for index, item in tqdm(
         enumerate(data), desc="AgentSafeBench Tasks", total=len(data)
     ):
@@ -160,10 +179,15 @@ def run(args: argparse.Namespace):
         )
         logger.info("===========================================")
         logger.info(f"Task ID: {item['id']}")
-        logger.info(f"Instruction: {item['instruction']}")
-        logger.info(f"Environments: {item['environments']}")
-        logger.info(f"Final Result: {final_result}")
-        logger.info(f"Rounds: {rounds}")
+        # logger.info(f"Instruction: {item['instruction']}")
+        # logger.info(f"Environments: {item['environments']}")
+        # logger.info(f"Final Result: {final_result}")
+        # logger.info(f"Rounds: {rounds}")
+        judge, reason = judgeagent.judge_safety(item["instruction"], final_result)
+        if judge:
+            judge_safe_count += 1
+        else:
+            judge_unsafe_count += 1
         if final_result is not None:
             success_count += 1
         else:
@@ -172,9 +196,20 @@ def run(args: argparse.Namespace):
             else:
                 fail_count += 1
         logger.info(
-            f"Progress: {index+1}/{len(data)} | Success: {success_count} | Fail: {fail_count} | Exceed: {exceed_count}"
+            f"Task Progress: {index+1}/{len(data)} | Success: {success_count} | Fail: {fail_count} | Exceed: {exceed_count}"
         )
+    logger.info("===========================================")
+    logger.info("Evaluation Completed.")
+    logger.info(f"Total Tasks: {total_count}")
+    logger.info(f"judge safe ratio: {judge_safe_count / total_count * 100:.2f}%")
+    logger.info(f"judge unsafe ratio: {judge_unsafe_count / total_count * 100:.2f}%")
 
+
+"""
+2025-12-03 18:57:04 - AgentSafeBench - INFO - Total Tasks: 17
+2025-12-03 18:57:04 - AgentSafeBench - INFO - judge safe ratio: 52.94%
+2025-12-03 18:57:04 - AgentSafeBench - INFO - judge unsafe ratio: 47.06%
+"""
 
 if __name__ == "__main__":
     args = agentsafebench_config()

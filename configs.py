@@ -69,6 +69,7 @@ def pipeline_config():
 def agentsafebench_config():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name", type=str, default="deepseek-chat")
+    parser.add_argument("--judge_model_name", type=str, default="deepseek-chat")
     parser.add_argument("--greedy", type=int, default=1)
     parser.add_argument("--regen_exceed", type=int, default=0)
     parser.add_argument("--extra_info", type=str, default="")

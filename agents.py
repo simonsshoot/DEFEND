@@ -17,6 +17,7 @@ from agents_prompts import (
     TOOL_DOUBT_OPTIMIZE_PROMPT,
     DOUBT_DECISION_PROMPT,
     SIMULATE_AGENT_PROMPT,
+    SANDBOX_TOOL_PROMPT,
 )
 from configs import (
     DEEPSEEK_BASE_URL,
@@ -56,21 +57,25 @@ class Agent:
         else:
             return self.__call_openai(history)
 
-    def extract_json(self, response: str) -> Dict[str, Any]:
+    def extract_json(self, response: str) -> str:
+        """从响应文本中提取JSON字符串"""
         cleaned = response.strip()
         if cleaned.startswith("{") and cleaned.endswith("}"):
             return cleaned
+
         if "```json" in cleaned:
             match = re.search(r"```json(.*?)```", cleaned, re.DOTALL)
             if match:
                 json_content = match.group(1).strip()
                 return json_content
+
         if "```" in cleaned:
             match = re.search(r"```\s*(.*?)\s*```", cleaned, re.DOTALL)
             if match:
                 content = match.group(1).strip()
                 if content.startswith("{") and content.endswith("}"):
                     return content
+
         try:
             start = cleaned.find("{")
             end = cleaned.rfind("}")
@@ -79,9 +84,7 @@ class Agent:
                 json.loads(json_str)
                 return json_str
         except:
-            self.logger.warning(
-                "Failed to extract JSON from response. Return the original response."
-            )
+            self.logger.warning("Failed to extract valid JSON from response")
         return cleaned
 
     def __call_deepseek(self, history: List[dict]) -> str:
@@ -741,6 +744,64 @@ tool_info:
 }}
 
 """
+
+
+class SandBoxAgent(Agent):
+    def __init__(self, model_name, logger="sandbox_agent_logger"):
+        super().__init__(model_name, logger)
+
+    def sandbox_execute_tool(
+        self, tool_workflow: List[Tuple[Dict, bool]], data: Dict[str, Any]
+    ) -> List[Tuple[Dict, bool, bool]]:
+        """在LLM沙箱环境中执行安全工具"""
+        user_identity = data["user_identity"]
+        command = data["agent_actions"]
+        execution_results: List[Tuple[Dict, bool, bool]] = []
+
+        for tool_item in tool_workflow:
+            tool_info, is_optimized = tool_item
+            prompt = SANDBOX_TOOL_PROMPT.format(
+                user_identity=user_identity,
+                command=command,
+                tool_info=tool_info,
+                environment=data.get("init", ""),
+            )
+            messages = [
+                {
+                    "role": "system",
+                    "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行安全工具的结果。",
+                },
+                {"role": "user", "content": prompt},
+            ]
+            time.sleep(1)
+            response = self.inference(messages)
+            clean_response = self.extract_json(response)
+            clean_response = json.loads(clean_response)
+            result = clean_response.get("result", "True")
+            execution_results.append(
+                (tool_info, is_optimized, True if result == "True" else False)
+            )
+        return execution_results
+
+    def sandbox_execute_action(self, data: Dict[str, Any]) -> List[str]:
+        prompt = SANDBOX_ACTION_PROMPT.format(
+            user_identity=data["user_identity"],
+            command=data["agent_actions"],
+            environment=data.get("init", ""),
+        )
+        messages = [
+            {
+                "role": "system",
+                "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行用户命令的结果。",
+            },
+            {"role": "user", "content": prompt},
+        ]
+        time.sleep(1)
+        response = self.inference(messages)
+        clean_response = self.extract_json(response)
+        clean_response = json.loads(clean_response)
+        result = clean_response.get("result", "")
+        return [result]
 
 
 class SimulateAgent(Agent):
