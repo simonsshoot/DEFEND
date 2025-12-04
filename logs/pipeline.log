@@ -26,3 +26,31 @@ Error processing item 3: timed out
 Error processing item 16: Invalid \escape: line 2 column 190 (char 191)
 2025-12-04 13:32:06 - pipeline - ERROR - 
 Error processing item 3: Invalid \escape: line 8 column 209 (char 436)
+2025-12-04 20:36:58 - pipeline - ERROR - Error loading AgentHarm tools: No module named 'inspect_ai'
+2025-12-04 20:59:02 - pipeline - ERROR - 
+Error processing item 0: local variable 'debug_simu_time' referenced before assignment
+2025-12-04 21:27:00 - pipeline - ERROR - 
+Error processing item 0: name 'tarvodata' is not defined
+2025-12-04 21:29:08 - pipeline - ERROR - 
+Error processing item 1: name 'tarvodata' is not defined
+2025-12-04 21:30:25 - pipeline - ERROR - 
+Error processing item 2: name 'tarvodata' is not defined
+2025-12-04 21:33:14 - pipeline - ERROR - Error loading AgentHarm tools: No module named 'inspect_ai'
+2025-12-04 21:33:21 - pipeline - ERROR - 
+Error processing item 3: name 'tarvodata' is not defined
+2025-12-04 21:35:20 - pipeline - ERROR - 
+Error processing item 4: name 'tarvodata' is not defined
+2025-12-04 21:36:52 - pipeline - ERROR - 
+Error processing item 5: name 'tarvodata' is not defined
+2025-12-04 21:38:36 - pipeline - ERROR - 
+Error processing item 6: name 'tarvodata' is not defined
+2025-12-04 21:39:20 - pipeline - ERROR - 
+Error processing item 7: Invalid \escape: line 8 column 315 (char 764)
+2025-12-04 21:41:26 - pipeline - ERROR - 
+Error processing item 8: name 'tarvodata' is not defined
+2025-12-04 21:41:40 - pipeline - ERROR - Error loading AgentHarm tools: module 'benchmark.harmful_tools' has no attribute 'TOOLS'
+2025-12-04 21:42:35 - pipeline - ERROR - 
+Error processing item 9: name 'tarvodata' is not defined
+2025-12-04 21:48:44 - pipeline - ERROR - Error loading tool run_stable_diffusion_model: No module named 'inspect_ai'
+2025-12-04 21:48:44 - pipeline - ERROR - Error loading tool create_ai_video: No module named 'inspect_ai'
+2025-12-04 21:48:44 - pipeline - ERROR - Error loading tool post_on_x: No module named 'inspect_ai'

@@ -13,20 +13,20 @@ def read_data(data_type: str):
     elif data_type == "agentsafebench":
         data_path = "agentsafebench/data/test_data.json"
     elif data_type == "agentharm":
-        data_path = "agentharm/harmful_behaviors_test_public.json"
+        data_path = "agentharm/harmful_behaviors_test.json"
     elif data_type == "agentharm_benign":
-        data_path = "agentharm/benign_behaviors_test_public.json"
+        data_path = "agentharm/benign_behaviors_test.json"
     else:
         raise ValueError(f"Unknown data type: {data_type}")
-    
+
     with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    
+
     # AgentHarm数据格式是 {"behaviors": [...]}
     if data_type in ["agentharm", "agentharm_benign"]:
         if isinstance(data, dict) and "behaviors" in data:
             data = data["behaviors"]
-    
+
     return data
 
 
@@ -92,14 +92,14 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["request"] = data.get("prompt", "")
         target_data["user_identity"] = "user"
         target_data["user_level"] = "user"
-        
+
         # AgentHarm中所有harmful behaviors都应该被拦截
         # benign behaviors应该被允许
         if agent_type == "agentharm":
             target_data["labels"] = "unsafe"  # harmful behaviors
         else:
-            target_data["labels"] = "safe"    # benign behaviors
-        
+            target_data["labels"] = "safe"  # benign behaviors
+
         # 保留AgentHarm原始信息
         target_data["agentharm_id"] = data.get("id")
         target_data["agentharm_category"] = data.get("category", "")
@@ -107,11 +107,11 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["agentharm_target_functions"] = data.get("target_functions", [])
         target_data["agentharm_detailed_prompt"] = data.get("detailed_prompt", False)
         target_data["agentharm_hint_included"] = data.get("hint_included", False)
-        
+
         # 初始化为空，将由SimulateAgent生成
         target_data["agent_actions"] = ""
         target_data["init"] = ""
-    
+
     return target_data
 
 

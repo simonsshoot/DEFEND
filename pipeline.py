@@ -195,39 +195,83 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
             return []
 
         return present_tools
-    
+
     elif dataset == "agentharm" or dataset == "agentharm_benign":
         # AgentHarm数据集，从target_functions中提取工具
         import sys
+
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), "agentharm"))
-        
+
         try:
-            from benchmark import harmful_tools, benign_tools
+            # AgentHarm工具是通过@tool装饰器定义的函数
+            # 动态导入目标工具
             if dataset == "agentharm":
-                available_tools = harmful_tools.TOOLS
+                tools_package = "benchmark.harmful_tools"
             else:
-                available_tools = benign_tools.TOOLS
+                tools_package = "benchmark.benign_tools"
 
             target_functions = data.get("agentharm_target_functions", [])
-            
+
             present_tools = []
             for func_name in target_functions:
-                # 在available_tools中查找对应的工具
-                for tool in available_tools:
-                    if hasattr(tool, "name") and tool.name == func_name:
-                        present_tools.append({
-                            "environment": "agentharm",
-                            "tool_name": func_name,
-                            "description": tool.description if hasattr(tool, "description") else "",
-                            "parameters": tool.parameters.model_dump() if hasattr(tool, "parameters") else {},
-                            "tool_instance": tool,
-                        })
-                        break
-            
+                try:
+                    # 导入对应的工具模块
+                    module_path = f"{tools_package}.{func_name}"
+                    tool_module = __import__(module_path, fromlist=[func_name])
+
+                    # 获取工具函数
+                    if hasattr(tool_module, func_name):
+                        tool_func = getattr(tool_module, func_name)
+
+                        # 调用tool函数获取Tool对象
+                        tool_obj = tool_func()
+
+                        # 提取工具描述和参数
+                        import inspect
+
+                        if hasattr(tool_obj, "__wrapped__"):
+                            sig = inspect.signature(tool_obj.__wrapped__)
+                            doc = inspect.getdoc(tool_obj.__wrapped__) or ""
+                        else:
+                            sig = inspect.signature(tool_obj)
+                            doc = inspect.getdoc(tool_obj) or ""
+
+                        # 构建参数信息
+                        params = {}
+                        for param_name, param in sig.parameters.items():
+                            params[param_name] = {
+                                "type": (
+                                    str(param.annotation)
+                                    if param.annotation != inspect.Parameter.empty
+                                    else "any"
+                                ),
+                                "required": param.default == inspect.Parameter.empty,
+                            }
+
+                        present_tools.append(
+                            {
+                                "environment": "agentharm",
+                                "tool_name": func_name,
+                                "description": doc,
+                                "parameters": {"properties": params},
+                                "tool_function": tool_obj,
+                            }
+                        )
+                        logger.info(f"Loaded AgentHarm tool: {func_name}")
+                    else:
+                        logger.warning(f"Tool function {func_name} not found in module")
+                except Exception as e:
+                    logger.error(f"Error loading tool {func_name}: {str(e)}")
+                    import traceback
+
+                    traceback.print_exc()
+                    continue
+
             return present_tools
         except Exception as e:
             logger.error(f"Error loading AgentHarm tools: {str(e)}")
             import traceback
+
             traceback.print_exc()
             return []
     else:
@@ -236,7 +280,9 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 
 def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
-) -> Tuple[List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]]]:
+) -> Tuple[
+    List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]], Dict[str, Any]
+]:
     # Step 1: TarevoAgent - 风险分析和工具生成
     wrap_data = data_wrapper(data, args.dataset)
     present_tools = get_present_tools(args.dataset, wrap_data)
@@ -286,7 +332,7 @@ def pipeline(
 
     decision = "unsafe" if is_unsafe else "safe"
 
-    return tool_set, decision, risk_analysis, doubt_tool_result
+    return tool_set, decision, risk_analysis, doubt_tool_result, tarvodata
 
 
 def run(args: argparse.Namespace):
@@ -341,7 +387,7 @@ def run(args: argparse.Namespace):
 
         try:
             container = Container()
-            tool_set, decision, risk_analysis, doubt_tool_result = pipeline(
+            tool_set, decision, risk_analysis, doubt_tool_result, tarvodata = pipeline(
                 args, item, container
             )
             for result in doubt_tool_result:
@@ -363,10 +409,19 @@ def run(args: argparse.Namespace):
                         }
                         f.write(json.dumps(debug_info, ensure_ascii=False) + "\n")
 
-            # 记录结果
-            df.at[index, "input"] = item.get("description", "")
-            df.at[index, "label"] = item.get("labels", "")
-            df.at[index, "agent_actions"] = item.get("agent_actions", "")
+            if args.dataset == "agentsafebench":
+                input_text = item.get("instruction", "")
+                label = item.get("fulfillable", 0)
+            elif args.dataset in ["agentharm", "agentharm_benign"]:
+                input_text = item.get("prompt", "")
+                label = 0 if args.dataset == "agentharm" else 1
+            else:
+                input_text = item.get("description", "")
+                label = item.get("labels", "")
+
+            df.at[index, "input"] = input_text
+            df.at[index, "label"] = label
+            df.at[index, "agent_actions"] = tarvodata.get("agent_actions", "")
             df.at[index, "generated_tools"] = json.dumps(
                 [tool.get("tool_name") for tool in tool_set]
             )
