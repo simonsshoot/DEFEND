@@ -147,6 +147,7 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
     """
     根据数据集名称，返回对应的现有工具列表(这里的工具是执行工具，不是安全工具)
     从AgentSafeBench的environments字段中提取工具描述
+    从AgentHarm的target_functions字段中提取工具描述
     """
     if dataset == "agentsafebench":
         # 导入AgentSafeBench的环境管理器
@@ -194,6 +195,41 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
             return []
 
         return present_tools
+    
+    elif dataset == "agentharm" or dataset == "agentharm_benign":
+        # AgentHarm数据集，从target_functions中提取工具
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "agentharm"))
+        
+        try:
+            from benchmark import harmful_tools, benign_tools
+            if dataset == "agentharm":
+                available_tools = harmful_tools.TOOLS
+            else:
+                available_tools = benign_tools.TOOLS
+
+            target_functions = data.get("agentharm_target_functions", [])
+            
+            present_tools = []
+            for func_name in target_functions:
+                # 在available_tools中查找对应的工具
+                for tool in available_tools:
+                    if hasattr(tool, "name") and tool.name == func_name:
+                        present_tools.append({
+                            "environment": "agentharm",
+                            "tool_name": func_name,
+                            "description": tool.description if hasattr(tool, "description") else "",
+                            "parameters": tool.parameters.model_dump() if hasattr(tool, "parameters") else {},
+                            "tool_instance": tool,
+                        })
+                        break
+            
+            return present_tools
+        except Exception as e:
+            logger.error(f"Error loading AgentHarm tools: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return []
     else:
         return []
 

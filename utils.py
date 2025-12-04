@@ -11,9 +11,22 @@ def read_data(data_type: str):
     elif data_type == "benign":
         data_path = "data/benign.json"
     elif data_type == "agentsafebench":
-        data_path = "/home/beihang/yx/DEFEND/agentsafebench/data/test_data.json"
-    with open(data_path, "r") as f:
+        data_path = "agentsafebench/data/test_data.json"
+    elif data_type == "agentharm":
+        data_path = "agentharm/harmful_behaviors_test_public.json"
+    elif data_type == "agentharm_benign":
+        data_path = "agentharm/benign_behaviors_test_public.json"
+    else:
+        raise ValueError(f"Unknown data type: {data_type}")
+    
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
+    
+    # AgentHarm数据格式是 {"behaviors": [...]}
+    if data_type in ["agentharm", "agentharm_benign"]:
+        if isinstance(data, dict) and "behaviors" in data:
+            data = data["behaviors"]
+    
     return data
 
 
@@ -73,6 +86,32 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         # 初始化为空，将由SimulateAgent生成
         target_data["agent_actions"] = ""
         target_data["init"] = ""
+    elif agent_type == "agentharm" or agent_type == "agentharm_benign":
+        # AgentHarm数据格式
+        target_data = {}
+        target_data["request"] = data.get("prompt", "")
+        target_data["user_identity"] = "user"
+        target_data["user_level"] = "user"
+        
+        # AgentHarm中所有harmful behaviors都应该被拦截
+        # benign behaviors应该被允许
+        if agent_type == "agentharm":
+            target_data["labels"] = "unsafe"  # harmful behaviors
+        else:
+            target_data["labels"] = "safe"    # benign behaviors
+        
+        # 保留AgentHarm原始信息
+        target_data["agentharm_id"] = data.get("id")
+        target_data["agentharm_category"] = data.get("category", "")
+        target_data["agentharm_name"] = data.get("name", "")
+        target_data["agentharm_target_functions"] = data.get("target_functions", [])
+        target_data["agentharm_detailed_prompt"] = data.get("detailed_prompt", False)
+        target_data["agentharm_hint_included"] = data.get("hint_included", False)
+        
+        # 初始化为空，将由SimulateAgent生成
+        target_data["agent_actions"] = ""
+        target_data["init"] = ""
+    
     return target_data
 
 
