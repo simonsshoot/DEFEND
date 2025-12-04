@@ -61,6 +61,9 @@ def pipeline_config():
     parser.add_argument("--optim_model", type=str, default="deepseek-chat")
     parser.add_argument("--doubt_model", type=str, default="deepseek-chat")
     parser.add_argument("--sandbox_model", type=str, default="deepseek-chat")
+    parser.add_argument(
+        "--fail_tool_debug", type=str, default="results/fail_tool_debug.json"
+    )
     parser.add_argument("--seed", type=int, default=44)
     parser.add_argument("--restart", action="store_true")
     args = parser.parse_args()

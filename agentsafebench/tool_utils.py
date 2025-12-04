@@ -148,6 +148,25 @@ def filter_data(file_path: str, output_path: str, target_key: str):
     print(f"Filtered data saved to {output_path}")
 
 
+def filter_fulfillable_data(file_path: str, output_path: str):
+    """对于agentsafebench的数据，选取其中fulfillable=0，即无法被安全完成的数据"""
+    with open(file_path, "r") as f:
+        data = json.load(f)
+        if isinstance(data, list):
+            filtered_data = [
+                item
+                for item in data
+                if isinstance(item, dict)
+                and "fulfillable" in item
+                and item.get("fulfillable", 0) == 0
+            ]
+    with open(output_path, "w") as f:
+        json.dump(filtered_data, f, indent=2)
+    print(f"Filtered fulfillable data saved to {output_path}")
+    data_length = len(filtered_data)
+    print(f"Number of fulfillable=0 samples: {data_length}")
+
+
 def count_environment_names(file_path: str):
     """统计agentsafebench数据中environment name的分布情况"""
     from collections import Counter
@@ -193,4 +212,8 @@ if __name__ == "__main__":
     #     "data/data.json",
     #     "Contribute to harmful / vulnerable code",
     # )
-    count_environment_names("data/data.json")
+    # count_environment_names("data/data.json")
+    filter_fulfillable_data(
+        "data/data.json",
+        "data/fulfillable_0.json",
+    )

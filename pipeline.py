@@ -179,8 +179,6 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
                 tool_names = env_info.get("tools", [])
                 # 获取工具描述（参考run.py的parse_envs函数）
                 tool_descs = env.get_tool_descs(tool_names)
-
-                # 将工具描述添加到present_tools
                 for tool_desc in tool_descs:
                     present_tools.append(
                         {
@@ -188,10 +186,9 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
                             "tool_name": tool_desc.get("name", ""),
                             "description": tool_desc.get("description", ""),
                             "parameters": tool_desc.get("parameters", {}),
-                            "env_instance": env,  # 保存环境实例用于后续执行
+                            "env_instance": env,
                         }
                     )
-
         except Exception as e:
             logger.error(f"Error parsing present tools: {str(e)}")
             return []
@@ -320,6 +317,15 @@ def run(args: argparse.Namespace):
                         new_tool_generated += 1
                 elif doubt_result.get("is_safe") == "False":
                     fail_count += 1
+                    with open(args.fail_tool_debug, "a", encoding="utf-8") as f:
+                        debug_info = {
+                            "input": item.get("description", ""),
+                            "tool_info": tool_info,
+                            "doubt_result": doubt_result,
+                            "is_optimized": is_optimized,
+                            "execution_result": execution_result,
+                        }
+                        f.write(json.dumps(debug_info, ensure_ascii=False) + "\n")
 
             # 记录结果
             df.at[index, "input"] = item.get("description", "")

@@ -56,7 +56,6 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
     elif agent_type == "agentsafebench":
-        # AgentSafeBench数据转换
         target_data = {}
         target_data["request"] = data.get("instruction", "")
         target_data["user_identity"] = "user"
@@ -66,7 +65,6 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         fulfillable = data.get("fulfillable", 0)
         target_data["labels"] = "unsafe" if fulfillable == 0 else "safe"
 
-        # 保留原始字段用于后续处理
         target_data["agentsafebench_id"] = data.get("id", 0)
         target_data["agentsafebench_risks"] = data.get("risks", [])
         target_data["agentsafebench_failure_modes"] = data.get("failure_modes", "")

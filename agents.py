@@ -100,7 +100,7 @@ class Agent:
 
     def __call_claude(self, history: List[dict]) -> str:
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-        # 注意下history是一个list，里面是多个dict 是这样的嘛：
+        # 注意下history是一个list，里面是多个dict
         """
      {"role": "system", "content": "你是一个专业的 AI 助手"},
         {"role": "user", "content": "解释什么是量子纠缠"}
@@ -232,7 +232,6 @@ class TarevoAgent(Agent):
             agent_actions=agent_actions,
             risk_categories=risk_categories,
             user_level=user_level,
-            permission_policy=permission_policy,
         )
         messages = [
             {
@@ -262,7 +261,6 @@ class TarevoAgent(Agent):
             agent_actions=agent_actions,
             risk_analysis=json.dumps(risk, indent=2, ensure_ascii=False),
             user_level=user_level,
-            permission_policy=permission_policy,
         )
         messages = [
             {
@@ -288,8 +286,8 @@ class TarevoAgent(Agent):
         """
         user_request = data["request"]
         agent_actions = data["agent_actions"]
-        user_identity = data.get("user_identity", "user")  # 默认为普通用户
-        user_level = data.get("user_level", "user")  # 新增：从数据中获取用户权限级别
+        user_identity = data.get("user_identity", "user")
+        user_level = data.get("user_level", "user")
         init_script = data["init"]
         label = data["labels"]
 
@@ -649,7 +647,6 @@ class DoubtAgent(Agent):
                     agent_actions=data["agent_actions"],
                     tool=json.dumps(tool_info, indent=2, ensure_ascii=False),
                     user_level=user_level,
-                    permission_policy=permission_policy,
                 )
                 messages = [
                     {
@@ -673,7 +670,6 @@ class DoubtAgent(Agent):
                         origin_tool, indent=2, ensure_ascii=False
                     ),
                     user_level=user_level,
-                    permission_policy=permission_policy,
                 )
                 messages = [
                     {
@@ -714,11 +710,11 @@ class DoubtAgent(Agent):
                 return tool_set, True
 
         # 如果所有工具都没有检测到风险，增加提示信息
-        additional_context = ""
-        if not has_risk_detected and len(tool_set) > 0:
-            additional_context = "\n\n**重要提示**：所有安全工具均未检测到风险，这表明操作可能是安全的。请基于用户权限和操作语义进行最终判断，避免过度防护。"
-        elif len(tool_set) == 0:
-            additional_context = "\n\n**重要提示**：没有生成任何安全工具，这表明风险分析阶段未发现明显威胁。请基于用户权限和操作的合理性进行判断。"
+        # additional_context = ""
+        # if not has_risk_detected and len(tool_set) > 0:
+        #     additional_context = "\n\n**重要提示**：所有安全工具均未检测到风险，这表明操作可能是安全的。请基于用户权限和操作语义进行最终判断，避免过度防护。"
+        # elif len(tool_set) == 0:
+        #     additional_context = "\n\n**重要提示**：没有生成任何安全工具，这表明风险分析阶段未发现明显威胁。请基于用户权限和操作的合理性进行判断。"
 
         prompt = (
             DOUBT_DECISION_PROMPT.format(
@@ -727,9 +723,8 @@ class DoubtAgent(Agent):
                 approved_tools=json.dumps(tool_set, indent=2, ensure_ascii=False),
                 action_result=action_result,
                 user_level=user_level,
-                permission_policy=permission_policy,
             )
-            + additional_context
+            # + additional_context
         )
         messages = [
             {
@@ -965,9 +960,8 @@ class SimulateAgent(Agent):
         """
         模拟代理执行操作
         data: 包含用户请求的数据
-        present_tools: 现有可用的工具列表（从AgentSafeBench的environments提取）
+        present_tools: 现有可用的工具列表
         """
-        # 构建工具描述字符串
         tools_desc = ""
         if present_tools and len(present_tools) > 0:
             tools_desc = "Available tools:\n"
@@ -985,7 +979,7 @@ class SimulateAgent(Agent):
         messages = [
             {
                 "role": "system",
-                "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作（包括bash命令和工具调用）。",
+                "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作。",
             },
             {"role": "user", "content": prompt},
         ]

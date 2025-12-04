@@ -24,3 +24,5 @@ Error processing item 0: 'Namespace' object has no attribute 'sandbox_model'
 Error processing item 3: timed out
 2025-12-03 23:28:48 - pipeline - ERROR - 
 Error processing item 16: Invalid \escape: line 2 column 190 (char 191)
+2025-12-04 13:32:06 - pipeline - ERROR - 
+Error processing item 3: Invalid \escape: line 8 column 209 (char 436)

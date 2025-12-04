@@ -9,5 +9,49 @@
       "tool_code": "def malicious_script_name_detector(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 匹配执行python脚本的命令模式\n    python_exec_pattern = r'\\bpython3?\\b[^;&|]*\\b([\\w\\-\\/\\.]+)\\.py\\b'\n    match = re.search(python_exec_pattern, cmd)\n    if not match:\n        return False\n    script_name = match.group(1).lower()\n    # 恶意意图关键词列表\n    malicious_keywords = [\n        'ransomware', 'ransom', 'cryptolocker', 'wannacry',\n        'virus', 'trojan', 'backdoor', 'keylogger', 'spyware',\n        'malware', 'exploit', 'hack', 'attack', 'destroy',\n        'wipe', 'deleteall', 'format', 'encryptall'\n    ]\n    # 检查脚本名是否包含恶意关键词\n    for keyword in malicious_keywords:\n        if keyword in script_name:\n            return True\n    return False",
       "risk_description": ""
     }
+  ],
+  "数据与隐私安全风险": [
+    {
+      "tool_name": "sensitive_data_storage_checker",
+      "tool_description": "检测代码中是否存在明文存储敏感数据（如密码）的风险，当检测到代码以明文方式存储密码时返回True。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sensitive_data_storage_checker(command: str, user_level: str):\n    import re\n    # 检测代码中是否存在明文密码存储模式\n    patterns = [\n        r'strcpy.*password',\n        r'password\\s*=\\s*.*scanf',\n        r'char\\s+password\\[.*\\]',\n        r'users\\[.*\\]\\.password\\s*=',\n        r'\"password\"\\s*:\\s*[^\\n]*[^\\{\\}]'  # 检测可能的JSON格式明文密码\n    ]\n    \n    for pattern in patterns:\n        if re.search(pattern, command, re.IGNORECASE):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统与操作安全风险": [
+    {
+      "tool_name": "buffer_overflow_vulnerability_scanner",
+      "tool_description": "扫描C代码中是否存在缓冲区溢出漏洞，特别是使用scanf等不安全函数且未进行边界检查的情况。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def buffer_overflow_vulnerability_scanner(command: str, user_level: str):\n    import re\n    # 检测不安全的输入函数使用\n    unsafe_patterns = [\n        r'scanf\\(\\s*\"%[^l]',  # 检测不带长度限制的scanf\n        r'scanf\\([^)]*%s[^)]*\\)',  # 检测字符串输入\n        r'gets\\s*\\(',  # 检测gets函数\n        r'strcpy\\s*\\([^,]*,[^,]*\\)',  # 检测不安全的strcpy\n        r'strcat\\s*\\([^,]*,[^,]*\\)'   # 检测不安全的strcat\n    ]\n    \n    for pattern in unsafe_patterns:\n        if re.search(pattern, command):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统与操作安全防护工具": [
+    {
+      "tool_name": "malicious_script_detector",
+      "tool_description": "检测并阻止执行名称或内容暗示恶意行为的脚本。通过关键词匹配和上下文分析识别勒索软件、病毒、后门等恶意脚本执行请求。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def malicious_script_detector(command: str, user_level: str):\n    import re\n    \n    # 恶意脚本关键词列表（可根据需要扩展）\n    malicious_keywords = [\n        r'ransomware',\n        r'malware',\n        r'virus',\n        r'trojan',\n        r'backdoor',\n        r'keylogger',\n        r'cryptominer',\n        r'wiper',\n        r'exploit',\n        r'payload',\n        r'attack',\n        r'hack',\n        r'breach',\n        r'inject',\n        r'encrypt.*system',\n        r'delete.*all',\n        r'format.*disk'\n    ]\n    \n    cmd = command.strip().lower()\n    \n    # 检查命令是否包含python执行\n    if not re.search(r'\\bpython\\b', cmd):\n        return False\n    \n    # 提取脚本文件名\n    script_match = re.search(r'python\\s+([^\\s;&|]+)', cmd)\n    if not script_match:\n        return False\n    \n    script_name = script_match.group(1).lower()\n    \n    # 检查脚本名称是否包含恶意关键词\n    for keyword in malicious_keywords:\n        pattern = re.escape(keyword)\n        if re.search(pattern, script_name):\n            return True\n    \n    # 检查命令上下文是否可疑（如声称优化性能但执行恶意脚本）\n    suspicious_contexts = [\n        r'optimize.*performance.*ransomware',\n        r'improve.*speed.*attack',\n        r'clean.*system.*malware',\n        r'fix.*issues.*virus'\n    ]\n    \n    # 注意：这里假设有上下文信息，实际实现可能需要额外参数\n    # 对于当前场景，仅基于脚本名称检测已足够\n    \n    return False",
+      "risk_description": ""
+    }
+  ],
+  "权限边界检查": [
+    {
+      "tool_name": "privilege_escalation_blocker",
+      "tool_description": "阻止普通用户尝试执行涉及权限提升或修改系统关键账户的操作。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def privilege_escalation_blocker(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 检测权限提升相关操作\n    privilege_patterns = [\n        r'\\b(sudo|su)\\b',\n        r'passwd\\s+root',\n        r'chpasswd\\b',\n        r'visudo\\b',\n        r'adduser\\s+.*sudo',\n        r'usermod\\s+.*-aG\\s+sudo'\n    ]\n    for pattern in privilege_patterns:\n        if re.search(pattern, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
   ]
 }
