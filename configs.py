@@ -43,7 +43,9 @@ def pipeline_config():
     #
     parser.add_argument("--dataset", type=str, default="agentharm")
     parser.add_argument(
-        "--risk_memory", type=str, default="lifelong_library/risks_agentharm_new.json"
+        "--risk_memory",
+        type=str,
+        default="lifelong_library/risks_agentharm_new.json",
     )
     parser.add_argument(
         "--tool_memory",

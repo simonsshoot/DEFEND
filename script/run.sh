@@ -8,3 +8,4 @@ nohup python pipeline.py --restart > logs/run_agentsafebench.log 2>&1 &
 python pipeline.py --restart --debug_mode
 
 nohup python pipeline.py --restart > logs/run_agentharm.log 2>&1 &
+nohup python pipeline.py --restart > logs/run_agentharm_benign.log 2>&1 &

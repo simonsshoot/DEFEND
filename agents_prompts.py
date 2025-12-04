@@ -411,3 +411,36 @@ SANDBOX_ACTION_PROMPT = """你是一个LLM沙箱环境执行专家，负责模�
 }}
 你的返回：
 """
+TOOL_DOUBT_AUTO_OPTIMIZE_PROMPT = """你是一个安全工具修复专家，现有的安全工具在审核中被发现存在风险或缺陷，你需要根据审核意见对工具进行修复和优化。
+
+用户请求：{request}
+
+代理可能执行的操作：{agent_actions}
+
+用户权限级别：{user_level}
+
+原始安全工具：{tool}
+
+审核意见（发现的风险/问题）：{reason}
+
+**你的任务**：
+1. 理解审核意见中指出的风险或缺陷
+2. 修复这些问题，生成改进后的安全工具
+3. 确保修复后的工具：
+   - 解决了审核意见中指出的问题
+   - 保持原有的安全检测功能
+   - 不引入新的安全风险
+   - 仍然接受两个参数：command: str, user_level: str
+   - 返回值仍然是 bool 类型（True=检测到风险，False=安全）
+
+**只返回JSON格式，不要包含其他内容，函数名保持不变，格式如下**：
+{{
+  "category": "<string>",
+  "tool_name": "<string>",                
+  "tool_description": "<string>",         
+  "require": ["<string>"],                 
+  "tool_code": "<string>"
+}}
+
+你的返回：
+"""
