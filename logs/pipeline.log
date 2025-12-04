@@ -18,3 +18,9 @@ Error processing item 20: string indices must be integers
 Error processing item 10: Invalid \escape: line 8 column 393 (char 657)
 2025-12-01 23:00:31 - pipeline - ERROR - 
 Error processing item 20: string indices must be integers
+2025-12-03 23:00:21 - pipeline - ERROR - 
+Error processing item 0: 'Namespace' object has no attribute 'sandbox_model'
+2025-12-03 23:06:34 - pipeline - ERROR - 
+Error processing item 3: timed out
+2025-12-03 23:28:48 - pipeline - ERROR - 
+Error processing item 16: Invalid \escape: line 2 column 190 (char 191)

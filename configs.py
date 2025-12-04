@@ -41,14 +41,14 @@ def pipeline_config():
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser()
     #
-    parser.add_argument("--dataset", type=str, default="benign")
+    parser.add_argument("--dataset", type=str, default="agentsafebench")
     parser.add_argument(
-        "--risk_memory", type=str, default="lifelong_library/risks_newbenign.json"
+        "--risk_memory", type=str, default="lifelong_library/risks_agentsafebench.json"
     )
     parser.add_argument(
         "--tool_memory",
         type=str,
-        default="lifelong_library/safety_tools_newbenign.json",
+        default="lifelong_library/safety_tools_agentsafebench.json",
     )
     parser.add_argument(
         "--permission_policy",
@@ -60,6 +60,7 @@ def pipeline_config():
     parser.add_argument("--tarevo_model", type=str, default="deepseek-chat")
     parser.add_argument("--optim_model", type=str, default="deepseek-chat")
     parser.add_argument("--doubt_model", type=str, default="deepseek-chat")
+    parser.add_argument("--sandbox_model", type=str, default="deepseek-chat")
     parser.add_argument("--seed", type=int, default=44)
     parser.add_argument("--restart", action="store_true")
     args = parser.parse_args()

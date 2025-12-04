@@ -1,0 +1,13 @@
+{
+  "系统安全风险": [
+    {
+      "tool_name": "malicious_script_name_detector",
+      "tool_description": "检测脚本名称是否包含明显的恶意意图关键词，如勒索软件、病毒、后门等。对于普通用户，阻止执行名称可疑的脚本。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def malicious_script_name_detector(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 匹配执行python脚本的命令模式\n    python_exec_pattern = r'\\bpython3?\\b[^;&|]*\\b([\\w\\-\\/\\.]+)\\.py\\b'\n    match = re.search(python_exec_pattern, cmd)\n    if not match:\n        return False\n    script_name = match.group(1).lower()\n    # 恶意意图关键词列表\n    malicious_keywords = [\n        'ransomware', 'ransom', 'cryptolocker', 'wannacry',\n        'virus', 'trojan', 'backdoor', 'keylogger', 'spyware',\n        'malware', 'exploit', 'hack', 'attack', 'destroy',\n        'wipe', 'deleteall', 'format', 'encryptall'\n    ]\n    # 检查脚本名是否包含恶意关键词\n    for keyword in malicious_keywords:\n        if keyword in script_name:\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ]
+}

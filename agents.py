@@ -18,6 +18,7 @@ from agents_prompts import (
     DOUBT_DECISION_PROMPT,
     SIMULATE_AGENT_PROMPT,
     SANDBOX_TOOL_PROMPT,
+    SANDBOX_ACTION_PROMPT,
 )
 from configs import (
     DEEPSEEK_BASE_URL,
@@ -275,8 +276,16 @@ class TarevoAgent(Agent):
         clean_response = json.loads(clean_response)
         return clean_response
 
-    def targeted_evo(self, args: argparse.Namespace, data: List[Dict[str, Any]]):
-        """目标进化"""
+    def targeted_evo(
+        self,
+        args: argparse.Namespace,
+        data: List[Dict[str, Any]],
+        present_tools: List[Dict] = None,
+    ):
+        """
+        目标进化
+        present_tools: 现有可用的工具列表（用于提供上下文，但不影响风险分析和安全工具生成）
+        """
         user_request = data["request"]
         agent_actions = data["agent_actions"]
         user_identity = data.get("user_identity", "user")  # 默认为普通用户
@@ -622,7 +631,12 @@ class DoubtAgent(Agent):
         tool_workflow: List[Tuple[Dict, bool]],
         feedback: List[Tuple[Dict, bool, bool]],
         data: Dict[str, Any],
+        present_tools: List[Dict] = None,
     ) -> List[Tuple[Dict, Dict, bool, bool]]:
+        """
+        质疑安全工具
+        present_tools: 现有可用的工具（提供上下文，不影响质疑逻辑）
+        """
         doubt_results = []
         user_level = data.get("user_level", "user")
         permission_policy = self.__load_permission_policy(user_level)
@@ -751,9 +765,17 @@ class SandBoxAgent(Agent):
         super().__init__(model_name, logger)
 
     def sandbox_execute_tool(
-        self, tool_workflow: List[Tuple[Dict, bool]], data: Dict[str, Any]
+        self,
+        tool_workflow: List[Tuple[Dict, bool]],
+        data: Dict[str, Any],
+        present_tools: List[Dict] = None,
+        dataset: str = "",
     ) -> List[Tuple[Dict, bool, bool]]:
-        """在LLM沙箱环境中执行安全工具"""
+        """
+        在LLM沙箱环境中执行安全工具
+        present_tools: 现有可用的工具（AgentSafeBench环境工具）
+        dataset: 数据集名称，用于判断是否需要特殊处理
+        """
         user_identity = data["user_identity"]
         command = data["agent_actions"]
         execution_results: List[Tuple[Dict, bool, bool]] = []
@@ -783,39 +805,187 @@ class SandBoxAgent(Agent):
             )
         return execution_results
 
-    def sandbox_execute_action(self, data: Dict[str, Any]) -> List[str]:
-        prompt = SANDBOX_ACTION_PROMPT.format(
-            user_identity=data["user_identity"],
-            command=data["agent_actions"],
-            environment=data.get("init", ""),
-        )
-        messages = [
-            {
-                "role": "system",
-                "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行用户命令的结果。",
-            },
-            {"role": "user", "content": prompt},
-        ]
-        time.sleep(1)
-        response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        clean_response = json.loads(clean_response)
-        result = clean_response.get("result", "")
-        return [result]
+    def sandbox_execute_action(
+        self, data: Dict[str, Any], present_tools: List[Dict] = None, dataset: str = ""
+    ) -> List[str]:
+        """
+        在沙箱环境中执行agent操作
+        如果是agentsafebench数据集且有present_tools，则模拟工具调用执行（参考run.py）
+        否则使用LLM沙箱模拟bash命令执行
+        """
+        if dataset == "agentsafebench" and present_tools and len(present_tools) > 0:
+            # 使用AgentSafeBench的工具执行方式
+            return self._execute_agentsafebench_actions(data, present_tools)
+        else:
+            # 使用LLM沙箱模拟执行
+            prompt = SANDBOX_ACTION_PROMPT.format(
+                user_identity=data["user_identity"],
+                command=data["agent_actions"],
+                environment=data.get("init", ""),
+            )
+            messages = [
+                {
+                    "role": "system",
+                    "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行用户命令的结果。",
+                },
+                {"role": "user", "content": prompt},
+            ]
+            time.sleep(1)
+            response = self.inference(messages)
+            clean_response = self.extract_json(response)
+            clean_response = json.loads(clean_response)
+            result = clean_response.get("result", "")
+            return [result]
+
+    def _execute_agentsafebench_actions(
+        self, data: Dict[str, Any], present_tools: List[Dict]
+    ) -> List[str]:
+        """
+        执行AgentSafeBench的工具调用（参考run.py的execute_task）
+        解析agent_actions中的工具调用并执行
+        """
+        from copy import deepcopy
+
+        results = []
+        agent_actions = data.get("agent_actions", "")
+        environments = data.get("environments", [])
+
+        # 解析agent_actions中的工具调用
+        # 格式: tool_name(args) 或 tool_name('arg1', 'arg2')
+        import re
+
+        tool_calls = re.findall(r"(\w+)\((.*?)\)", agent_actions)
+
+        if not tool_calls:
+            # 没有工具调用，使用LLM沙箱模拟
+            prompt = SANDBOX_ACTION_PROMPT.format(
+                user_identity=data["user_identity"],
+                command=agent_actions,
+                environment=data.get("init", ""),
+            )
+            messages = [
+                {
+                    "role": "system",
+                    "content": "你是一个LLM沙箱环境执行专家，负责模拟执行bash命令。",
+                },
+                {"role": "user", "content": prompt},
+            ]
+            response = self.inference(messages)
+            clean_response = self.extract_json(response)
+            clean_response = json.loads(clean_response)
+            return [clean_response.get("result", "")]
+
+        # 执行每个工具调用
+        for tool_name, args_str in tool_calls:
+            tool_result = None
+
+            # 查找对应的工具和环境
+            for tool_info in present_tools:
+                if tool_info.get("tool_name") == tool_name:
+                    env_instance = tool_info.get("env_instance")
+                    if env_instance and env_instance.has_tool(tool_name):
+                        # 解析参数
+                        try:
+                            tool_args = {}
+                            if args_str.strip():
+                                args_str_clean = args_str.strip()
+
+                                # 尝试解析为JSON格式
+                                if args_str_clean.startswith(
+                                    "{"
+                                ) and args_str_clean.endswith("}"):
+                                    tool_args = json.loads(args_str_clean)
+                                else:
+                                    # 解析键值对参数：arg1='val1', arg2='val2'
+                                    # 或单个参数：'value'
+                                    if "=" in args_str_clean:
+                                        # 键值对格式
+                                        parts = args_str_clean.split(",")
+                                        for part in parts:
+                                            part = part.strip()
+                                            if "=" in part:
+                                                key, val = part.split("=", 1)
+                                                key = key.strip()
+                                                val = val.strip().strip("'\"")
+                                                tool_args[key] = val
+                                    else:
+                                        # 单个参数，使用第一个参数名
+                                        val = args_str_clean.strip("'\"")
+                                        params = tool_info.get("parameters", {})
+                                        if params and "properties" in params:
+                                            first_param = list(
+                                                params["properties"].keys()
+                                            )[0]
+                                            tool_args[first_param] = val
+                                        else:
+                                            # 如果没有参数定义，尝试常见的参数名
+                                            tool_args["file_path"] = val
+
+                            # 调用工具
+                            tool_result = env_instance.call_tool(
+                                tool_name, deepcopy(tool_args)
+                            )
+                            results.append(json.dumps(tool_result))
+                            self.logger.info(
+                                f"Executed tool {tool_name} with args {tool_args}: {tool_result.get('success', False)}"
+                            )
+                            break
+                        except Exception as e:
+                            self.logger.error(
+                                f"Error executing tool {tool_name}: {str(e)}"
+                            )
+                            import traceback
+
+                            traceback.print_exc()
+                            tool_result = {
+                                "success": False,
+                                "message": f"Error executing tool: {str(e)}",
+                            }
+                            results.append(json.dumps(tool_result))
+                            break
+
+            if tool_result is None:
+                # 工具未找到
+                result = {
+                    "success": False,
+                    "message": f"Tool {tool_name} not found in present tools",
+                }
+                results.append(json.dumps(result))
+
+        return results if results else ["No tool execution results"]
 
 
 class SimulateAgent(Agent):
     def __init__(self, model_name, logger="simulate_logger"):
         super().__init__(model_name, logger)
 
-    def simulate(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        prompt = SIMULATE_AGENT_PROMPT.format(
-            request=data["request"],
-        )
+    def simulate(
+        self, data: Dict[str, Any], present_tools: List[Dict] = None
+    ) -> Dict[str, Any]:
+        """
+        模拟代理执行操作
+        data: 包含用户请求的数据
+        present_tools: 现有可用的工具列表（从AgentSafeBench的environments提取）
+        """
+        # 构建工具描述字符串
+        tools_desc = ""
+        if present_tools and len(present_tools) > 0:
+            tools_desc = "Available tools:\n"
+            for tool in present_tools:
+                tools_desc += f"- {tool.get('tool_name', 'unknown')}: {tool.get('description', 'No description')}\n"
+                params = tool.get("parameters", {})
+                if params:
+                    tools_desc += (
+                        f"  Parameters: {json.dumps(params, ensure_ascii=False)}\n"
+                    )
+        else:
+            tools_desc = "No tools available."
+
+        prompt = SIMULATE_AGENT_PROMPT.format(request=data["request"], tools=tools_desc)
         messages = [
             {
                 "role": "system",
-                "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作。",
+                "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作（包括bash命令和工具调用）。",
             },
             {"role": "user", "content": prompt},
         ]

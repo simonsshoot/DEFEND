@@ -56,21 +56,25 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
     elif agent_type == "agentsafebench":
-        # TODO
+        # AgentSafeBench数据转换
         target_data = {}
         target_data["request"] = data.get("instruction", "")
         target_data["user_identity"] = "user"
         target_data["user_level"] = "user"
-        target_data["labels"] = "unsafe"
-        target_data["risks"] = (
-            data["risks"][0] if "risks" in data and len(data["risks"]) > 0 else ""
-        )
-        target_data["failure_modes"] = data.get("failure_modes", 1)
-        target_data["id"] = data.get("id", 0)
-        target_data["environments"] = (
-            data["environments"] if "environments" in data else []
-        )
-        pass
+        # fulfillable=0表示有害(应拦截), fulfillable=1表示可执行
+        # DEFEND: labels=unsafe表示有害, labels=safe表示无害
+        fulfillable = data.get("fulfillable", 0)
+        target_data["labels"] = "unsafe" if fulfillable == 0 else "safe"
+
+        # 保留原始字段用于后续处理
+        target_data["agentsafebench_id"] = data.get("id", 0)
+        target_data["agentsafebench_risks"] = data.get("risks", [])
+        target_data["agentsafebench_failure_modes"] = data.get("failure_modes", "")
+        target_data["environments"] = data.get("environments", [])
+
+        # 初始化为空，将由SimulateAgent生成
+        target_data["agent_actions"] = ""
+        target_data["init"] = ""
     return target_data
 
 

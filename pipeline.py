@@ -143,13 +143,60 @@ def update_lifelong_library(
         logger.error(f"Failed to update tool library: {str(e)}")
 
 
-def get_present_tools(datset: str, data: Dict[str, Any]) -> List[Dict]:
+def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
     """
     根据数据集名称，返回对应的现有工具列表(这里的工具是执行工具，不是安全工具)
+    从AgentSafeBench的environments字段中提取工具描述
     """
-    if datset == "agentsafebench":
-        # TODO
-        pass
+    if dataset == "agentsafebench":
+        # 导入AgentSafeBench的环境管理器
+        import sys
+
+        sys.path.append(os.path.join(os.path.dirname(__file__), "agentsafebench"))
+        from environments.EnvManager import EnvManager
+
+        env_manager = EnvManager()
+        present_tools = []
+
+        environments = data.get("environments", [])
+        if not environments or not environments[0].get("name"):
+            return []
+
+        try:
+            # 解析每个环境
+            for env_info in environments:
+                env_name = env_info.get("name", "")
+                if not env_name:
+                    continue
+
+                env_params = env_info.get("parameters") or None
+                env = env_manager.init_env(env_name, env_params)
+
+                if env is None:
+                    logger.warning(f"Environment {env_name} not found.")
+                    continue
+
+                tool_names = env_info.get("tools", [])
+                # 获取工具描述（参考run.py的parse_envs函数）
+                tool_descs = env.get_tool_descs(tool_names)
+
+                # 将工具描述添加到present_tools
+                for tool_desc in tool_descs:
+                    present_tools.append(
+                        {
+                            "environment": env_name,
+                            "tool_name": tool_desc.get("name", ""),
+                            "description": tool_desc.get("description", ""),
+                            "parameters": tool_desc.get("parameters", {}),
+                            "env_instance": env,  # 保存环境实例用于后续执行
+                        }
+                    )
+
+        except Exception as e:
+            logger.error(f"Error parsing present tools: {str(e)}")
+            return []
+
+        return present_tools
     else:
         return []
 
@@ -165,7 +212,6 @@ def pipeline(
         args.tarevo_model, args.risk_memory, args.permission_policy
     )
     # new add
-    # TODO：完善simulate和tarevodata，agent_actions可能包含现有工具调用
     tarvodata = simulateagent.simulate(wrap_data, present_tools)
 
     if "user_level" not in tarvodata:
@@ -184,9 +230,11 @@ def pipeline(
     sandboxagent = SandBoxAgent(args.sandbox_model)
     # new add
     feedback = sandboxagent.sandbox_execute_tool(
-        tool_workflow, tarvodata, present_tools
+        tool_workflow, tarvodata, present_tools, args.dataset
     )
-    agent_action_result = sandboxagent.sandbox_execute_action(tarvodata, present_tools)
+    agent_action_result = sandboxagent.sandbox_execute_action(
+        tarvodata, present_tools, args.dataset
+    )
     # feedback = optimagent.execute_tool(tool_workflow, tarvodata, container)
     # agent_action_result = optimagent.execute_action(tarvodata, container)
 
