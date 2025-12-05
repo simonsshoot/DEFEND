@@ -286,12 +286,18 @@ def pipeline(
     # Step 1: TarevoAgent - 风险分析和工具生成
     wrap_data = data_wrapper(data, args.dataset)
     present_tools = get_present_tools(args.dataset, wrap_data)
-    simulateagent = SimulateAgent(args.simulate_model)
+    if args.need_simulate:
+        simulateagent = SimulateAgent(args.simulate_model)
+        tarvodata = simulateagent.simulate(wrap_data, present_tools)
+    else:
+        tarvodata = data
     tarevoagent = TarevoAgent(
         args.tarevo_model, args.risk_memory, args.permission_policy
     )
-    # new add
-    tarvodata = simulateagent.simulate(wrap_data, present_tools)
+
+    if args.debug_mode:
+        with open(args.debug_file, "a", encoding="utf-8") as f:
+            json.dump(tarvodata, f, indent=2, ensure_ascii=False)
 
     if "user_level" not in tarvodata:
         user_identity = tarvodata.get("user_identity", "user")
@@ -475,6 +481,40 @@ def run(args: argparse.Namespace):
 
 
 if __name__ == "__main__":
-    args = pipeline_config()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, default="agentharm")
+    parser.add_argument(
+        "--risk_memory",
+        type=str,
+        default="lifelong_library/risks_agentharm_new.json",
+    )
+    parser.add_argument(
+        "--tool_memory",
+        type=str,
+        default="lifelong_library/safety_tools_agentharm_new.json",
+    )
+    parser.add_argument(
+        "--permission_policy",
+        type=str,
+        default="permission_policy.json",
+        help="Path to the permission policy JSON file",
+    )
+    parser.add_argument("--simulate_model", type=str, default="deepseek-chat")
+    parser.add_argument("--tarevo_model", type=str, default="deepseek-chat")
+    parser.add_argument("--optim_model", type=str, default="deepseek-chat")
+    parser.add_argument("--doubt_model", type=str, default="deepseek-chat")
+    parser.add_argument("--sandbox_model", type=str, default="deepseek-chat")
+    parser.add_argument(
+        "--fail_tool_debug", type=str, default="results/fail_tool_debug2.json"
+    )
+    parser.add_argument("--debug_mode", action="store_true")
+    parser.add_argument(
+        "--debug_file", type=str, default="results/simulate_agentharm.json"
+    )
+    parser.add_argument("--seed", type=int, default=44)
+    parser.add_argument("--restart", action="store_true")
+    parser.add_argument("--need_simulate", action="store_true")
+
+    args = parser.parse_args()
     logger.info(f"Pipeline Configuration: {args}")
     run(args)

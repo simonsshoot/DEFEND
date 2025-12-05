@@ -632,8 +632,6 @@ class DoubtAgent(Agent):
         data: Dict[str, Any],
     ) -> Tuple[Dict[str, Any], bool]:
         """
-        当工具被判定有风险时，根据reason自动优化工具（简化流程：优化后直接使用，不再审核）
-
         Args:
             tool_info: 有风险的工具信息
             reason: DoubtAgent给出的风险原因
@@ -709,7 +707,6 @@ class DoubtAgent(Agent):
                         tool_info=tool_info,
                         reason=clean_response.get("reason", "工具存在安全风险"),
                         data=data,
-                        max_retry=3,
                     )
 
                     if success:
@@ -750,7 +747,6 @@ class DoubtAgent(Agent):
                             "reason", "优化后的工具仍存在安全风险"
                         ),
                         data=data,
-                        max_retry=3,
                     )
 
                     if success:
@@ -780,14 +776,76 @@ class DoubtAgent(Agent):
         for item in doubt_tool_result:
             tool_set.append(item[0])
 
-        # 检查是否有工具检测到风险
         has_risk_detected = False
         for item in doubt_tool_result:
+            # doubt_tool_result 的结构：
+            # (tool_info, doubt_result, is_optimized, execution_result)
+            tool_info = item[0]
+            doubt_result = item[1]
+            is_optimized = item[2]
+            execution_result = item[3]
+
             # execution_result: True 表示检测到风险，False 表示安全
-            if item[3] == True:
-                return tool_set, True
-            if item[1].get("is_safe") == "False":
-                return tool_set, True
+            if execution_result == True or doubt_result.get("is_safe") == "False":
+                # 记录详细的风险检测信息
+                risk_record = {
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "task_id": data.get("id", "unknown"),
+                    "user_request": data["request"],
+                    "agent_actions": data["agent_actions"],
+                    "user_level": data.get("user_level", "user"),
+                    # 检测到风险的工具信息
+                    "detected_by_tool": {
+                        "tool_name": tool_info.get("tool_name", "unknown"),
+                        "tool_category": tool_info.get("category", "unknown"),
+                        "tool_description": tool_info.get("tool_description", ""),
+                        "is_optimized_tool": is_optimized,
+                    },
+                    # 风险来源分析
+                    "risk_source": "",
+                    "risk_details": {},
+                }
+
+                # 判断风险来源并记录详细信息
+                if execution_result == True and doubt_result.get("is_safe") == "False":
+                    # 两者都检测到风险
+                    risk_record["risk_source"] = "both"
+                    risk_record["risk_details"] = {
+                        "tool_execution_result": "检测到风险 (返回 True)",
+                        "doubt_agent_result": "审核不通过",
+                        "doubt_agent_reason": doubt_result.get(
+                            "reason", "No reason provided"
+                        ),
+                        "conclusion": f"工具 '{tool_info.get('tool_name')}' 执行时检测到风险，且 DoubtAgent 审核也认为不安全",
+                    }
+                elif execution_result == True:
+                    # 仅工具执行检测到风险
+                    risk_record["risk_source"] = "tool_execution"
+                    risk_record["risk_details"] = {
+                        "tool_execution_result": "检测到风险 (返回 True)",
+                        "doubt_agent_result": "审核通过",
+                        "conclusion": f"工具 '{tool_info.get('tool_name')}' 在执行过程中检测到命令存在安全风险",
+                    }
+                elif doubt_result.get("is_safe") == "False":
+                    # 仅 DoubtAgent 审核不通过
+                    risk_record["risk_source"] = "doubt_agent"
+                    risk_record["risk_details"] = {
+                        "tool_execution_result": "未检测到风险 (返回 False)",
+                        "doubt_agent_result": "审核不通过",
+                        "doubt_agent_reason": doubt_result.get(
+                            "reason", "No reason provided"
+                        ),
+                        "conclusion": f"工具 '{tool_info.get('tool_name')}' 本身被 DoubtAgent 认为不安全或不合适",
+                    }
+
+                # 写入日志文件
+                with open("debug_doubt_tool.log", "a", encoding="utf-8") as f:
+                    f.write("=" * 80 + "\n")
+                    f.write(f"[RISK DETECTED BY: {tool_info.get('tool_name')}]\n")
+                    f.write(
+                        json.dumps(risk_record, ensure_ascii=False, indent=2) + "\n"
+                    )
+                    f.write("=" * 80 + "\n\n")
         prompt = DOUBT_DECISION_PROMPT.format(
             request=data["request"],
             agent_actions=data["agent_actions"],
@@ -882,7 +940,6 @@ class SandBoxAgent(Agent):
             and present_tools
             and len(present_tools) > 0
         ):
-            # 使用工具执行方式（AgentSafeBench或AgentHarm）
             return self._execute_tool_actions(data, present_tools, dataset)
         else:
             # 使用LLM沙箱模拟执行
@@ -1070,7 +1127,7 @@ class SandBoxAgent(Agent):
 工具描述：{tool_desc}
 调用参数：{json.dumps(tool_args, ensure_ascii=False)}
 
-请模拟该工具的执行结果。返回JSON格式：
+请模拟该工具的执行结果。你不用考虑其他因素，只需要模拟执行，只返回JSON格式：
 {{
     "success": true/false,
     "message": "<执行结果描述>",

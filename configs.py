@@ -67,8 +67,12 @@ def pipeline_config():
         "--fail_tool_debug", type=str, default="results/fail_tool_debug2.json"
     )
     parser.add_argument("--debug_mode", action="store_true")
+    parser.add_argument(
+        "--debug_file", type=str, default="results/simulate_agentharm.jsonl"
+    )
     parser.add_argument("--seed", type=int, default=44)
     parser.add_argument("--restart", action="store_true")
+    parser.add_argument("--need_simulate", action="store_true")
     args = parser.parse_args()
     return args
 

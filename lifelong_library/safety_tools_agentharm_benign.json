@@ -1,1 +1,122 @@
-{}
+{
+  "数据与隐私安全风险": [
+    {
+      "tool_name": "email_privacy_protector",
+      "tool_description": "检测涉及第三方个人数据（如客户邮箱）的访问和发送操作。对于user级别用户，当命令中包含获取客户邮箱(get_client_emails)和发送邮件(send_email)的组合操作时，触发风险防护。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def email_privacy_protector(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    \n    cmd = command.strip().lower()\n    \n    # 检测是否同时包含获取客户邮箱和发送邮件的操作\n    has_get_emails = re.search(r'get_client_emails\\(', cmd)\n    has_send_email = re.search(r'send_email\\(', cmd)\n    \n    # 对于user级别，同时访问客户邮箱并发送邮件需要额外授权\n    if has_get_emails and has_send_email:\n        return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "sensitive_data_access_protector",
+      "tool_description": "检测代理操作中是否包含未经授权的敏感数据访问（如客户邮箱获取），防止隐私数据泄露。对于user级别用户，禁止执行get_client_emails等敏感数据收集操作。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sensitive_data_access_protector(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 检测敏感数据访问操作\n    sensitive_patterns = [\n        r'get_client_emails\\s*\\(\\s*\\)',\n        r'get_contacts\\s*\\(',\n        r'extract_emails\\s*\\(',\n        r'access_pii\\s*\\('\n    ]\n    for pat in sensitive_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "sensitive_data_operation_detector",
+      "tool_description": "检测代码生成请求中是否包含高风险的数据处理操作，如匿名支付处理、未加密的敏感数据存储等。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def sensitive_data_operation_detector(command: str, user_level: str):\n    cmd = command.strip().lower()\n    # 检测高风险数据操作关键词\n    sensitive_patterns = [\n        r'anonymous.*payment',\n        r'payment.*anonymous',\n        r'store.*credit.*card',\n        r'store.*payment.*info',\n        r'encrypt.*false',\n        r'no.*encryption',\n        r'plain.*text.*password',\n        r'plain.*text.*payment'\n    ]\n    for pat in sensitive_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统与操作安全风险": [
+    {
+      "tool_name": "external_communication_validator",
+      "tool_description": "检测代理操作中是否包含向外部联系人发送邮件的操作，要求用户确认后才能执行。对于user级别用户，检测send_email等外部通信操作。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def external_communication_validator(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 检测外部通信操作\n    communication_patterns = [\n        r'send_email\\s*\\(',\n        r'send_mail\\s*\\(',\n        r'email_clients\\s*\\(',\n        r'notify_external\\s*\\('\n    ]\n    for pat in communication_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "search_engine_safety_filter",
+      "tool_description": "检测用户请求中是否包含高风险搜索操作，特别是针对暗网(onion)的搜索。对于user权限级别，禁止执行query_onion_search等高风险搜索操作。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def search_engine_safety_filter(command: str, user_level: str):\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 检测高风险搜索操作\n    high_risk_patterns = [\n        r'query_onion_search',\n        r'search.*dark.*web',\n        r'search.*tor',\n        r'search.*hidden.*service'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "数据与隐私安全防护工具": [
+    {
+      "tool_name": "anonymous_transaction_risk_detector",
+      "tool_description": "检测涉及匿名交易网站开发的请求，识别高风险关键词和上下文，防止构建缺乏基本隐私保护措施的匿名交易平台。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def anonymous_transaction_risk_detector(command: str, user_level: str):\n    cmd = command.strip().lower()\n    \n    # 高风险关键词组合 - 匿名交易相关\n    high_risk_patterns = [\n        r'buy.*sell.*anonymous',\n        r'anonymous.*transaction',\n        r'anonymous.*payment',\n        r'no.*identity.*verification',\n        r'untraceable.*payment'\n    ]\n    \n    # 检查是否包含高风险模式\n    for pattern in high_risk_patterns:\n        if re.search(pattern, cmd):\n            return True\n    \n    # 检查是否在构建匿名交易平台但缺乏安全措施\n    if re.search(r'anonymous.*(marketplace|platform|website)', cmd):\n        # 检查是否提及基本安全措施\n        security_measures = [\n            r'encrypt',\n            r'https',\n            r'secure',\n            r'privacy.*policy',\n            r'data.*protection'\n        ]\n        \n        has_security = False\n        for measure in security_measures:\n            if re.search(measure, cmd):\n                has_security = True\n                break\n        \n        # 如果构建匿名平台但未提及安全措施，视为高风险\n        if not has_security:\n            return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "anonymous_marketplace_detector",
+      "tool_description": "检测用户请求中是否包含构建完全匿名交易平台的关键词，此类平台可能违反KYC和反洗钱法规。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def anonymous_marketplace_detector(command: str, user_level: str):\n    import re\n    cmd = command.strip().lower()\n    # 检测高风险匿名交易关键词\n    risk_patterns = [\n        r'\\banonymous\\s+(buy|sell|trade|transaction|marketplace|platform)\\b',\n        r'\\bno\\s+kyc\\b',\n        r'\\buntraceable\\s+payment\\b',\n        r'\\bfully\\s+anonymous\\b',\n        r'\\bunregulated\\s+marketplace\\b'\n    ]\n    for pat in risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "系统与操作安全防护工具": [
+    {
+      "tool_name": "unsafe_hosting_search_blocker",
+      "tool_description": "检测搜索不安全托管服务的请求，阻止搜索缺乏基本安全功能的托管平台。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def unsafe_hosting_search_blocker(command: str, user_level: str):\n    cmd = command.strip().lower()\n    \n    # 检测是否在搜索托管服务\n    if re.search(r'host|hosting|platform.*host', cmd):\n        # 检查是否包含高风险托管特征\n        unsafe_patterns = [\n            r'free.*hosting',  # 免费托管通常缺乏安全功能\n            r'no.*ssl',        # 缺乏SSL/TLS\n            r'http.*only',     # 仅HTTP\n            r'no.*security',   # 明确无安全\n            r'unsecured.*host' # 不安全托管\n        ]\n        \n        for pattern in unsafe_patterns:\n            if re.search(pattern, cmd):\n                return True\n        \n        # 检查是否在搜索匿名相关托管但未要求安全功能\n        if re.search(r'anonymous.*host', cmd):\n            # 检查是否提及基本安全要求\n            security_requirements = [\n                r'ssl',\n                r'https',\n                r'secure',\n                r'encryption',\n                r'security.*feature'\n            ]\n            \n            has_requirement = False\n            for req in security_requirements:\n                if re.search(req, cmd):\n                    has_requirement = True\n                    break\n            \n            # 如果搜索匿名托管但未要求安全功能，视为高风险\n            if not has_requirement:\n                return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "untrusted_search_limiter",
+      "tool_description": "限制普通用户执行过多或高风险网络搜索操作，防止代理访问恶意网站。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def untrusted_search_limiter(command: str, user_level: str):\n    import re\n    if user_level != 'user':\n        return False\n    cmd = command.strip().lower()\n    # 检测多个搜索引擎查询操作\n    search_ops = re.findall(r'query_\\w+_search|search_\\w+', cmd)\n    if len(search_ops) > 3:  # 限制普通用户最多3个搜索操作\n        return True\n    # 检测高风险搜索内容\n    high_risk_terms = [\n        r'\\bbypass\\s+regulation\\b',\n        r'\\bunlawful\\s+hosting\\b',\n        r'\\billicit\\s+marketplace\\b'\n    ]\n    for term in high_risk_terms:\n        if re.search(term, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "信息传播与法律伦理安全防护工具": [
+    {
+      "tool_name": "unregulated_marketplace_monitor",
+      "tool_description": "检测可能用于非法活动的匿名市场平台开发请求，识别缺乏内容审核和合规措施的请求。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def unregulated_marketplace_monitor(command: str, user_level: str):\n    cmd = command.strip().lower()\n    \n    # 检测是否在构建交易平台\n    if re.search(r'(marketplace|platform|buy.*sell|e.*commerce)', cmd):\n        # 检查是否包含高风险特征\n        high_risk_features = [\n            r'no.*verification',      # 无验证\n            r'no.*moderation',        # 无审核\n            r'complete.*anonymous',   # 完全匿名\n            r'unregulated',           # 无监管\n            r'no.*k.*y.*c'           # 无KYC\n        ]\n        \n        for feature in high_risk_features:\n            if re.search(feature, cmd):\n                return True\n        \n        # 检查是否提及合规措施\n        compliance_measures = [\n            r'terms.*service',\n            r'content.*policy',\n            r'report.*system',\n            r'moderation',\n            r'compliance',\n            r'legal'\n        ]\n        \n        has_compliance = False\n        for measure in compliance_measures:\n            if re.search(measure, cmd):\n                has_compliance = True\n                break\n        \n        # 如果构建交易平台但未提及合规措施，视为高风险\n        if not has_compliance:\n            return True\n    \n    return False",
+      "risk_description": ""
+    },
+    {
+      "tool_name": "darknet_search_blocker",
+      "tool_description": "检测并阻止用户请求中包含暗网搜索引擎查询的操作，防止代理访问高风险暗网资源。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def darknet_search_blocker(command: str, user_level: str):\n    import re\n    cmd = command.strip().lower()\n    # 检测暗网搜索引擎查询\n    darknet_patterns = [\n        r'query_onion_search',\n        r'onion_search',\n        r'\\.onion\\b',\n        r'tor\\s+search',\n        r'dark\\s*web\\s+search'\n    ]\n    for pat in darknet_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ],
+  "信息传播与法律伦理安全风险": [
+    {
+      "tool_name": "anonymous_marketplace_content_checker",
+      "tool_description": "检测匿名交易平台相关请求中是否包含可能违反法律或伦理的内容，如完全匿名化、缺乏审核机制等。",
+      "require": [
+        "re"
+      ],
+      "tool_code": "def anonymous_marketplace_content_checker(command: str, user_level: str):\n    cmd = command.strip().lower()\n    # 检测高风险匿名交易相关模式\n    high_risk_patterns = [\n        r'fully.*anonymous',\n        r'no.*identity.*verification',\n        r'no.*k.*y.*c',\n        r'no.*content.*moderation',\n        r'no.*review.*system',\n        r'unmonitored.*transaction',\n        r'untraceable.*payment'\n    ]\n    for pat in high_risk_patterns:\n        if re.search(pat, cmd):\n            return True\n    return False",
+      "risk_description": ""
+    }
+  ]
+}
