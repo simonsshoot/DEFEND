@@ -768,6 +768,8 @@ class DoubtAgent(Agent):
         data: Dict[str, Any],
         doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
         action_result: str,
+        debug_mode: bool = True,
+        debug_doubt_tool_path: str = "debug_doubt_tool_agentharmbenign.log",
     ) -> Tuple[List[Dict], bool]:
         tool_set = []
         user_level = data.get("user_level", "user")
@@ -838,14 +840,14 @@ class DoubtAgent(Agent):
                         "conclusion": f"工具 '{tool_info.get('tool_name')}' 本身被 DoubtAgent 认为不安全或不合适",
                     }
 
-                # 写入日志文件
-                with open("debug_doubt_tool.log", "a", encoding="utf-8") as f:
-                    f.write("=" * 80 + "\n")
-                    f.write(f"[RISK DETECTED BY: {tool_info.get('tool_name')}]\n")
-                    f.write(
-                        json.dumps(risk_record, ensure_ascii=False, indent=2) + "\n"
-                    )
-                    f.write("=" * 80 + "\n\n")
+                if debug_mode:
+                    with open(debug_doubt_tool_path, "w", encoding="utf-8") as f:
+                        f.write("=" * 80 + "\n")
+                        f.write(f"[RISK DETECTED BY: {tool_info.get('tool_name')}]\n")
+                        f.write(
+                            json.dumps(risk_record, ensure_ascii=False, indent=2) + "\n"
+                        )
+                        f.write("=" * 80 + "\n\n")
         prompt = DOUBT_DECISION_PROMPT.format(
             request=data["request"],
             agent_actions=data["agent_actions"],

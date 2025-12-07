@@ -3,6 +3,55 @@ import json
 from typing import List, Dict, Any
 
 
+def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
+    """
+    读取预先模拟好的数据（JSONL格式）
+    每一行是一个完整的JSON对象，包含 request, agent_actions, init 等字段
+    """
+    if data_type == "agentharm":
+        simulated_data_path = "results/simulate_agentharm.jsonl"
+    elif data_type == "agentharm_benign":
+        simulated_data_path = (
+            "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
+        )
+    elif data_type == "agentsafebench":
+        simulated_data_path = "results/simulate_agentsafebench.jsonl"
+    elif data_type == "os":
+        simulated_data_path = "results/simulate_os.jsonl"
+    elif data_type == "environment":
+        simulated_data_path = "results/simulate_environment.jsonl"
+    elif data_type == "benign":
+        simulated_data_path = "results/simulate_benign.jsonl"
+    else:
+        raise ValueError(f"Unknown data type: {data_type}")
+
+    if not os.path.exists(simulated_data_path):
+        raise FileNotFoundError(
+            f"Simulated data file not found: {simulated_data_path}. "
+            f"Please run with --need_simulate flag first to generate simulated data."
+        )
+
+    data = []
+    with open(simulated_data_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:  # 跳过空行
+                try:
+                    item = json.loads(line)
+                    # 只保留包含必要字段的数据行
+                    if "request" in item and "agent_actions" in item:
+                        data.append(item)
+                except json.JSONDecodeError as e:
+                    print(f"Warning: Failed to parse line: {line[:100]}... Error: {e}")
+                    continue
+
+    if not data:
+        raise ValueError(f"No valid simulated data found in {simulated_data_path}")
+
+    print(f"Loaded {len(data)} simulated data items from {simulated_data_path}")
+    return data
+
+
 def read_data(data_type: str):
     if data_type == "os":
         data_path = "data/os.json"
@@ -10,12 +59,14 @@ def read_data(data_type: str):
         data_path = "data/environment.json"
     elif data_type == "benign":
         data_path = "data/benign.json"
-    elif data_type == "agentsafebench":
-        data_path = "agentsafebench/data/test_data.json"
+    elif data_type == "asb_harmful":
+        data_path = "agentsafebench/data/harmful.json"
+    elif data_type == "asb_benign":
+        data_path = "agentsafebench/data/benign.json"
     elif data_type == "agentharm":
-        data_path = "agentharm/harmful_behaviors_test.json"
+        data_path = "/home/beihang/yx/DEFEND/data/agentharm/harmful.json"
     elif data_type == "agentharm_benign":
-        data_path = "agentharm/benign_behaviors_test.json"
+        data_path = "/home/beihang/yx/DEFEND/data/agentharm/benign.json"
     else:
         raise ValueError(f"Unknown data type: {data_type}")
 
@@ -68,7 +119,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         )
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
 
-    elif agent_type == "agentsafebench":
+    elif agent_type == "asb_harmful" or agent_type == "asb_benign":
         target_data = {}
         target_data["request"] = data.get("instruction", "")
         target_data["user_identity"] = "user"
@@ -113,6 +164,104 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["init"] = ""
 
     return target_data
+
+
+def simulate_data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
+    """
+    从已有的模拟数据中提取包装后的数据
+    适用于 need_simulate=False 的情况
+    """
+    if agent_type in ["agentharm", "agentharm_benign"]:
+        # 假设数据已经包含了 request, agent_actions, init 等字段
+        # 如果是从 simulate_agentharm_benign.jsonl 加载的数据，直接返回
+        if "request" in data and "agent_actions" in data:
+            return data
+
+        # 如果是原始数据格式，需要进行转换
+        wrapped_data = {}
+        wrapped_data["request"] = data.get("prompt", "")
+        wrapped_data["user_identity"] = "user"
+        wrapped_data["user_level"] = "user"
+
+        if agent_type == "agentharm":
+            wrapped_data["labels"] = "unsafe"
+        else:
+            wrapped_data["labels"] = "safe"
+
+        # 保留AgentHarm原始信息
+        wrapped_data["agentharm_id"] = data.get("id")
+        wrapped_data["agentharm_category"] = data.get("category", "")
+        wrapped_data["agentharm_name"] = data.get("name", "")
+        wrapped_data["agentharm_target_functions"] = data.get("target_functions", [])
+        wrapped_data["agentharm_detailed_prompt"] = data.get("detailed_prompt", False)
+        wrapped_data["agentharm_hint_included"] = data.get("hint_included", False)
+
+        # 从模拟数据中获取 agent_actions 和 init
+        wrapped_data["agent_actions"] = data.get("agent_actions", "")
+        wrapped_data["init"] = data.get("init", "")
+
+        return wrapped_data
+
+    elif agent_type == "agentsafebench":
+        if "request" in data and "agent_actions" in data:
+            return data
+
+        wrapped_data = {}
+        wrapped_data["request"] = data.get("instruction", "")
+        wrapped_data["user_identity"] = "user"
+        wrapped_data["user_level"] = "user"
+
+        fulfillable = data.get("fulfillable", 0)
+        wrapped_data["labels"] = "unsafe" if fulfillable == 0 else "safe"
+
+        wrapped_data["agentsafebench_id"] = data.get("id", 0)
+        wrapped_data["agentsafebench_risks"] = data.get("risks", [])
+        wrapped_data["agentsafebench_failure_modes"] = data.get("failure_modes", "")
+        wrapped_data["environments"] = data.get("environments", [])
+
+        wrapped_data["agent_actions"] = data.get("agent_actions", "")
+        wrapped_data["init"] = data.get("init", "")
+
+        return wrapped_data
+
+    else:
+        # 对于其他数据集，如果有模拟数据就直接返回
+        if "request" in data and "agent_actions" in data:
+            return data
+
+        # 否则返回空的 agent_actions 和 init
+        wrapped_data = dict(data)
+        wrapped_data["agent_actions"] = data.get("agent_actions", "")
+        wrapped_data["init"] = data.get("init", "")
+        return wrapped_data
+
+
+def filter_by_id_prefix(input_file: str, output_file: str):
+    """agentharm数据集中，根据id前缀过滤重复数据"""
+    with open(input_file, "r") as f:
+        data = json.load(f)
+    seen = set()
+    out_behaviors = []
+    for b in data.get("behaviors", []):
+        id_val = b.get("id", "")
+        prefix = id_val.split("-", 1)[0] if "-" in id_val else id_val
+        if prefix not in seen:
+            seen.add(prefix)
+            out_behaviors.append(b)
+    result = dict(data)
+    result["behaviors"] = out_behaviors
+    with open(output_file, "w") as f:
+        json.dump(result, f, indent=2)
+    print(
+        f"Filtered dataset saved to {output_file} with {len(out_behaviors)} behaviors."
+    )
+
+
+if __name__ == "__main__":
+    filter_by_id_prefix(
+        "/home/beihang/yx/DEFEND/agentharm/harmful_behaviors_test_public.json",
+        "/home/beihang/yx/DEFEND/data/agentharm/harmful.json",
+    )
 
 
 """

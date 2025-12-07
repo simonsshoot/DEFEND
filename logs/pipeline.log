@@ -170,3 +170,81 @@ Error processing item 20: 'request'
 Error processing item 2: Expecting value: line 1 column 1 (char 0)
 2025-12-05 17:09:24 - pipeline - ERROR - 
 Error processing item 6: Invalid \escape: line 15 column 236 (char 1897)
+2025-12-05 19:48:17 - pipeline - ERROR - 
+Error processing item 0: 'request'
+2025-12-05 19:48:23 - pipeline - ERROR - 
+Error processing item 1: 'request'
+2025-12-05 19:49:58 - pipeline - ERROR - 
+Error processing item 0: 'request'
+2025-12-05 19:50:08 - pipeline - ERROR - 
+Error processing item 1: 'request'
+2025-12-05 20:24:27 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-06 13:08:51 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-06 13:28:08 - pipeline - ERROR - 
+Error processing item 0: Invalid \escape: line 8 column 894 (char 1167)
+2025-12-06 13:29:44 - pipeline - ERROR - 
+Error processing item 1: Expecting value: line 1 column 1 (char 0)
+2025-12-06 13:45:29 - pipeline - ERROR - 
+Error processing item 10: Invalid \escape: line 6 column 890 (char 1115)
+2025-12-06 13:56:58 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-06 14:02:37 - pipeline - ERROR - 
+Error processing item 12: Invalid \escape: line 8 column 1382 (char 1817)
+2025-12-06 14:08:46 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-06 14:19:05 - pipeline - ERROR - 
+Error processing item 20: string indices must be integers, not 'str'
+2025-12-06 14:27:32 - pipeline - ERROR - 
+Error processing item 24: Invalid \escape: line 8 column 601 (char 1001)
+2025-12-06 14:28:46 - pipeline - ERROR - 
+Error processing item 18: Expecting value: line 1 column 1 (char 0)
+2025-12-06 14:44:37 - pipeline - ERROR - 
+Error processing item 25: Invalid \escape: line 26 column 218 (char 2680)
+2025-12-06 14:52:52 - pipeline - ERROR - 
+Error processing item 27: Expecting value: line 1 column 1 (char 0)
+2025-12-06 15:09:27 - pipeline - ERROR - 
+Error processing item 29: Expecting value: line 1 column 1 (char 0)
+2025-12-06 15:09:50 - pipeline - ERROR - 
+Error processing item 31: Expecting value: line 1 column 1 (char 0)
+2025-12-06 15:13:16 - pipeline - ERROR - 
+Error processing item 31: Invalid \escape: line 2 column 349 (char 350)
+2025-12-06 15:50:32 - pipeline - ERROR - 
+Error processing item 41: Expecting value: line 1 column 1 (char 0)
+2025-12-06 23:29:10 - pipeline - ERROR - 
+Error processing item 0: Expecting value: line 1 column 1 (char 0)
+2025-12-06 23:38:12 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-07 00:04:27 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-07 00:55:47 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-07 01:19:40 - pipeline - ERROR - 
+Error processing item 22: Expecting value: line 1 column 1 (char 0)
+2025-12-07 01:23:46 - pipeline - ERROR - 
+Error processing item 24: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 132946 tokens (130898 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 01:35:40 - pipeline - ERROR - 
+Error processing item 28: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137049 tokens (135001 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 01:36:57 - pipeline - ERROR - 
+Error processing item 29: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137284 tokens (135236 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 01:44:24 - pipeline - ERROR - 
+Error processing item 32: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 140219 tokens (138171 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 01:48:37 - pipeline - ERROR - 
+Error processing item 34: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 140676 tokens (138628 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 13:28:33 - pipeline - ERROR - 
+Error processing item 0: cannot access local variable 'target_data' where it is not associated with a value
+2025-12-07 13:28:44 - pipeline - ERROR - 
+Error processing item 1: cannot access local variable 'target_data' where it is not associated with a value
+2025-12-07 13:36:25 - pipeline - ERROR - 
+Error processing item 7: Invalid \escape: line 8 column 791 (char 1221)
+2025-12-07 13:42:28 - pipeline - ERROR - 
+Error processing item 2: Invalid \escape: line 3 column 110 (char 131)
+2025-12-07 13:54:22 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-07 14:10:55 - pipeline - ERROR - 
+Error processing item 23: Invalid \escape: line 8 column 1997 (char 2477)
+2025-12-07 14:24:47 - pipeline - ERROR - 
+Error processing item 29: Expecting value: line 1 column 1 (char 0)
+2025-12-07 14:42:09 - pipeline - ERROR - 
+Error processing item 22: Expecting value: line 1 column 1 (char 0)

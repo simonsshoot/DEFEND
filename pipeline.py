@@ -31,7 +31,7 @@ import json
 from tqdm import tqdm
 import pandas as pd
 from typing import List, Dict, Any, Tuple
-from utils import read_data, data_wrapper
+from utils import read_data, data_wrapper, simulate_data_wrapper, read_simulated_data
 from container import Container
 from agents import (
     Agent,
@@ -283,21 +283,28 @@ def pipeline(
 ) -> Tuple[
     List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]], Dict[str, Any]
 ]:
-    # Step 1: TarevoAgent - 风险分析和工具生成
-    wrap_data = data_wrapper(data, args.dataset)
-    present_tools = get_present_tools(args.dataset, wrap_data)
+    # Step 1: 数据预处理
     if args.need_simulate:
+        # 需要模拟：先包装数据，然后模拟
+        wrap_data = data_wrapper(data, args.dataset)
+        present_tools = get_present_tools(args.dataset, wrap_data)
         simulateagent = SimulateAgent(args.simulate_model)
         tarvodata = simulateagent.simulate(wrap_data, present_tools)
+
+        # 如果开启调试模式，保存模拟后的数据
+        if args.debug_mode:
+            with open(args.debug_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(tarvodata, ensure_ascii=False) + "\n")
     else:
+        # 不需要模拟：数据已经包含 agent_actions 和 init
+        # 直接使用预模拟的数据
         tarvodata = data
+        # 提取 present_tools（仍然需要用于后续流程）
+        present_tools = get_present_tools(args.dataset, tarvodata)
+
     tarevoagent = TarevoAgent(
         args.tarevo_model, args.risk_memory, args.permission_policy
     )
-
-    if args.debug_mode:
-        with open(args.debug_file, "a", encoding="utf-8") as f:
-            json.dump(tarvodata, f, indent=2, ensure_ascii=False)
 
     if "user_level" not in tarvodata:
         user_identity = tarvodata.get("user_identity", "user")
@@ -333,7 +340,11 @@ def pipeline(
         tool_workflow, feedback, tarvodata, present_tools
     )
     tool_set, is_unsafe = doubtagent.doubt_decision(
-        tarvodata, doubt_tool_result, final_result
+        tarvodata,
+        doubt_tool_result,
+        final_result,
+        args.debug_mode,
+        args.debug_tool_path,
     )
 
     decision = "unsafe" if is_unsafe else "safe"
@@ -345,8 +356,10 @@ def run(args: argparse.Namespace):
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-
-    data = read_data(args.dataset)
+    if args.need_simulate:
+        data = read_data(args.dataset)
+    else:
+        data = read_simulated_data(args.dataset)
 
     df = pd.DataFrame(
         {
@@ -415,7 +428,7 @@ def run(args: argparse.Namespace):
                         }
                         f.write(json.dumps(debug_info, ensure_ascii=False) + "\n")
 
-            if args.dataset == "agentsafebench":
+            if args.dataset == "asb_harmful" or args.dataset == "asb_benign":
                 input_text = item.get("instruction", "")
                 label = item.get("fulfillable", 0)
             elif args.dataset in ["agentharm", "agentharm_benign"]:
@@ -509,12 +522,17 @@ if __name__ == "__main__":
     )
     parser.add_argument("--debug_mode", action="store_true")
     parser.add_argument(
-        "--debug_file", type=str, default="results/simulate_agentharm.json"
+        "--debug_file", type=str, default="results/simulate_agentharm.jsonl"
     )
     parser.add_argument("--seed", type=int, default=44)
     parser.add_argument("--restart", action="store_true")
     parser.add_argument("--need_simulate", action="store_true")
-
+    parser.add_argument(
+        "--debug_tool_path",
+        type=str,
+        default="debug_doubt_tool_agentharmbenign.log",
+        help="Path to save debug tools if in debug mode",
+    )
     args = parser.parse_args()
     logger.info(f"Pipeline Configuration: {args}")
     run(args)
