@@ -40,3 +40,9 @@ nohup python pipeline.py --restart --debug_mode --dataset asb_benign --risk_memo
 
 ===========================agent harm良性数据的数据生成(无模拟)=========================
 nohup python pipeline.py --restart --debug_mode --dataset agentharm_benign --risk_memory lifelong_library/risks_agentharm_benign.json --tool_memory lifelong_library/tools_agentharm_benign.json --debug_file /home/beihang/yx/DEFEND/data/agentharm/benign_simulate.json --debug_doubt_tool_path debugs/agentharm_benign.log > logs/run_agentharm_benign.log 2>&1 &
+
+===========================R-Judge风险数据集运行(无模拟)====================================
+nohup python pipeline.py --restart --debug_mode --dataset rjudge_harmful --risk_memory lifelong_library/risks_rjudge_harmful.json --tool_memory lifelong_library/tools_rjudge_harmful.json --debug_doubt_tool_path debugs/rjudge_harmful.log > logs/run_rjudge_harmful.log 2>&1 &
+
+===========================R-Judge良性数据集运行(无模拟)====================================
+nohup python pipeline.py --restart --debug_mode --dataset rjudge_benign --risk_memory lifelong_library/risks_rjudge_benign.json --tool_memory lifelong_library/tools_rjudge_benign.json --debug_doubt_tool_path debugs/rjudge_benign.log > logs/run_rjudge_benign.log 2>&1 &

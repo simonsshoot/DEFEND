@@ -290,7 +290,11 @@ def pipeline(
     List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]], Dict[str, Any]
 ]:
     # Step 1: 数据预处理
-    if args.need_simulate:
+    # R-Judge 数据集已包含用户请求和代理操作，不需要模拟
+    if args.dataset.startswith("rjudge_"):
+        tarvodata = data
+        present_tools = []  # R-Judge 不需要 present_tools
+    elif args.need_simulate:
         # 需要模拟：先包装数据，然后模拟
         wrap_data = data_wrapper(data, args.dataset)
         present_tools = get_present_tools(args.dataset, wrap_data)
@@ -449,6 +453,11 @@ def run(args: argparse.Namespace):
             elif args.dataset in ["agentharm", "agentharm_benign"]:
                 input_text = item.get("prompt", "")
                 label = 0 if args.dataset == "agentharm" else 1
+            elif args.dataset.startswith("rjudge_"):
+                # R-Judge 数据集
+                input_text = tarvodata.get("request", "")
+                # R-Judge: label=1 表示 unsafe, label=0 表示 safe
+                label = 1 if tarvodata.get("labels") == "unsafe" else 0
             else:
                 input_text = item.get("description", "")
                 label = item.get("labels", "")
