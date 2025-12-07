@@ -290,11 +290,7 @@ def pipeline(
     List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]], Dict[str, Any]
 ]:
     # Step 1: 数据预处理
-    # R-Judge 数据集已包含用户请求和代理操作，不需要模拟
-    if args.dataset.startswith("rjudge_"):
-        tarvodata = data
-        present_tools = []  # R-Judge 不需要 present_tools
-    elif args.need_simulate:
+    if args.need_simulate:
         # 需要模拟：先包装数据，然后模拟
         wrap_data = data_wrapper(data, args.dataset)
         present_tools = get_present_tools(args.dataset, wrap_data)
@@ -355,6 +351,7 @@ def pipeline(
         final_result,
         args.debug_mode,
         args.debug_doubt_tool_path,
+        args.debug_decision_path,
     )
 
     decision = "unsafe" if is_unsafe else "safe"
@@ -409,6 +406,7 @@ def run(args: argparse.Namespace):
     fail_count = 0
     need_tools_count = 0  # 需要生成工具的次数
     no_tools_needed_count = 0  # 不需要生成工具的次数
+    risky_tools_count = 0  # 生成的工具中有风险的次数
 
     for index, item in tqdm(enumerate(data), desc="Pipeline Running", total=len(data)):
         if df.iloc[index]["decision"] is not None and pd.notna(
@@ -421,15 +419,18 @@ def run(args: argparse.Namespace):
             tool_set, decision, risk_analysis, doubt_tool_result, tarvodata = pipeline(
                 args, item, container
             )
-            
+
             need_tools = risk_analysis.get("need_tools", "no")
             if need_tools == "yes":
                 need_tools_count += 1
             else:
                 no_tools_needed_count += 1
-            
+
             for result in doubt_tool_result:
-                tool_info, doubt_result, is_optimized, execution_result = result
+                tool_info, doubt_result, is_optimized, execution_result, risky_tools = (
+                    result
+                )
+                risky_tools_count += risky_tools
                 if normalize_is_safe(doubt_result.get("is_safe", "")) == True:
                     if is_optimized:
                         optimized_tool += 1
@@ -453,11 +454,6 @@ def run(args: argparse.Namespace):
             elif args.dataset in ["agentharm", "agentharm_benign"]:
                 input_text = item.get("prompt", "")
                 label = 0 if args.dataset == "agentharm" else 1
-            elif args.dataset.startswith("rjudge_"):
-                # R-Judge 数据集
-                input_text = tarvodata.get("request", "")
-                # R-Judge: label=1 表示 unsafe, label=0 表示 safe
-                label = 1 if tarvodata.get("labels") == "unsafe" else 0
             else:
                 input_text = item.get("description", "")
                 label = item.get("labels", "")
@@ -503,14 +499,18 @@ def run(args: argparse.Namespace):
     print(
         f"Misjudge (Safe but judged Unsafe): {misjudge_count} ({misjudge_count/total*100:.2f}%)"
     )
-    
+
     # 工具生成决策统计
     print(f"\nTool Generation Decision:")
     decision_total = need_tools_count + no_tools_needed_count
     if decision_total > 0:
-        print(f"Need tools: {need_tools_count}/{decision_total} ({need_tools_count/decision_total*100:.2f}%)")
-        print(f"No tools needed: {no_tools_needed_count}/{decision_total} ({no_tools_needed_count/decision_total*100:.2f}%)")
-    
+        print(
+            f"Need tools: {need_tools_count}/{decision_total} ({need_tools_count/decision_total*100:.2f}%)"
+        )
+        print(
+            f"No tools needed: {no_tools_needed_count}/{decision_total} ({no_tools_needed_count/decision_total*100:.2f}%)"
+        )
+
     # 工具重用率和失败率统计
     tool_total = new_tool_generated + optimized_tool + fail_count
     if tool_total > 0:
@@ -521,7 +521,12 @@ def run(args: argparse.Namespace):
         print(
             f"Optimized tool ratio: {optimized_tool}/{tool_total} ({optimized_tool/tool_total*100:.2f}%)"
         )
-        print(f"Failed tool ratio: {fail_count}/{tool_total} ({fail_count/tool_total*100:.2f}%)")
+        print(
+            f"Failed tool ratio: {fail_count}/{tool_total} ({fail_count/tool_total*100:.2f}%)"
+        )
+        print(
+            f"Risky tool ratio: {risky_tools_count}/{tool_total} ({risky_tools_count/tool_total*100:.2f}%)"
+        )
     else:
         print("\nNo tools generated.")
 
@@ -565,6 +570,12 @@ if __name__ == "__main__":
         type=str,
         default="debug_doubt_tool_agentharmbenign.log",
         help="Path to save debug tools if in debug mode",
+    )
+    parser.add_argument(
+        "--debug_decision_path",
+        type=str,
+        default="debugs/debug_decision_agentharmbenign.log",
+        help="tool pass but decision refused debug path",
     )
     args = parser.parse_args()
     logger.info(f"Pipeline Configuration: {args}")

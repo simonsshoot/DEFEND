@@ -61,23 +61,49 @@ class Agent:
             return self.__call_openai(history)
 
     def extract_json(self, response: str) -> str:
-        """从响应文本中提取JSON字符串"""
         cleaned = response.strip()
         if cleaned.startswith("{") and cleaned.endswith("}"):
-            return cleaned
+            try:
+                json.loads(cleaned)
+                return cleaned
+            except:
+                pass
 
-        if "```json" in cleaned:
-            match = re.search(r"```json(.*?)```", cleaned, re.DOTALL)
-            if match:
-                json_content = match.group(1).strip()
+        json_code_match = re.search(r"```json\s*(.*?)\s*```", cleaned, re.DOTALL)
+        if json_code_match:
+            json_content = json_code_match.group(1).strip()
+            if json_content:
                 return json_content
 
-        if "```" in cleaned:
-            match = re.search(r"```\s*(.*?)\s*```", cleaned, re.DOTALL)
-            if match:
-                content = match.group(1).strip()
-                if content.startswith("{") and content.endswith("}"):
+        code_match = re.search(r"```\s*(.*?)\s*```", cleaned, re.DOTALL)
+        if code_match:
+            content = code_match.group(1).strip()
+            if content.startswith("{") and content.endswith("}"):
+                try:
+                    json.loads(content)
                     return content
+                except:
+                    pass
+
+        single_quote_match = re.search(r"'(.*?)'", cleaned, re.DOTALL)
+        if single_quote_match:
+            content = single_quote_match.group(1).strip()
+            if content.startswith("{") and content.endswith("}"):
+                try:
+                    json.loads(content)
+                    return content
+                except:
+                    pass
+
+        double_quote_match = re.search(r'"(.*?)"', cleaned, re.DOTALL)
+        if double_quote_match:
+            content = double_quote_match.group(1).strip()
+            if content.startswith("{") and content.endswith("}"):
+                try:
+                    json.loads(content)
+                    return content
+                except:
+                    pass
 
         try:
             start = cleaned.find("{")
@@ -213,7 +239,7 @@ class TarevoAgent(Agent):
     ) -> Dict[str, Any]:
         """
         分析用户请求中的安全风险，并判断是否需要生成安全工具
-        
+
         返回格式：
         {{
         "risks": [
@@ -306,11 +332,11 @@ class TarevoAgent(Agent):
         )
         print("===========================================")
         self.logger.info(f"Risk Analysis Result: {analysis_result}")
-        
+
         # Step 2: 根据风险分析结果决定是否生成安全工具
         need_tools = analysis_result.get("need_tools", "no")
         reason = analysis_result.get("reason", "")
-        
+
         if need_tools == "yes":
             time.sleep(2)
             tool_results = self.safetytool_definition(
@@ -319,7 +345,7 @@ class TarevoAgent(Agent):
             print("===========================================")
             self.logger.info(f"Generated Safety Tool: {tool_results}")
         else:
-            tool_results = {"tools": []} 
+            tool_results = {"tools": []}
         return tool_results, analysis_result
 
 
@@ -382,7 +408,7 @@ class OptimAgent(Agent):
         # 处理空工具列表的情况
         if not tool_result.get("tools") or len(tool_result.get("tools", [])) == 0:
             return {"tools": []}
-        
+
         relevant_tools = self.load_tool(tool_result)
         prompt = TOOL_SEARCH_PROMPT.format(
             user_tools=json.dumps(tool_result, indent=2, ensure_ascii=False),
@@ -409,7 +435,10 @@ class OptimAgent(Agent):
         tool_workflow: List[Tuple[Dict, bool]] = []
 
         # 处理空工具列表的情况
-        if not clean_relevant_tools.get("tools") or len(clean_relevant_tools.get("tools", [])) == 0:
+        if (
+            not clean_relevant_tools.get("tools")
+            or len(clean_relevant_tools.get("tools", [])) == 0
+        ):
             return tool_workflow
 
         for item in clean_relevant_tools["tools"]:
@@ -691,7 +720,7 @@ class DoubtAgent(Agent):
         feedback: List[Tuple[Dict, bool, bool]],
         data: Dict[str, Any],
         present_tools: List[Dict] = None,
-    ) -> List[Tuple[Dict, Dict, bool, bool]]:
+    ) -> List[Tuple[Dict, Dict, bool, bool, int]]:
         """
         质疑安全工具
         present_tools: 现有可用的工具（提供上下文，不影响质疑逻辑）
@@ -699,6 +728,7 @@ class DoubtAgent(Agent):
         doubt_results = []
         user_level = data.get("user_level", "user")
         permission_policy = self.__load_permission_policy(user_level)
+        risky_tools = 0
 
         for item in feedback:
             tool_info, is_optimized, execution_result = item
@@ -723,6 +753,7 @@ class DoubtAgent(Agent):
 
                 # 如果工具被判定有风险，自动尝试优化
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
+                    risky_tools += 1
                     optimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get("reason", "工具存在安全风险"),
@@ -762,6 +793,7 @@ class DoubtAgent(Agent):
                 clean_response = self.extract_json(response)
                 clean_response = json.loads(clean_response)
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
+                    risky_tools += 1
                     reoptimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get(
@@ -780,17 +812,18 @@ class DoubtAgent(Agent):
                     else:
                         is_optimized = False
             doubt_results.append(
-                (tool_info, clean_response, is_optimized, execution_result)
+                (tool_info, clean_response, is_optimized, execution_result, risky_tools)
             )
         return doubt_results
 
     def doubt_decision(
         self,
         data: Dict[str, Any],
-        doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
+        doubt_tool_result: List[Tuple[Dict, Dict, bool, bool, int]],
         action_result: str,
         debug_mode: bool = True,
         debug_doubt_tool_path: str = "debug_doubt_tool_agentharmbenign.log",
+        debug_decision_path: str = "debug_doubt_decision_agentharmbenign.log",
     ) -> Tuple[List[Dict], bool]:
         tool_set = []
         user_level = data.get("user_level", "user")
@@ -875,6 +908,7 @@ class DoubtAgent(Agent):
                             json.dumps(risk_record, ensure_ascii=False, indent=2) + "\n"
                         )
                         f.write("=" * 80 + "\n\n")
+                return tool_set, True
         prompt = DOUBT_DECISION_PROMPT.format(
             request=data["request"],
             agent_actions=data["agent_actions"],
@@ -894,6 +928,14 @@ class DoubtAgent(Agent):
         clean_response = self.extract_json(response)
         clean_response = json.loads(clean_response)
         if normalize_is_safe(clean_response.get("is_safe", "")) == False:
+            if debug_mode:
+                with open(debug_decision_path, "w", encoding="utf-8") as f:
+                    f.write("=" * 80 + "\n")
+                    f.write("[TOOL PASS BUT DECISION REFUSED]\n")
+                    f.write(
+                        json.dumps(clean_response, ensure_ascii=False, indent=2) + "\n"
+                    )
+                    f.write("=" * 80 + "\n\n")
             return tool_set, True
         return tool_set, False
 
