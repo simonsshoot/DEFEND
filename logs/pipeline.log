@@ -248,3 +248,13 @@ Error processing item 23: Invalid \escape: line 8 column 1997 (char 2477)
 Error processing item 29: Expecting value: line 1 column 1 (char 0)
 2025-12-07 14:42:09 - pipeline - ERROR - 
 Error processing item 22: Expecting value: line 1 column 1 (char 0)
+2025-12-07 17:40:54 - pipeline - ERROR - 
+Error processing item 21: Expecting value: line 1 column 1 (char 0)
+2025-12-07 18:14:13 - pipeline - ERROR - 
+Error processing item 2: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 145134 tokens (143086 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 18:30:01 - pipeline - ERROR - 
+Error processing item 9: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148833 tokens (146785 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 18:32:05 - pipeline - ERROR - 
+Error processing item 11: Invalid \escape: line 8 column 196 (char 450)
+2025-12-07 18:33:21 - pipeline - ERROR - 
+Error processing item 12: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148421 tokens (146373 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
