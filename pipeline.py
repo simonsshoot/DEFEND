@@ -31,7 +31,13 @@ import json
 from tqdm import tqdm
 import pandas as pd
 from typing import List, Dict, Any, Tuple
-from utils import read_data, data_wrapper, simulate_data_wrapper, read_simulated_data
+from utils import (
+    read_data,
+    data_wrapper,
+    simulate_data_wrapper,
+    read_simulated_data,
+    normalize_is_safe,
+)
 from container import Container
 from agents import (
     Agent,
@@ -87,7 +93,7 @@ def update_lifelong_library(
         for item in doubt_tool_result:
             tool_info, doubt_result, is_optimized, execution_result = item
 
-            if doubt_result.get("is_safe") != "True":
+            if normalize_is_safe(doubt_result.get("is_safe", "")) != True:
                 continue
 
             category = tool_info.get("category")
@@ -344,7 +350,7 @@ def pipeline(
         doubt_tool_result,
         final_result,
         args.debug_mode,
-        args.debug_tool_path,
+        args.debug_doubt_tool_path,
     )
 
     decision = "unsafe" if is_unsafe else "safe"
@@ -411,12 +417,12 @@ def run(args: argparse.Namespace):
             )
             for result in doubt_tool_result:
                 tool_info, doubt_result, is_optimized, execution_result = result
-                if doubt_result.get("is_safe") == "True":
+                if normalize_is_safe(doubt_result.get("is_safe", "")) == True:
                     if is_optimized:
                         optimized_tool += 1
                     else:
                         new_tool_generated += 1
-                elif doubt_result.get("is_safe") == "False":
+                elif normalize_is_safe(doubt_result.get("is_safe", "")) == False:
                     fail_count += 1
                     with open(args.fail_tool_debug, "a", encoding="utf-8") as f:
                         debug_info = {
@@ -528,7 +534,7 @@ if __name__ == "__main__":
     parser.add_argument("--restart", action="store_true")
     parser.add_argument("--need_simulate", action="store_true")
     parser.add_argument(
-        "--debug_tool_path",
+        "--debug_doubt_tool_path",
         type=str,
         default="debug_doubt_tool_agentharmbenign.log",
         help="Path to save debug tools if in debug mode",

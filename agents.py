@@ -34,6 +34,7 @@ from configs import (
 )
 from configs import setup_logger
 from container import Container
+from utils import normalize_is_safe
 
 
 class Agent:
@@ -702,7 +703,7 @@ class DoubtAgent(Agent):
                 clean_response = json.loads(clean_response)
 
                 # 如果工具被判定有风险，自动尝试优化
-                if clean_response.get("is_safe") == "False":
+                if normalize_is_safe(clean_response.get("is_safe", "")) == False:
                     optimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get("reason", "工具存在安全风险"),
@@ -715,6 +716,7 @@ class DoubtAgent(Agent):
                             "is_safe": "True",
                             "reason": "工具已自动优化并通过审核",
                         }
+                        is_optimized = True
                     else:
                         pass
 
@@ -740,7 +742,7 @@ class DoubtAgent(Agent):
                 response = self.inference(messages)
                 clean_response = self.extract_json(response)
                 clean_response = json.loads(clean_response)
-                if clean_response.get("is_safe") == "False":
+                if normalize_is_safe(clean_response.get("is_safe", "")) == False:
                     reoptimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get(
@@ -757,7 +759,7 @@ class DoubtAgent(Agent):
                         }
 
                     else:
-                        pass
+                        is_optimized = False
             doubt_results.append(
                 (tool_info, clean_response, is_optimized, execution_result)
             )
@@ -788,7 +790,10 @@ class DoubtAgent(Agent):
             execution_result = item[3]
 
             # execution_result: True 表示检测到风险，False 表示安全
-            if execution_result == True or doubt_result.get("is_safe") == "False":
+            if (
+                execution_result == True
+                or normalize_is_safe(doubt_result.get("is_safe", "")) == False
+            ):
                 # 记录详细的风险检测信息
                 risk_record = {
                     "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -809,7 +814,10 @@ class DoubtAgent(Agent):
                 }
 
                 # 判断风险来源并记录详细信息
-                if execution_result == True and doubt_result.get("is_safe") == "False":
+                if (
+                    execution_result == True
+                    and normalize_is_safe(doubt_result.get("is_safe", "")) == False
+                ):
                     # 两者都检测到风险
                     risk_record["risk_source"] = "both"
                     risk_record["risk_details"] = {
@@ -828,7 +836,7 @@ class DoubtAgent(Agent):
                         "doubt_agent_result": "审核通过",
                         "conclusion": f"工具 '{tool_info.get('tool_name')}' 在执行过程中检测到命令存在安全风险",
                     }
-                elif doubt_result.get("is_safe") == "False":
+                elif normalize_is_safe(doubt_result.get("is_safe", "")) == False:
                     # 仅 DoubtAgent 审核不通过
                     risk_record["risk_source"] = "doubt_agent"
                     risk_record["risk_details"] = {
@@ -866,7 +874,7 @@ class DoubtAgent(Agent):
         response = self.inference(messages)
         clean_response = self.extract_json(response)
         clean_response = json.loads(clean_response)
-        if clean_response.get("is_safe") == "False":
+        if normalize_is_safe(clean_response.get("is_safe", "")) == False:
             return tool_set, True
         return tool_set, False
 

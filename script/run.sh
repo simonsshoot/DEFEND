@@ -34,3 +34,6 @@ nohup python pipeline.py --restart --debug_mode --need_simulate --dataset agents
 
 =====================agentsafetybench良性数据的模拟代理数据生成==========================
 nohup python pipeline.py --restart --debug_mode --need_simulate --dataset asb_benign --risk_memory lifelong_library/risks_asb_benign.json --tool_memory lifelong_library/tools_asb_benign.json --debug_file /home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl > logs/run_asb_benign.log 2>&1 &
+
+=====================agentsafetybench良性数据生成(无模拟)==========================
+nohup python pipeline.py --restart --debug_mode --dataset asb_benign --risk_memory lifelong_library/risks_asb_benign.json --tool_memory lifelong_library/tools_asb_benign.json --debug_file /home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl --debug_doubt_tool_path debugs/asb_benign.log > logs/run_asb_benign.log 2>&1 &

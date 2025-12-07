@@ -3,6 +3,14 @@ import json
 from typing import List, Dict, Any
 
 
+def normalize_is_safe(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in ["true", "1", "yes", "True"]
+    return False
+
+
 def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
     """
     读取预先模拟好的数据（JSONL格式）
@@ -14,8 +22,10 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
         simulated_data_path = (
             "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
         )
-    elif data_type == "agentsafebench":
-        simulated_data_path = "results/simulate_agentsafebench.jsonl"
+    elif data_type == "asb_benign":
+        simulated_data_path = "data/ASB/benign_simulate.jsonl"
+    elif data_type == "asb_harmful":
+        simulated_data_path = "data/ASB/harmful_simulate.jsonl"
     elif data_type == "os":
         simulated_data_path = "results/simulate_os.jsonl"
     elif data_type == "environment":
