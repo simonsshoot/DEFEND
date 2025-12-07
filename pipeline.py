@@ -403,6 +403,8 @@ def run(args: argparse.Namespace):
     new_tool_generated = 0
     optimized_tool = 0
     fail_count = 0
+    need_tools_count = 0  # 需要生成工具的次数
+    no_tools_needed_count = 0  # 不需要生成工具的次数
 
     for index, item in tqdm(enumerate(data), desc="Pipeline Running", total=len(data)):
         if df.iloc[index]["decision"] is not None and pd.notna(
@@ -415,6 +417,13 @@ def run(args: argparse.Namespace):
             tool_set, decision, risk_analysis, doubt_tool_result, tarvodata = pipeline(
                 args, item, container
             )
+            
+            need_tools = risk_analysis.get("need_tools", "no")
+            if need_tools == "yes":
+                need_tools_count += 1
+            else:
+                no_tools_needed_count += 1
+            
             for result in doubt_tool_result:
                 tool_info, doubt_result, is_optimized, execution_result = result
                 if normalize_is_safe(doubt_result.get("is_safe", "")) == True:
@@ -485,18 +494,27 @@ def run(args: argparse.Namespace):
     print(
         f"Misjudge (Safe but judged Unsafe): {misjudge_count} ({misjudge_count/total*100:.2f}%)"
     )
-    # 重用率：所有生成的工具中，有多少是优化过的 和新生成工具率反过来？
-    total = new_tool_generated + optimized_tool + fail_count
-    if total > 0:
+    
+    # 工具生成决策统计
+    print(f"\nTool Generation Decision:")
+    decision_total = need_tools_count + no_tools_needed_count
+    if decision_total > 0:
+        print(f"Need tools: {need_tools_count}/{decision_total} ({need_tools_count/decision_total*100:.2f}%)")
+        print(f"No tools needed: {no_tools_needed_count}/{decision_total} ({no_tools_needed_count/decision_total*100:.2f}%)")
+    
+    # 工具重用率和失败率统计
+    tool_total = new_tool_generated + optimized_tool + fail_count
+    if tool_total > 0:
+        print(f"\nTool Statistics:")
         print(
-            f"Newly generated tool ratio: {new_tool_generated}/{total} ({new_tool_generated/total*100:.2f}%)"
+            f"Newly generated tool ratio: {new_tool_generated}/{tool_total} ({new_tool_generated/tool_total*100:.2f}%)"
         )
         print(
-            f"Optimized tool ratio: {optimized_tool}/{total} ({optimized_tool/total*100:.2f}%)"
+            f"Optimized tool ratio: {optimized_tool}/{tool_total} ({optimized_tool/tool_total*100:.2f}%)"
         )
-        print(f"Failed tool ratio: {fail_count}/{total} ({fail_count/total*100:.2f}%)")
+        print(f"Failed tool ratio: {fail_count}/{tool_total} ({fail_count/tool_total*100:.2f}%)")
     else:
-        print("No tools generated.")
+        print("\nNo tools generated.")
 
 
 if __name__ == "__main__":

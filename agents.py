@@ -212,7 +212,9 @@ class TarevoAgent(Agent):
         user_level: str = "user",
     ) -> Dict[str, Any]:
         """
-        analysis_result:
+        分析用户请求中的安全风险，并判断是否需要生成安全工具
+        
+        返回格式：
         {{
         "risks": [
         {{
@@ -224,7 +226,9 @@ class TarevoAgent(Agent):
         "description": "具体描述2"
         }}
         ],
-        "new_risks": "yes/no"
+        "new_risks": "yes/no",
+        "need_tools": "yes/no",
+        "reason": "是否需要工具的理由"
         }}
         """
         permission_policy = self.__load_permission_policy(user_level)
@@ -293,6 +297,7 @@ class TarevoAgent(Agent):
         init_script = data["init"]
         label = data["labels"]
 
+        # Step 1: 风险分析
         analysis_result = self.risk_analysis(
             request=user_request,
             agent_actions=agent_actions,
@@ -301,14 +306,20 @@ class TarevoAgent(Agent):
         )
         print("===========================================")
         self.logger.info(f"Risk Analysis Result: {analysis_result}")
-        time.sleep(2)
-        tool_results = self.safetytool_definition(
-            analysis_result, user_request, agent_actions, user_level
-        )
-        print("===========================================")
-        self.logger.info(f"Generated Safety Tool: {tool_results}")
-
-        # 返回 tool_results 和 analysis_result 用于后续更新 lifelong library
+        
+        # Step 2: 根据风险分析结果决定是否生成安全工具
+        need_tools = analysis_result.get("need_tools", "no")
+        reason = analysis_result.get("reason", "")
+        
+        if need_tools == "yes":
+            time.sleep(2)
+            tool_results = self.safetytool_definition(
+                analysis_result, user_request, agent_actions, user_level
+            )
+            print("===========================================")
+            self.logger.info(f"Generated Safety Tool: {tool_results}")
+        else:
+            tool_results = {"tools": []} 
         return tool_results, analysis_result
 
 
@@ -368,6 +379,10 @@ class OptimAgent(Agent):
           ]
         }}
         """
+        # 处理空工具列表的情况
+        if not tool_result.get("tools") or len(tool_result.get("tools", [])) == 0:
+            return {"tools": []}
+        
         relevant_tools = self.load_tool(tool_result)
         prompt = TOOL_SEARCH_PROMPT.format(
             user_tools=json.dumps(tool_result, indent=2, ensure_ascii=False),
@@ -392,6 +407,10 @@ class OptimAgent(Agent):
         # 这里还应该形成最终执行的工具集合
         tool_category_json = self.__load_toolmemory()
         tool_workflow: List[Tuple[Dict, bool]] = []
+
+        # 处理空工具列表的情况
+        if not clean_relevant_tools.get("tools") or len(clean_relevant_tools.get("tools", [])) == 0:
+            return tool_workflow
 
         for item in clean_relevant_tools["tools"]:
             matched_tool_info = None
