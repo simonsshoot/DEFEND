@@ -202,8 +202,9 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 
         return present_tools
 
-    elif dataset == "agentharm" or dataset == "agentharm_benign":
-        # AgentHarm数据集，从target_functions中提取工具
+    elif dataset == "agentharm" or dataset == "agentharm_benign" or \
+         (dataset.startswith("agentharm_") and ("_harmful" in dataset or "_benign" in dataset)):
+        # AgentHarm数据集，从target_functions中提取工具（支持整体和按类别）
         import sys
 
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), "agentharm"))
@@ -211,7 +212,7 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
         try:
             # AgentHarm工具是通过@tool装饰器定义的函数
             # 动态导入目标工具
-            if dataset == "agentharm":
+            if dataset == "agentharm" or "_harmful" in dataset:
                 tools_package = "benchmark.harmful_tools"
             else:
                 tools_package = "benchmark.benign_tools"
@@ -455,9 +456,10 @@ def run(args: argparse.Namespace):
             if args.dataset == "asb_harmful" or args.dataset == "asb_benign":
                 input_text = item.get("instruction", "")
                 label = item.get("fulfillable", 0)
-            elif args.dataset in ["agentharm", "agentharm_benign"]:
+            elif args.dataset in ["agentharm", "agentharm_benign"] or \
+                 (args.dataset.startswith("agentharm_") and ("_harmful" in args.dataset or "_benign" in args.dataset)):
                 input_text = item.get("prompt", "")
-                label = 0 if args.dataset == "agentharm" else 1
+                label = 0 if ("agentharm" == args.dataset or "_harmful" in args.dataset) else 1
             else:
                 input_text = item.get("description", "")
                 label = item.get("labels", "")

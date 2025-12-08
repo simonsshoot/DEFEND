@@ -22,30 +22,50 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
     if data_type.startswith("rjudge_"):
         return read_data(data_type)
 
-    if data_type == "agentharm":
-        simulated_data_path = (
-            "/home/beihang/yx/DEFEND/data/agentharm/harmful_simulate.jsonl"
-        )
-    elif data_type == "agentharm_benign":
-        simulated_data_path = (
-            "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
-        )
-    elif data_type == "asb_benign":
-        simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl"
-    elif data_type == "asb_harmful":
-        simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/harmful_simulate.jsonl"
-    elif data_type == "safeOS_harmful":
-        simulated_data_path = (
-            "/home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl"
-        )
-    elif data_type == "environment":
-        simulated_data_path = "results/simulate_environment.jsonl"
-    elif data_type == "safeOS_benign":
-        simulated_data_path = (
-            "/home/beihang/yx/DEFEND/data/safeOS/benign_simulate.jsonl"
-        )
+    agentharm_categories = [
+        "Copyright",
+        "Cybercrime",
+        "Disinformation",
+        "Drugs",
+        "Fraud",
+        "Harassment",
+        "Hate",
+        "Sexual",
+    ]
+    
+    for category in agentharm_categories:
+        if data_type == f"agentharm_{category}_harmful":
+            simulated_data_path = f"data/agentharm/{category}/harmful_simulate.jsonl"
+            break
+        elif data_type == f"agentharm_{category}_benign":
+            simulated_data_path = f"data/agentharm/{category}/benign_simulate.jsonl"
+            break
     else:
-        raise ValueError(f"Unknown data type: {data_type}")
+        # 如果不是类别数据，使用原有逻辑
+        if data_type == "agentharm":
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/agentharm/harmful_simulate.jsonl"
+            )
+        elif data_type == "agentharm_benign":
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
+            )
+        elif data_type == "asb_benign":
+            simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl"
+        elif data_type == "asb_harmful":
+            simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/harmful_simulate.jsonl"
+        elif data_type == "safeOS_harmful":
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl"
+            )
+        elif data_type == "environment":
+            simulated_data_path = "results/simulate_environment.jsonl"
+        elif data_type == "safeOS_benign":
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/safeOS/benign_simulate.jsonl"
+            )
+        else:
+            raise ValueError(f"Unknown data type: {data_type}")
 
     if not os.path.exists(simulated_data_path):
         raise FileNotFoundError(
@@ -75,6 +95,35 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
 
 
 def read_data(data_type: str):
+    # 支持 AgentHarm 按类别读取
+    # 格式: agentharm_<category>_harmful 或 agentharm_<category>_benign
+    agentharm_categories = [
+        "Copyright",
+        "Cybercrime",
+        "Disinformation",
+        "Drugs",
+        "Fraud",
+        "Harassment",
+        "Hate",
+        "Sexual",
+    ]
+    
+    for category in agentharm_categories:
+        if data_type == f"agentharm_{category}_harmful":
+            data_path = f"data/agentharm/{category}/harmful.json"
+            with open(data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict) and "behaviors" in data:
+                data = data["behaviors"]
+            return data
+        elif data_type == f"agentharm_{category}_benign":
+            data_path = f"data/agentharm/{category}/benign.json"
+            with open(data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict) and "behaviors" in data:
+                data = data["behaviors"]
+            return data
+    
     if data_type == "safeOS_harmful":
         data_path = "/home/beihang/yx/DEFEND/data/os.json"
     elif data_type == "environment":
@@ -171,8 +220,9 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         # 初始化为空，将由SimulateAgent生成
         target_data["agent_actions"] = ""
         target_data["init"] = ""
-    elif agent_type == "agentharm" or agent_type == "agentharm_benign":
-        # AgentHarm数据格式
+    elif agent_type == "agentharm" or agent_type == "agentharm_benign" or \
+         agent_type.startswith("agentharm_") and ("_harmful" in agent_type or "_benign" in agent_type):
+        # AgentHarm数据格式（支持整体和按类别）
         target_data = {}
         target_data["request"] = data.get("prompt", "")
         target_data["user_identity"] = "root"
@@ -180,7 +230,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
 
         # AgentHarm中所有harmful behaviors都应该被拦截
         # benign behaviors应该被允许
-        if agent_type == "agentharm":
+        if agent_type == "agentharm" or "_harmful" in agent_type:
             target_data["labels"] = "unsafe"  # harmful behaviors
         else:
             target_data["labels"] = "safe"  # benign behaviors
