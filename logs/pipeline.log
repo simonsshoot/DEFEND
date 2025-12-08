@@ -258,3 +258,93 @@ Error processing item 9: Error code: 400 - {'error': {'message': "This model's m
 Error processing item 11: Invalid \escape: line 8 column 196 (char 450)
 2025-12-07 18:33:21 - pipeline - ERROR - 
 Error processing item 12: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148421 tokens (146373 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 21:21:37 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:25:07 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:28:48 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:36:26 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:36:30 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:37:32 - pipeline - ERROR - 
+Error processing item 1: Invalid \escape: line 8 column 289 (char 573)
+2025-12-07 21:39:58 - pipeline - ERROR - 
+Error processing item 2: Unterminated string starting at: line 2 column 13 (char 14)
+2025-12-07 21:40:03 - pipeline - ERROR - 
+Error processing item 23: Expecting value: line 1 column 1 (char 0)
+2025-12-07 21:41:39 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-07 21:43:17 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:45:11 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:46:53 - pipeline - ERROR - 
+Error processing item 7: Expecting value: line 1 column 1 (char 0)
+2025-12-07 21:48:24 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:48:56 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:51:49 - pipeline - ERROR - 
+Error processing item 33: Expecting value: line 1 column 1 (char 0)
+2025-12-07 21:52:36 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:55:50 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:56:37 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 21:59:39 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:02:48 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:09:01 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:11:49 - pipeline - ERROR - 
+Error processing item 19: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:13:27 - pipeline - ERROR - 
+Error processing item 20: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:16:33 - pipeline - ERROR - 
+Error processing item 2: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148731 tokens (146683 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 22:16:36 - pipeline - ERROR - 
+Error processing item 21: Invalid \escape: line 6 column 304 (char 559)
+2025-12-07 22:20:09 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:21:45 - pipeline - ERROR - 
+Error processing item 23: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:21:48 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:25:33 - pipeline - ERROR - 
+Error processing item 25: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:27:45 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:29:54 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:32:04 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:37:16 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:39:27 - pipeline - ERROR - 
+Error processing item 22: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:40:46 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:40:48 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:43:10 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:44:22 - pipeline - ERROR - 
+Error processing item 14: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:46:09 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:48:12 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:50:32 - pipeline - ERROR - 
+Error processing item 37: Expecting value: line 1 column 1 (char 0)
+2025-12-07 22:52:01 - pipeline - ERROR - Failed to update tool library: too many values to unpack (expected 4)
+2025-12-07 22:53:46 - pipeline - ERROR - 
+Error processing item 39: Invalid \escape: line 22 column 381 (char 4826)
+2025-12-07 22:57:22 - pipeline - ERROR - 
+Error processing item 20: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 155180 tokens (153132 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 22:59:03 - pipeline - ERROR - 
+Error processing item 21: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:08:05 - pipeline - ERROR - 
+Error processing item 25: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:09:35 - pipeline - ERROR - 
+Error processing item 26: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 157850 tokens (155802 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 23:11:16 - pipeline - ERROR - 
+Error processing item 27: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:14:20 - pipeline - ERROR - 
+Error processing item 28: Invalid \escape: line 6 column 740 (char 1059)
+2025-12-07 23:21:33 - pipeline - ERROR - 
+Error processing item 30: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:23:08 - pipeline - ERROR - 
+Error processing item 31: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:26:03 - pipeline - ERROR - 
+Error processing item 33: Expecting value: line 1 column 1 (char 0)
+2025-12-07 23:27:37 - pipeline - ERROR - 
+Error processing item 34: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 159851 tokens (157803 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-07 23:41:02 - pipeline - ERROR - 
+Error processing item 41: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 159932 tokens (157884 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-08 15:58:16 - pipeline - ERROR - 
+Error processing item 0: cannot access local variable 'target_data' where it is not associated with a value
+2025-12-08 15:58:27 - pipeline - ERROR - 
+Error processing item 1: cannot access local variable 'target_data' where it is not associated with a value
+2025-12-08 16:18:42 - pipeline - ERROR - 
+Error processing item 9: Invalid \escape: line 8 column 272 (char 553)

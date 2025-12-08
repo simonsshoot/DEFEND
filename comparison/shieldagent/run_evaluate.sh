@@ -14,6 +14,6 @@ python evaluate.py --datasets rjudge_harmful --output_dir results
 
 # 评估所有数据集
 echo "Evaluating all datasets..."
-nohup python evaluate.py --datasets agentharm_benign asb_benign rjudge_harmful --output_dir results > logs/shieldagent_eval.log 2>&1 &
+nohup python evaluate.py --datasets agentharm_benign --output_dir results > logs/shieldagent_eval.log 2>&1 &
 
 echo "Evaluation jobs submitted!"

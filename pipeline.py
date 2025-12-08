@@ -56,7 +56,7 @@ def update_lifelong_library(
     args: argparse.Namespace,
     risk_analysis: Dict[str, Any],
     tool_set: List[Dict],
-    doubt_tool_result: List[Tuple[Dict, Dict, bool, bool]],
+    doubt_tool_result: List[Tuple[Dict, Dict, bool, bool, int]],
 ):
     """
     更新 lifelong library
@@ -91,7 +91,7 @@ def update_lifelong_library(
         updated = False
 
         for item in doubt_tool_result:
-            tool_info, doubt_result, is_optimized, execution_result = item
+            tool_info, doubt_result, is_optimized, execution_result, risky_tool = item
 
             if normalize_is_safe(doubt_result.get("is_safe", "")) != True:
                 continue
@@ -287,7 +287,11 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
 ) -> Tuple[
-    List[Dict], str, Dict[str, Any], List[Tuple[Dict, Dict, bool, bool]], Dict[str, Any]
+    List[Dict],
+    str,
+    Dict[str, Any],
+    List[Tuple[Dict, Dict, bool, bool, int]],
+    Dict[str, Any],
 ]:
     # Step 1: 数据预处理
     if args.need_simulate:

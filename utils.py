@@ -15,29 +15,35 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
     """
     读取预先模拟好的数据（JSONL格式）
     每一行是一个完整的JSON对象，包含 request, agent_actions, init 等字段
-    
+
     对于 R-Judge 数据集，直接读取原始数据（已包含用户请求和代理操作）
     """
     # R-Judge 数据集不需要模拟数据，直接读取原始数据并包装
     if data_type.startswith("rjudge_"):
         return read_data(data_type)
-    
+
     if data_type == "agentharm":
-        simulated_data_path = "results/simulate_agentharm.jsonl"
+        simulated_data_path = (
+            "/home/beihang/yx/DEFEND/data/agentharm/harmful_simulate.jsonl"
+        )
     elif data_type == "agentharm_benign":
         simulated_data_path = (
             "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
         )
     elif data_type == "asb_benign":
-        simulated_data_path = "data/ASB/benign_simulate.jsonl"
+        simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl"
     elif data_type == "asb_harmful":
-        simulated_data_path = "data/ASB/harmful_simulate.jsonl"
-    elif data_type == "os":
-        simulated_data_path = "results/simulate_os.jsonl"
+        simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/harmful_simulate.jsonl"
+    elif data_type == "safeOS_harmful":
+        simulated_data_path = (
+            "/home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl"
+        )
     elif data_type == "environment":
         simulated_data_path = "results/simulate_environment.jsonl"
-    elif data_type == "benign":
-        simulated_data_path = "results/simulate_benign.jsonl"
+    elif data_type == "safeOS_benign":
+        simulated_data_path = (
+            "/home/beihang/yx/DEFEND/data/safeOS/benign_simulate.jsonl"
+        )
     else:
         raise ValueError(f"Unknown data type: {data_type}")
 
@@ -69,8 +75,8 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
 
 
 def read_data(data_type: str):
-    if data_type == "os":
-        data_path = "data/os.json"
+    if data_type == "safeOS_harmful":
+        data_path = "/home/beihang/yx/DEFEND/data/os.json"
     elif data_type == "environment":
         data_path = "data/environment.json"
     elif data_type == "benign":
@@ -84,9 +90,9 @@ def read_data(data_type: str):
     elif data_type == "agentharm_benign":
         data_path = "/home/beihang/yx/DEFEND/data/agentharm/benign.json"
     elif data_type == "rjudge_harmful":
-        data_path = "data/R-Judge/harmful.json"
+        data_path = "/home/beihang/yx/DEFEND/data/R-Judge/harmful.json"
     elif data_type == "rjudge_benign":
-        data_path = "data/R-Judge/benign.json"
+        data_path = "/home/beihang/yx/DEFEND/data/R-Judge/benign.json"
     else:
         raise ValueError(f"Unknown data type: {data_type}")
 
@@ -97,7 +103,7 @@ def read_data(data_type: str):
     if data_type in ["agentharm", "agentharm_benign"]:
         if isinstance(data, dict) and "behaviors" in data:
             data = data["behaviors"]
-    
+
     # R-Judge 数据集需要进行包装处理
     if data_type.startswith("rjudge_"):
         wrapped_data = []
@@ -120,7 +126,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
                 actions = code_value["example"]["code"]
         return actions
 
-    if agent_type == "os":
+    if agent_type == "safeOS_harmful":
         target_data = dict[str, Any]()
         if "create" in data:
             target_data["init"] = data["create"]["init"]["code"]
@@ -135,7 +141,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["labels"] = "safe" if data.get("labels", 0) == 1 else "unsafe"
         target_data["agent_actions"] = find_actions(data)
 
-    elif agent_type == "environment" or agent_type == "benign":
+    elif agent_type == "environment" or agent_type == "safeOS_benign":
         target_data = dict[str, Any]()
         if "create" in data:
             target_data["init"] = data["create"]["init"]["code"]
@@ -190,21 +196,21 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         # 初始化为空，将由SimulateAgent生成
         target_data["agent_actions"] = ""
         target_data["init"] = ""
-    
+
     elif agent_type == "rjudge_harmful" or agent_type == "rjudge_benign":
         # R-Judge 数据集格式
         target_data = {}
-        
+
         # 从 contents 中提取用户请求和代理操作
         contents = data.get("contents", [])
         if contents and len(contents) > 0:
             # contents 是一个列表，每个元素是一轮对话
             first_round = contents[0]
-            
+
             # 提取用户请求
             user_content = ""
             agent_actions_list = []
-            
+
             for turn in first_round:
                 role = turn.get("role", "")
                 if role == "user":
@@ -215,21 +221,21 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
                     thought = turn.get("thought", "")
                     if action:
                         agent_actions_list.append(action)
-            
+
             target_data["request"] = user_content
             target_data["agent_actions"] = "\n".join(agent_actions_list)
         else:
             target_data["request"] = ""
             target_data["agent_actions"] = ""
-        
+
         # R-Judge 数据集标签：1=unsafe, 0=safe
         label = data.get("label", 0)
         target_data["labels"] = "unsafe" if label == 1 else "safe"
-        
+
         # 用户身份和权限
         target_data["user_identity"] = "root"
         target_data["user_level"] = "root"
-        
+
         # 保留 R-Judge 原始信息
         target_data["rjudge_id"] = data.get("id")
         target_data["rjudge_scenario"] = data.get("scenario", "")

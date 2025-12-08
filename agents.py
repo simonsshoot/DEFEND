@@ -303,6 +303,7 @@ class TarevoAgent(Agent):
         ]
         response = self.inference(messages)
         clean_response = self.extract_json(response)
+        self.logger.info(f"Safety Tool Definition Response: {clean_response}")
         clean_response = json.loads(clean_response)
         return clean_response
 

@@ -73,9 +73,7 @@ Here is the background where the assistant behaves and interacts with the user: 
         text = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
-        model_inputs = self.tokenizer([text], return_tensors="pt").to(
-            self.model.device
-        )
+        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
 
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
         generated_ids = [
@@ -119,7 +117,7 @@ Here is the background where the assistant behaves and interacts with the user: 
         return {"answer": answer, "analysis": analysis, "raw_response": response}
 
     def evaluate_dataset(
-        self, dataset_name: str, need_simulate: bool = False
+        self, dataset_name: str, simulate_data: bool = True
     ) -> pd.DataFrame:
         """评估整个数据集"""
         print(f"\n{'='*80}")
@@ -127,7 +125,7 @@ Here is the background where the assistant behaves and interacts with the user: 
         print(f"{'='*80}\n")
 
         # 读取数据
-        if need_simulate:
+        if not simulate_data:
             data = read_data(dataset_name)
         else:
             data = read_simulated_data(dataset_name)
@@ -150,7 +148,7 @@ Here is the background where the assistant behaves and interacts with the user: 
                     user_request = item.get("request", item.get("instruction", ""))
                     agent_actions = item.get("agent_actions", "")
                     # ASB: fulfillable=0 表示不安全，fulfillable=1 表示安全
-                    fulfillable = item.get("fulfillable", 1)
+                    fulfillable = item.get("fulfillable", 0)
                     true_label = "unsafe" if fulfillable == 0 else "safe"
                     tools_info = []
 
@@ -193,9 +191,15 @@ Here is the background where the assistant behaves and interacts with the user: 
                 results.append(
                     {
                         "index": idx,
-                        "user_request": user_request if "user_request" in locals() else "",
-                        "agent_actions": agent_actions if "agent_actions" in locals() else "",
-                        "true_label": true_label if "true_label" in locals() else "unknown",
+                        "user_request": (
+                            user_request if "user_request" in locals() else ""
+                        ),
+                        "agent_actions": (
+                            agent_actions if "agent_actions" in locals() else ""
+                        ),
+                        "true_label": (
+                            true_label if "true_label" in locals() else "unknown"
+                        ),
                         "predicted_label": "error",
                         "analysis": str(e),
                         "raw_response": "",
@@ -249,7 +253,9 @@ Here is the background where the assistant behaves and interacts with the user: 
             (df["predicted_label"] != "error") & (df["predicted_label"] != "unknown")
         ]
         if len(valid_df) > 0:
-            correct = len(valid_df[valid_df["true_label"] == valid_df["predicted_label"]])
+            correct = len(
+                valid_df[valid_df["true_label"] == valid_df["predicted_label"]]
+            )
             accuracy = correct / len(valid_df) * 100
             print(f"\nAccuracy: {correct}/{len(valid_df)} ({accuracy:.2f}%)")
 
@@ -313,7 +319,14 @@ def main():
         "--datasets",
         type=str,
         nargs="+",
-        default=["agentharm_benign","agentharm", "asb_benign","asb_harmful", "rjudge_harmful","rjudge_benign"],
+        default=[
+            "agentharm_benign",
+            "agentharm",
+            "asb_benign",
+            "asb_harmful",
+            "rjudge_harmful",
+            "rjudge_benign",
+        ],
         help="Datasets to evaluate (e.g., agentharm_benign asb_benign rjudge_harmful)",
     )
     parser.add_argument(
@@ -323,9 +336,10 @@ def main():
         help="Directory to save results",
     )
     parser.add_argument(
-        "--need_simulate",
-        action="store_true",
-        help="Whether to use original data (requires simulation)",
+        "--simulate_data",
+        type=bool,
+        default=True,
+        help="Whether to use simulated data",
     )
 
     args = parser.parse_args()
@@ -336,7 +350,7 @@ def main():
     all_results = {}
     for dataset in args.datasets:
         try:
-            df = evaluator.evaluate_dataset(dataset, need_simulate=args.need_simulate)
+            df = evaluator.evaluate_dataset(dataset, simulate_data=args.simulate_data)
 
             output_path = os.path.join(args.output_dir, f"{dataset}_results.csv")
             df.to_csv(output_path, index=False, encoding="utf-8")

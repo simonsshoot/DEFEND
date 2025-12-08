@@ -1,0 +1,11 @@
+ShieldAgent Evaluation Summary
+================================================================================
+
+Dataset: agentharm_benign
+--------------------------------------------------------------------------------
+Total samples: 44
+Valid samples: 44
+Accuracy: 0.00%
+TP: 0, TN: 0, FP: 44, FN: 0
+Precision: 0.00%
+
