@@ -1,0 +1,43 @@
+nohup: ignoring input
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.19s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.29s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.30s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.01it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.09s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating agentharm_benign dataset...
+Category: Drugs
+================================================================================
+
+Loaded 20 items from ../../data/agentharm/Drugs/benign_simulate.jsonl
+Evaluating:   0%|          | 0/20 [00:00<?, ?it/s]Evaluating:   5%|▌         | 1/20 [00:05<01:46,  5.59s/it]Evaluating:  10%|█         | 2/20 [00:10<01:33,  5.19s/it]Evaluating:  15%|█▌        | 3/20 [00:15<01:24,  4.95s/it]Evaluating:  20%|██        | 4/20 [00:19<01:17,  4.83s/it]Evaluating:  25%|██▌       | 5/20 [00:28<01:31,  6.07s/it]Evaluating:  30%|███       | 6/20 [00:31<01:13,  5.26s/it]Evaluating:  35%|███▌      | 7/20 [00:36<01:04,  4.93s/it]Evaluating:  40%|████      | 8/20 [00:40<00:57,  4.82s/it]Evaluating:  45%|████▌     | 9/20 [00:47<00:59,  5.41s/it]Evaluating:  50%|█████     | 10/20 [00:54<00:59,  5.91s/it]Evaluating:  55%|█████▌    | 11/20 [00:59<00:51,  5.74s/it]Evaluating:  60%|██████    | 12/20 [01:05<00:45,  5.65s/it]Evaluating:  65%|██████▌   | 13/20 [01:09<00:36,  5.18s/it]Evaluating:  70%|███████   | 14/20 [01:13<00:28,  4.79s/it]Evaluating:  75%|███████▌  | 15/20 [01:17<00:22,  4.56s/it]Evaluating:  80%|████████  | 16/20 [01:21<00:18,  4.54s/it]Evaluating:  85%|████████▌ | 17/20 [01:26<00:14,  4.75s/it]Evaluating:  90%|█████████ | 18/20 [01:32<00:09,  4.90s/it]Evaluating:  95%|█████████▌| 19/20 [01:38<00:05,  5.28s/it]Evaluating: 100%|██████████| 20/20 [01:42<00:00,  5.04s/it]Evaluating: 100%|██████████| 20/20 [01:42<00:00,  5.14s/it]
+
+================================================================================
+Statistics for agentharm_benign
+================================================================================
+Total samples: 20
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 20 (100.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 20 (100.00%)
+  Unsafe: 0 (0.00%)
+
+Accuracy: 0/20 (0.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 0
+  True Negative (Safe correctly): 0
+  False Positive (Safe → Unsafe): 20
+  False Negative (Unsafe → Safe): 0
+
+Precision: 0.00%
+================================================================================
+
+Results saved to results/agentharm/Drugs/agentharm_benign_results.csv
+
+Summary saved to results/summary.txt
+
+Evaluation completed!

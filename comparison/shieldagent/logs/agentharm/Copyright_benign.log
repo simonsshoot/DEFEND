@@ -1,0 +1,1577 @@
+nohup: ignoring input
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.04s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.19s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.16s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.13it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.02it/s]
+Model loaded successfully!
+
+================================================================================
+Evaluating agentharm_benign dataset...
+Category: Copyright
+================================================================================
+
+Loaded 23 items from ../../data/agentharm/Copyright/benign_simulate.jsonl
+Evaluating:   0%|          | 0/23 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 260, in forward
+    hidden_states, self_attn_weights = self.self_attn(
+                                       ^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 167, in forward
+    query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 90, in apply_rotary_pos_emb
+    q_embed = (q * cos) + (rotate_half(q) * sin)
+               ~~^~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 43.50 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:   4%|▍         | 1/23 [00:00<00:10,  2.09it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 170, in new_forward
+    args, kwargs = module._hf_hook.pre_forward(module, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 369, in pre_forward
+    return send_to_device(args, self.execution_device), send_to_device(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 170, in send_to_device
+    return honor_type(
+           ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 82, in honor_type
+    return type(obj)(generator)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 171, in <genexpr>
+    tensor, (send_to_device(t, device, non_blocking=non_blocking, skip_keys=skip_keys) for t in tensor)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 154, in send_to_device
+    return tensor.to(device, non_blocking=non_blocking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 43.50 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 45.34 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.62 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.32 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:  26%|██▌       | 6/23 [00:00<00:01, 11.82it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.38 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.82 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.61 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:  39%|███▉      | 9/23 [00:00<00:00, 15.78it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.38 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.54 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 0: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 43.50 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 1: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 43.50 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 2: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 45.34 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 3: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.62 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 4: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 5: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.32 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 6: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.38 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 7: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.82 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 8: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.61 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 9: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.38 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 10: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.54 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 11: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.52 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.52 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.40 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:  57%|█████▋    | 13/23 [00:00<00:00, 20.02it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.84 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.95 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 170, in new_forward
+    args, kwargs = module._hf_hook.pre_forward(module, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 369, in pre_forward
+    return send_to_device(args, self.execution_device), send_to_device(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 170, in send_to_device
+    return honor_type(
+           ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 82, in honor_type
+    return type(obj)(generator)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 171, in <genexpr>
+    tensor, (send_to_device(t, device, non_blocking=non_blocking, skip_keys=skip_keys) for t in tensor)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/utils/operations.py", line 154, in send_to_device
+    return tensor.to(device, non_blocking=non_blocking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 45.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 50.04 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:  74%|███████▍  | 17/23 [00:00<00:00, 23.29it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.67 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.69 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.83 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating:  87%|████████▋ | 20/23 [00:01<00:00, 24.22it/s]Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.82 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 221, in forward
+    variance = hidden_states.pow(2).mean(-1, keepdim=True)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.34 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 182, in evaluate_dataset
+    result = self.evaluate_single(user_request, agent_actions, tools_info)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/shieldagent/evaluate.py", line 78, in evaluate_single
+    generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 2223, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/generation/utils.py", line 3211, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 856, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 579, in forward
+    layer_outputs = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 257, in forward
+    hidden_states = self.input_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 220, in forward
+    hidden_states = hidden_states.to(torch.float32)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.35 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Evaluating: 100%|██████████| 23/23 [00:01<00:00, 24.98it/s]Evaluating: 100%|██████████| 23/23 [00:01<00:00, 18.91it/s]
+
+
+Error processing item 12: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.40 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 13: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 47.84 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 14: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 42.95 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 15: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 45.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 16: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 50.04 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 17: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.67 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 18: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.69 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 19: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.83 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 20: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.37 GiB is allocated by PyTorch, and 46.82 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 21: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.34 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+Error processing item 22: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 1 has a total capacity of 23.55 GiB of which 3.56 MiB is free. Process 3528857 has 462.00 MiB memory in use. Process 2073188 has 12.58 GiB memory in use. Process 2076153 has 5.77 GiB memory in use. Including non-PyTorch memory, this process has 4.72 GiB memory in use. Of the allocated memory 4.38 GiB is allocated by PyTorch, and 41.35 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+================================================================================
+Statistics for agentharm_benign
+================================================================================
+Total samples: 23
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 0 (0.00%)
+  Error: 23 (100.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 23 (100.00%)
+  Unsafe: 0 (0.00%)
+================================================================================
+
+Results saved to results/agentharm/Copyright/agentharm_benign_results.csv
+
+Summary saved to results/summary.txt
+
+Evaluation completed!

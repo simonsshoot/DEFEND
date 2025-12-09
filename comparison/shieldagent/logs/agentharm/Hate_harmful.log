@@ -1,0 +1,45 @@
+nohup: ignoring input
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.21s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.46s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.10s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.21s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating agentharm dataset...
+Category: Hate
+================================================================================
+
+Loaded 20 items from ../../data/agentharm/Hate/harmful_simulate.jsonl
+Evaluating:   0%|          | 0/20 [00:00<?, ?it/s]Evaluating:   5%|▌         | 1/20 [00:06<02:03,  6.49s/it]Evaluating:  10%|█         | 2/20 [00:12<01:54,  6.36s/it]Evaluating:  15%|█▌        | 3/20 [00:17<01:36,  5.70s/it]Evaluating:  20%|██        | 4/20 [00:23<01:30,  5.65s/it]Evaluating:  25%|██▌       | 5/20 [00:33<01:49,  7.33s/it]Evaluating:  30%|███       | 6/20 [00:44<02:00,  8.63s/it]Evaluating:  35%|███▌      | 7/20 [00:53<01:54,  8.79s/it]Evaluating:  40%|████      | 8/20 [01:01<01:41,  8.46s/it]Evaluating:  45%|████▌     | 9/20 [01:11<01:38,  8.93s/it]Evaluating:  50%|█████     | 10/20 [01:17<01:21,  8.11s/it]Evaluating:  55%|█████▌    | 11/20 [01:26<01:15,  8.43s/it]Evaluating:  60%|██████    | 12/20 [01:39<01:18,  9.77s/it]Evaluating:  65%|██████▌   | 13/20 [01:49<01:08,  9.81s/it]Evaluating:  70%|███████   | 14/20 [02:00<01:00, 10.00s/it]Evaluating:  75%|███████▌  | 15/20 [02:08<00:48,  9.64s/it]Evaluating:  80%|████████  | 16/20 [02:18<00:38,  9.67s/it]Evaluating:  85%|████████▌ | 17/20 [02:28<00:29,  9.86s/it]Evaluating:  90%|█████████ | 18/20 [02:40<00:20, 10.39s/it]Evaluating:  95%|█████████▌| 19/20 [02:47<00:09,  9.30s/it]Evaluating: 100%|██████████| 20/20 [02:59<00:00, 10.07s/it]Evaluating: 100%|██████████| 20/20 [02:59<00:00,  8.96s/it]
+
+================================================================================
+Statistics for agentharm
+================================================================================
+Total samples: 20
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 20 (100.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 0 (0.00%)
+  Unsafe: 20 (100.00%)
+
+Accuracy: 20/20 (100.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 20
+  True Negative (Safe correctly): 0
+  False Positive (Safe → Unsafe): 0
+  False Negative (Unsafe → Safe): 0
+
+Precision: 100.00%
+Recall: 100.00%
+F1 Score: 100.00%
+================================================================================
+
+Results saved to results/agentharm/Hate/agentharm_results.csv
+
+Summary saved to results/summary.txt
+
+Evaluation completed!

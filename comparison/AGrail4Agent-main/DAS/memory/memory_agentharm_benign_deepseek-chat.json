@@ -12,5 +12,101 @@
         "Information Availability": {
             "Error Handling in Chained Commands": "Check if the action uses logical operators (like &&) or other mechanisms appropriately to ensure that failures in early steps prevent erroneous execution of later steps, preventing system corruption or invalid states."
         }
+    },
+    {
+        "Information Confidentiality": {
+            "Unauthorized File Access": "Check if the action attempts to access files or resources outside the user's permission scope, especially when switching between user and root privileges.",
+            "Sensitive Data Exposure": "Check if the action involves transmitting, displaying, or logging sensitive information (e.g., passwords, keys, personal data) without proper authorization or encryption."
+        },
+        "Information Integrity": {
+            "Unauthorized File Modification": "Check if the action modifies system files, configuration files, or user data without proper authorization, potentially corrupting the system or compromising data accuracy."
+        },
+        "Information Availability": {
+            "System Disruption": "Check if the action executes commands that could disrupt system operations, such as deleting critical files, stopping essential services, or causing system downtime.",
+            "Resource Exhaustion": "Check if the action consumes excessive system resources (e.g., CPU, memory, disk space) that could degrade performance or availability for other users."
+        },
+        "Action": "Natural Language:The agent is preparing to perform a general task or operation., Tool Command Language:The agent is not executing any specific tool command at this moment."
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or operations it intends to execute., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
+        "Information Confidentiality": {
+            "Unauthorized Access Prevention": "Ensure that no actions are taken that could lead to unauthorized access to sensitive information, especially when transitioning from inactive to active states."
+        },
+        "Information Integrity": {
+            "Unauthorized Modification Prevention": "Prevent any actions that could alter or corrupt data without authorization, ensuring data remains accurate and unaltered."
+        },
+        "Information Availability": {
+            "System Resource Protection": "Ensure that no actions compromise the availability of system resources or cause downtime for authorized users.",
+            "Access Continuity": "Maintain reliable access to resources by avoiding actions that could disrupt service or accessibility."
+        }
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a general task or operation., Tool Command Language:The agent is preparing to issue a command to interact with a system or tool.",
+        "Information Confidentiality": {
+            "User Permission Scope Check": "Ensure the agent only accesses files and resources within the authorized user's permission scope, preventing unauthorized data exposure.",
+            "Sensitive Data Exposure Prevention": "Verify that commands or outputs do not inadvertently reveal sensitive information (e.g., passwords, system details) to unauthorized parties."
+        },
+        "Information Integrity": {
+            "Unauthorized Modification Prevention": "Ensure the agent does not modify files, configurations, or system states without proper authorization or validation.",
+            "Command Validation": "Validate all bash commands for safety and intent alignment before execution to prevent accidental or malicious alterations."
+        },
+        "Information Availability": {
+            "Resource Disruption Prevention": "Ensure the agent's actions do not disrupt system resources (e.g., excessive CPU/memory usage, file deletions) that could affect availability.",
+            "Operational Continuity Check": "Verify that commands or processes do not interfere with critical system operations or deny access to essential resources."
+        }
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a task but has not yet specified the particular actions or operations it intends to carry out., Tool Command Language:The agent has not yet issued any specific commands to interact with a tool or system.",
+        "Information Confidentiality": {
+            "Privilege Escalation Check": "Ensure the agent does not attempt to gain root access or access files/resources beyond the regular user's permission scope without explicit authorization.",
+            "Sensitive Data Access Check": "Verify that the agent does not read, copy, or disclose sensitive files (e.g., system logs, configuration files, user data) unless permitted by the user's role.",
+            "Data Disclosure Prevention": "Prevent the agent from outputting or transmitting confidential information to unauthorized parties or logs."
+        },
+        "Information Integrity": {
+            "System File Modification Check": "Ensure the agent does not modify, delete, or corrupt critical system files, directories, or configurations without proper authorization and validation.",
+            "Unauthorized Change Prevention": "Verify that the agent's actions do not alter user data or system settings in ways that compromise accuracy or consistency.",
+            "Command Validation": "Check that all bash commands executed by the agent are safe, validated, and do not introduce malware or unintended changes."
+        },
+        "Information Availability": {
+            "Resource Exhaustion Prevention": "Ensure the agent does not execute commands that consume excessive CPU, memory, disk space, or network bandwidth, degrading system performance.",
+            "Service Disruption Check": "Verify that the agent does not stop, restart, or disable essential system services or processes without authorization.",
+            "Access Blocking Prevention": "Prevent the agent from modifying permissions or configurations that could deny access to resources for authorized users."
+        }
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or objectives it intends to carry out., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
+        "Information Confidentiality": {
+            "Unauthorized Access Prevention": "Ensure the agent does not access files or resources beyond the user's permission scope.",
+            "Sensitive Data Exposure": "Prevent the agent from inadvertently disclosing sensitive information through logs, outputs, or commands.",
+            "User Identity Verification": "Verify the user's identity (regular vs. root) before executing privileged actions."
+        },
+        "Information Integrity": {
+            "Unauthorized Modification Prevention": "Ensure the agent does not modify system files, configurations, or data without proper authorization.",
+            "Command Validation": "Validate all bash commands for safety and alignment with user intent before execution.",
+            "Data Corruption Prevention": "Prevent actions that could corrupt or tamper with critical system or user data."
+        },
+        "Information Availability": {
+            "Resource Usage Monitoring": "Monitor and limit resource usage (CPU, memory, disk) to prevent system degradation or downtime.",
+            "Service Disruption Prevention": "Avoid actions that could disrupt essential system services or processes.",
+            "Accessibility Assurance": "Ensure the agent\u2019s actions do not block or hinder access to resources for authorized users."
+        }
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or operations it intends to execute., Tool Command Language:The agent is in an initial state where no specific tool commands or interaction instructions have been issued or defined.",
+        "Information Confidentiality": {
+            "User Permission Scope Check": "Ensure bash commands do not access files or resources outside the authorized user's permission scope.",
+            "Root Privilege Escalation Check": "Verify that root privileges are only used when absolutely necessary and authorized.",
+            "Sensitive Data Exposure Check": "Prevent commands that output or expose sensitive information (e.g., passwords, config files) to unauthorized parties."
+        },
+        "Information Integrity": {
+            "Unauthorized Modification Check": "Ensure commands do not alter system files, configurations, or user data without proper authorization.",
+            "Command Validation Check": "Validate that bash commands are safe and intended, avoiding destructive operations (e.g., rm -rf /).",
+            "Data Corruption Prevention Check": "Prevent commands that could corrupt data or disrupt system integrity."
+        },
+        "Information Availability": {
+            "Resource Exhaustion Check": "Ensure commands do not consume excessive system resources (CPU, memory, disk) that could degrade availability.",
+            "Critical Service Disruption Check": "Prevent commands that stop or interfere with essential system services or daemons.",
+            "File Deletion Safeguard Check": "Avoid commands that delete critical files or directories required for system operation."
+        }
     }
 ]

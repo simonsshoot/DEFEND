@@ -1,8 +1,8 @@
 export CUDA_VISIBLE_DEVICES=0,1,2
 MODEL="deepseek-chat"
 
-CATEGORY="Copyright"  # Copyright, Cybercrime, Disinformation, Drugs, Fraud, Harassment, Hate, Sexual
-DATA_TYPE="benign"    # harmful 或 benign
+CATEGORY="Drugs"  # Copyright, Cybercrime, Disinformation, Drugs, Fraud, Harassment, Hate, Sexual
+DATA_TYPE="harmful"    # harmful 或 benign
 
 mkdir -p logs/agentharm
 mkdir -p result/comparison/agentharm/$CATEGORY
