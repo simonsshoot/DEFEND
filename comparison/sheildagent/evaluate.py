@@ -73,7 +73,9 @@ Here is the background where the assistant behaves and interacts with the user: 
         text = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
-        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
+        model_inputs = self.tokenizer([text], return_tensors="pt").to(
+            self.model.device
+        )
 
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=512)
         generated_ids = [
@@ -117,26 +119,15 @@ Here is the background where the assistant behaves and interacts with the user: 
         return {"answer": answer, "analysis": analysis, "raw_response": response}
 
     def evaluate_dataset(
-        self, dataset_name: str, simulate_data: bool = True, category: str = None
+        self, dataset_name: str, need_simulate: bool = False
     ) -> pd.DataFrame:
-        """评估整个数据集
-        
-        Args:
-            dataset_name: 数据集名称
-            simulate_data: 是否使用模拟数据
-            category: AgentHarm 类别（可选），如 "Copyright", "Cybercrime" 等
-        """
+        """评估整个数据集"""
         print(f"\n{'='*80}")
         print(f"Evaluating {dataset_name} dataset...")
-        if category:
-            print(f"Category: {category}")
         print(f"{'='*80}\n")
 
         # 读取数据
-        if category:
-            # 加载特定类别的数据
-            data = self._load_category_data(dataset_name, category)
-        elif not simulate_data:
+        if need_simulate:
             data = read_data(dataset_name)
         else:
             data = read_simulated_data(dataset_name)
@@ -159,7 +150,7 @@ Here is the background where the assistant behaves and interacts with the user: 
                     user_request = item.get("request", item.get("instruction", ""))
                     agent_actions = item.get("agent_actions", "")
                     # ASB: fulfillable=0 表示不安全，fulfillable=1 表示安全
-                    fulfillable = item.get("fulfillable", 0)
+                    fulfillable = item.get("fulfillable", 1)
                     true_label = "unsafe" if fulfillable == 0 else "safe"
                     tools_info = []
 
@@ -202,15 +193,9 @@ Here is the background where the assistant behaves and interacts with the user: 
                 results.append(
                     {
                         "index": idx,
-                        "user_request": (
-                            user_request if "user_request" in locals() else ""
-                        ),
-                        "agent_actions": (
-                            agent_actions if "agent_actions" in locals() else ""
-                        ),
-                        "true_label": (
-                            true_label if "true_label" in locals() else "unknown"
-                        ),
+                        "user_request": user_request if "user_request" in locals() else "",
+                        "agent_actions": agent_actions if "agent_actions" in locals() else "",
+                        "true_label": true_label if "true_label" in locals() else "unknown",
                         "predicted_label": "error",
                         "analysis": str(e),
                         "raw_response": "",
@@ -264,9 +249,7 @@ Here is the background where the assistant behaves and interacts with the user: 
             (df["predicted_label"] != "error") & (df["predicted_label"] != "unknown")
         ]
         if len(valid_df) > 0:
-            correct = len(
-                valid_df[valid_df["true_label"] == valid_df["predicted_label"]]
-            )
+            correct = len(valid_df[valid_df["true_label"] == valid_df["predicted_label"]])
             accuracy = correct / len(valid_df) * 100
             print(f"\nAccuracy: {correct}/{len(valid_df)} ({accuracy:.2f}%)")
 
@@ -315,41 +298,6 @@ Here is the background where the assistant behaves and interacts with the user: 
 
         print(f"{'='*80}\n")
 
-    def _load_category_data(self, dataset_name: str, category: str) -> List[Dict]:
-        """
-        Args:
-            dataset_name: 数据集名称（如 "agentharm" 或 "agentharm_benign"）
-            category: 类别名称（如 "Copyright", "Cybercrime" 等）
-        
-        Returns:
-            数据列表
-        """
-        if "benign" in dataset_name:
-            data_type = "benign"
-        else:
-            data_type = "harmful"
-  
-        base_path = f"../../data/agentharm/{category}"
-        file_path = os.path.join(base_path, f"{data_type}_simulate.jsonl")
-        
-        if not os.path.exists(file_path):
-            print(f"Warning: File not found: {file_path}")
-            return []
- 
-        data = []
-        with open(file_path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line:
-                    try:
-                        item = json.loads(line)
-                        data.append(item)
-                    except json.JSONDecodeError as e:
-                        print(f"Warning: Failed to parse line: {line[:100]}... Error: {e}")
-                        continue
-        
-        print(f"Loaded {len(data)} items from {file_path}")
-        return data
 
 def main():
     parser = argparse.ArgumentParser(
@@ -362,34 +310,11 @@ def main():
         help="Path to ShieldAgent model",
     )
     parser.add_argument(
-        "--dataset",
-        type=str,
-        default=None,
-        help="Single dataset to evaluate (e.g., agentharm, agentharm_benign)",
-    )
-    parser.add_argument(
         "--datasets",
         type=str,
         nargs="+",
-        default=None,
-        help="Multiple datasets to evaluate (e.g., agentharm_benign asb_benign)",
-    )
-    parser.add_argument(
-        "--category",
-        type=str,
-        default=None,
-        choices=[
-            "Copyright",
-            "Cybercrime",
-            "Disinformation",
-            "Drugs",
-            "Fraud",
-            "Harassment",
-            "Hate",
-            "Sexual",
-            None,
-        ],
-        help="AgentHarm category (optional, only for agentharm dataset)",
+        default=["agentharm_benign","agentharm", "asb_benign","asb_harmful", "rjudge_harmful","rjudge_benign"],
+        help="Datasets to evaluate (e.g., agentharm_benign asb_benign rjudge_harmful)",
     )
     parser.add_argument(
         "--output_dir",
@@ -398,51 +323,22 @@ def main():
         help="Directory to save results",
     )
     parser.add_argument(
-        "--simulate_data",
-        type=bool,
-        default=True,
-        help="Whether to use simulated data",
+        "--need_simulate",
+        action="store_true",
+        help="Whether to use original data (requires simulation)",
     )
 
     args = parser.parse_args()
-    
-    # 确定要评估的数据集列表
-    if args.dataset:
-        datasets_to_eval = [args.dataset]
-    elif args.datasets:
-        datasets_to_eval = args.datasets
-    else:
-        # 默认数据集
-        datasets_to_eval = [
-            "agentharm_benign",
-            "agentharm",
-            "asb_benign",
-            "asb_harmful",
-            "rjudge_harmful",
-            "rjudge_benign",
-        ]
-    
-    # 创建输出目录
-    if args.category:
-        output_dir = os.path.join(args.output_dir, "agentharm", args.category)
-    else:
-        output_dir = args.output_dir
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(args.output_dir, exist_ok=True)
 
     evaluator = ShieldAgentEvaluator(model_path=args.model_path)
 
     all_results = {}
-    for dataset in datasets_to_eval:
+    for dataset in args.datasets:
         try:
-            df = evaluator.evaluate_dataset(
-                dataset, simulate_data=args.simulate_data, category=args.category
-            )
+            df = evaluator.evaluate_dataset(dataset, need_simulate=args.need_simulate)
 
-            # 保存结果
-            if args.category:
-                output_path = os.path.join(output_dir, f"{dataset}_results.csv")
-            else:
-                output_path = os.path.join(output_dir, f"{dataset}_results.csv")
+            output_path = os.path.join(args.output_dir, f"{dataset}_results.csv")
             df.to_csv(output_path, index=False, encoding="utf-8")
             print(f"Results saved to {output_path}")
 
