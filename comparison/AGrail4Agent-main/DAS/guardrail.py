@@ -19,7 +19,7 @@ model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 # 用于 ChromaDB 检索的 BGE-M3 embedding 模型（本地路径）
 DEFAULT_EMBEDDING = HuggingFaceEmbeddings(
-    model_name="/home/beihang/yx/models/bge-m3",
+    model_name="/data/Content_Moderation/BAAI-bge-m3",
     model_kwargs={"device": "cuda"},  # 如果有 GPU 可以改为 'cuda'
     encode_kwargs={"normalize_embeddings": True},
 )
