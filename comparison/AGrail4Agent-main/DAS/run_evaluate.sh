@@ -8,16 +8,17 @@ mkdir -p logs
 # 模型选择
 MODEL="deepseek-chat"
 
+
 # ==================== AgentHarm 数据集 ====================
 echo ""
 echo "Evaluating AgentHarm dataset..."
-
+export CUDA_VISIBLE_DEVICES=4,5,6,7
 # AgentHarm Harmful
 echo "  - Running AgentHarm harmful..."
 nohup python evaluate.py \
     --dataset agentharm \
     --data_type harmful \
-    --model $MODEL \
+    --model deepseek-chat \
     --seed 44 \
     > logs/agrail_agentharm_harmful.log 2>&1 &
 
@@ -74,5 +75,5 @@ nohup python evaluate.py \
     --seed 44 \
     > logs/agrail_rjudge_benign.log 2>&1 &
 
-echo "All jobs completed! Running summary..."
-python summarize_results.py --model $MODEL
+# echo "All jobs completed! Running summary..."
+# python summarize_results.py --model $MODEL

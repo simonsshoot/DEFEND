@@ -45,7 +45,7 @@ def load_agentharm_data(data_type):
         file_path = os.path.join(base_path, "benign_simulate.jsonl")
     else:
         raise ValueError(f"Unknown AgentHarm data type: {data_type}")
-    
+
     # 读取 JSONL 格式的模拟数据
     data = []
     with open(file_path, "r", encoding="utf-8") as f:
@@ -58,7 +58,7 @@ def load_agentharm_data(data_type):
                 except json.JSONDecodeError as e:
                     print(f"Warning: Failed to parse line: {line[:100]}... Error: {e}")
                     continue
-    
+
     return data
 
 
@@ -71,7 +71,7 @@ def load_asb_data(data_type):
         file_path = os.path.join(base_path, "benign_simulate.jsonl")
     else:
         raise ValueError(f"Unknown ASB data type: {data_type}")
-    
+
     # 读取 JSONL 格式的模拟数据
     data = []
     with open(file_path, "r", encoding="utf-8") as f:
@@ -84,7 +84,7 @@ def load_asb_data(data_type):
                 except json.JSONDecodeError as e:
                     print(f"Warning: Failed to parse line: {line[:100]}... Error: {e}")
                     continue
-    
+
     return data
 
 
@@ -97,10 +97,10 @@ def load_rjudge_data(data_type):
         file_path = os.path.join(base_path, "benign.json")
     else:
         raise ValueError(f"Unknown R-Judge data type: {data_type}")
-    
+
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    
+
     return data
 
 
@@ -178,8 +178,18 @@ def extract_label(item, dataset, data_type):
 def run_guardrail_check(user_request, agent_action, retrieve_file, container, model):
     """运行 AGrail 的 guardrail 检查"""
     user_info = f'"user_request": "{user_request}"'
-    
+
     try:
+        # 检查输入是否为空
+        if not agent_action or agent_action.strip() == "":
+            print(f"Warning: Empty agent_action, using placeholder")
+            agent_action = "No specific actions provided."
+
+        if not user_request or user_request.strip() == "":
+            print(f"Warning: Empty user_request, using placeholder")
+            user_request = "No request provided."
+            user_info = f'"user_request": "{user_request}"'
+
         guardrail_output, check_process, code, length = guard_rail(
             tools=TOOLS,
             user_information=user_info,
@@ -192,25 +202,44 @@ def run_guardrail_check(user_request, agent_action, retrieve_file, container, mo
             agent_model=model,
             update=True,
         )
-        
+
         # 解析结果：如果包含 "False"，表示不安全
         is_safe = "False" not in str(guardrail_output)
-        
+
         return {
             "decision": "safe" if is_safe else "unsafe",
             "guardrail_output": str(guardrail_output),
             "check_process": str(check_process),
             "code": str(code),
-            "token_length": length
+            "token_length": length,
+        }
+    except IndexError as e:
+        print(f"Error in guardrail check (IndexError): {e}")
+        print(f"  User request: {user_request[:100]}...")
+        print(f"  Agent action: {agent_action[:100]}...")
+        import traceback
+
+        traceback.print_exc()
+        return {
+            "decision": "error",
+            "guardrail_output": f"IndexError: {str(e)}",
+            "check_process": "",
+            "code": "",
+            "token_length": 0,
         }
     except Exception as e:
         print(f"Error in guardrail check: {e}")
+        print(f"  User request: {user_request[:100] if user_request else 'None'}...")
+        print(f"  Agent action: {agent_action[:100] if agent_action else 'None'}...")
+        import traceback
+
+        traceback.print_exc()
         return {
             "decision": "error",
-            "guardrail_output": "",
+            "guardrail_output": f"Error: {str(e)}",
             "check_process": "",
             "code": "",
-            "token_length": 0
+            "token_length": 0,
         }
 
 
@@ -219,7 +248,7 @@ def evaluate_dataset(args):
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-    
+
     # 加载数据
     if args.dataset == "agentharm":
         data = load_agentharm_data(args.data_type)
@@ -232,55 +261,67 @@ def evaluate_dataset(args):
         dataset_name = "rjudge"
     else:
         raise ValueError(f"Unknown dataset: {args.dataset}")
-    
+
     print(f"Loaded {len(data)} items from {args.dataset} ({args.data_type})")
-    
+
     # 创建结果目录
     result_dir = os.path.join("result", "comparison", args.dataset)
     os.makedirs(result_dir, exist_ok=True)
-    
+
     result_path = os.path.join(result_dir, f"{args.data_type}_{args.model}.csv")
-    
+
     # 创建 DataFrame
-    df = pd.DataFrame({
-        "index": range(len(data)),
-        "user_request": [None] * len(data),
-        "agent_actions": [None] * len(data),
-        "label": [None] * len(data),
-        "decision": [None] * len(data),
-        "guardrail_output": [None] * len(data),
-        "check_process": [None] * len(data),
-        "code": [None] * len(data),
-        "token_length": [None] * len(data),
-    })
-    
+    df = pd.DataFrame(
+        {
+            "index": range(len(data)),
+            "user_request": [None] * len(data),
+            "agent_actions": [None] * len(data),
+            "label": [None] * len(data),
+            "decision": [None] * len(data),
+            "guardrail_output": [None] * len(data),
+            "check_process": [None] * len(data),
+            "code": [None] * len(data),
+            "token_length": [None] * len(data),
+        }
+    )
+
     # 如果结果文件已存在，加载已有结果
     if os.path.exists(result_path) and not args.restart:
         existing_df = pd.read_csv(result_path)
         df = existing_df
         print(f"Loaded existing results from {result_path}")
-    
+
     # 创建内存文件
     os.makedirs("memory", exist_ok=True)
-    retrieve_file = os.path.join("memory", f"memory_{args.dataset}_{args.data_type}_{args.model}.json")
-    
+    retrieve_file = os.path.join(
+        "memory", f"memory_{args.dataset}_{args.data_type}_{args.model}.json"
+    )
+
     # 评估每个数据项
     container = Container()
-    
-    for index, item in tqdm(enumerate(data), desc=f"Evaluating {args.dataset}", total=len(data)):
+
+    for index, item in tqdm(
+        enumerate(data), desc=f"Evaluating {args.dataset}", total=len(data)
+    ):
         # 跳过已处理的项
-        if df.iloc[index]["decision"] is not None and pd.notna(df.iloc[index]["decision"]) and df.iloc[index]["decision"] != "error":
+        if (
+            df.iloc[index]["decision"] is not None
+            and pd.notna(df.iloc[index]["decision"])
+            and df.iloc[index]["decision"] != "error"
+        ):
             continue
-        
+
         try:
             # 提取信息
             user_request = extract_user_request(item, dataset_name)
             agent_actions = extract_agent_actions(item, dataset_name)
             label = extract_label(item, dataset_name, args.data_type)
-            
+
             # 运行 guardrail 检查
-            result = run_guardrail_check(user_request, agent_actions, retrieve_file, container, args.model)
-            
+            result = run_guardrail_check(
+                user_request, agent_actions, retrieve_file, container, args.model
+            )
+
             # 保存结果
             df.at[index, "user_request"] = user_request
             df.at[index, "agent_actions"] = agent_actions
@@ -290,68 +331,74 @@ def evaluate_dataset(args):
             df.at[index, "check_process"] = result["check_process"]
             df.at[index, "code"] = result["code"]
             df.at[index, "token_length"] = result["token_length"]
-            
+
             # 定期保存
             if (index + 1) % 10 == 0:
                 df.to_csv(result_path, index=False)
                 print(f"Progress saved at index {index + 1}")
-            
+
             if args.debug and index >= 2:
                 break
-                
+
         except Exception as e:
             print(f"Error processing item {index}: {e}")
             import traceback
+
             traceback.print_exc()
-            
+
             df.at[index, "decision"] = "error"
             df.to_csv(result_path, index=False)
             continue
-    
+
     # 保存最终结果
     df.to_csv(result_path, index=False)
     container.__del__()
-    
+
     print(f"\nEvaluation completed! Results saved to {result_path}")
-    
+
     # 统计结果
     print_statistics(df, args.dataset, args.data_type)
-    
+
     return result_path
 
 
 def print_statistics(df, dataset, data_type):
     """打印统计结果"""
     total = len(df)
-    
+
     # 过滤掉错误的项
     valid_df = df[df["decision"] != "error"]
     valid_count = len(valid_df)
     error_count = total - valid_count
-    
+
     if valid_count == 0:
         print("No valid results to analyze.")
         return
-    
+
     # 决策统计
     unsafe_count = len(valid_df[valid_df["decision"] == "unsafe"])
     safe_count = len(valid_df[valid_df["decision"] == "safe"])
-    
+
     # 标签统计
     label_0_count = len(valid_df[valid_df["label"] == 0])  # unsafe (should be blocked)
     label_1_count = len(valid_df[valid_df["label"] == 1])  # safe (should pass)
-    
+
     # 准确率计算
     # 对于 harmful 数据（label=0），正确判断为 unsafe
     # 对于 benign 数据（label=1），正确判断为 safe
-    correct_count = len(valid_df[(valid_df["label"] == 0) & (valid_df["decision"] == "unsafe")]) + \
-                    len(valid_df[(valid_df["label"] == 1) & (valid_df["decision"] == "safe")])
+    correct_count = len(
+        valid_df[(valid_df["label"] == 0) & (valid_df["decision"] == "unsafe")]
+    ) + len(valid_df[(valid_df["label"] == 1) & (valid_df["decision"] == "safe")])
     accuracy = correct_count / valid_count * 100 if valid_count > 0 else 0
-    
+
     # 误判统计
-    false_positive = len(valid_df[(valid_df["label"] == 1) & (valid_df["decision"] == "unsafe")])  # 良性误判为恶意
-    false_negative = len(valid_df[(valid_df["label"] == 0) & (valid_df["decision"] == "safe")])    # 恶意误判为良性
-    
+    false_positive = len(
+        valid_df[(valid_df["label"] == 1) & (valid_df["decision"] == "unsafe")]
+    )  # 良性误判为恶意
+    false_negative = len(
+        valid_df[(valid_df["label"] == 0) & (valid_df["decision"] == "safe")]
+    )  # 恶意误判为良性
+
     print(f"\n{'='*60}")
     print(f"Statistics for {dataset} ({data_type})")
     print(f"{'='*60}")
@@ -362,35 +409,57 @@ def print_statistics(df, dataset, data_type):
     print(f"  Unsafe: {unsafe_count} ({unsafe_count/valid_count*100:.2f}%)")
     print(f"  Safe: {safe_count} ({safe_count/valid_count*100:.2f}%)")
     print(f"\nLabel Distribution:")
-    print(f"  Label 0 (should block): {label_0_count} ({label_0_count/valid_count*100:.2f}%)")
-    print(f"  Label 1 (should pass): {label_1_count} ({label_1_count/valid_count*100:.2f}%)")
+    print(
+        f"  Label 0 (should block): {label_0_count} ({label_0_count/valid_count*100:.2f}%)"
+    )
+    print(
+        f"  Label 1 (should pass): {label_1_count} ({label_1_count/valid_count*100:.2f}%)"
+    )
     print(f"\nAccuracy Metrics:")
     print(f"  Overall Accuracy: {accuracy:.2f}%")
     print(f"  Correct Predictions: {correct_count}/{valid_count}")
-    print(f"  False Positive (benign→unsafe): {false_positive} ({false_positive/valid_count*100:.2f}%)")
-    print(f"  False Negative (harmful→safe): {false_negative} ({false_negative/valid_count*100:.2f}%)")
+    print(
+        f"  False Positive (benign→unsafe): {false_positive} ({false_positive/valid_count*100:.2f}%)"
+    )
+    print(
+        f"  False Negative (harmful→safe): {false_negative} ({false_negative/valid_count*100:.2f}%)"
+    )
     print(f"{'='*60}\n")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AGrail4Agent evaluation for DEFEND datasets")
-    parser.add_argument("--dataset", type=str, required=True, 
-                        choices=["agentharm", "asb", "rjudge"],
-                        help="Dataset to evaluate")
-    parser.add_argument("--data_type", type=str, required=True,
-                        choices=["harmful", "benign"],
-                        help="Data type: harmful or benign")
-    parser.add_argument("--model", type=str, default="deepseek-chat",
-                        help="Model to use for guardrail")
-    parser.add_argument("--seed", type=int, default=44,
-                        help="Random seed")
-    parser.add_argument("--debug", action="store_true",
-                        help="Debug mode (only process first 3 items)")
-    parser.add_argument("--restart", action="store_true",
-                        help="Restart evaluation (ignore existing results)")
-    
+    parser = argparse.ArgumentParser(
+        description="AGrail4Agent evaluation for DEFEND datasets"
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        required=True,
+        choices=["agentharm", "asb", "rjudge"],
+        help="Dataset to evaluate",
+    )
+    parser.add_argument(
+        "--data_type",
+        type=str,
+        required=True,
+        choices=["harmful", "benign"],
+        help="Data type: harmful or benign",
+    )
+    parser.add_argument(
+        "--model", type=str, default="deepseek-chat", help="Model to use for guardrail"
+    )
+    parser.add_argument("--seed", type=int, default=44, help="Random seed")
+    parser.add_argument(
+        "--debug", action="store_true", help="Debug mode (only process first 3 items)"
+    )
+    parser.add_argument(
+        "--restart",
+        action="store_true",
+        help="Restart evaluation (ignore existing results)",
+    )
+
     args = parser.parse_args()
-    
+
     print(f"Starting AGrail4Agent evaluation...")
     print(f"Dataset: {args.dataset}")
     print(f"Data type: {args.data_type}")
@@ -398,9 +467,9 @@ def main():
     print(f"Seed: {args.seed}")
     print(f"Debug mode: {args.debug}")
     print(f"Restart: {args.restart}\n")
-    
+
     result_path = evaluate_dataset(args)
-    
+
     print(f"\nEvaluation complete! Results saved to: {result_path}")
 
 

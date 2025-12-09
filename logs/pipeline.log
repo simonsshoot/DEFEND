@@ -348,3 +348,203 @@ Error processing item 0: cannot access local variable 'target_data' where it is 
 Error processing item 1: cannot access local variable 'target_data' where it is not associated with a value
 2025-12-08 16:18:42 - pipeline - ERROR - 
 Error processing item 9: Invalid \escape: line 8 column 272 (char 553)
+2025-12-08 23:29:11 - pipeline - ERROR - 
+Error processing item 0: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:29:12 - pipeline - ERROR - 
+Error processing item 0: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:29:12 - pipeline - ERROR - 
+Error processing item 0: Invalid \escape: line 15 column 361 (char 1757)
+2025-12-08 23:29:17 - pipeline - ERROR - 
+Error processing item 0: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:30:40 - pipeline - ERROR - 
+Error processing item 1: Invalid \escape: line 15 column 360 (char 1519)
+2025-12-08 23:30:43 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:30:55 - pipeline - ERROR - 
+Error processing item 1: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:30:58 - pipeline - ERROR - 
+Error processing item 4: Invalid \escape: line 2 column 1069 (char 1070)
+2025-12-08 23:31:00 - pipeline - ERROR - 
+Error processing item 1: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:31:03 - pipeline - ERROR - 
+Error processing item 1: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:31:54 - pipeline - ERROR - 
+Error processing item 4: Invalid \escape: line 15 column 1516 (char 3322)
+2025-12-08 23:32:38 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:32:52 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:33:15 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:33:20 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:33:45 - pipeline - ERROR - 
+Error processing item 5: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:33:51 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:35:12 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:36:33 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:37:30 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:38:44 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:40:21 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:40:42 - pipeline - ERROR - 
+Error processing item 9: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:42:01 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:42:10 - pipeline - ERROR - 
+Error processing item 2: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:44:08 - pipeline - ERROR - 
+Error processing item 3: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:44:21 - pipeline - ERROR - 
+Error processing item 5: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:45:12 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:45:14 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:45:48 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:45:58 - pipeline - ERROR - 
+Error processing item 7: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:46:51 - pipeline - ERROR - 
+Error processing item 9: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:47:00 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:47:08 - pipeline - ERROR - 
+Error processing item 16: Invalid \escape: line 6 column 912 (char 1183)
+2025-12-08 23:47:30 - pipeline - ERROR - 
+Error processing item 5: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:47:31 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:47:39 - pipeline - ERROR - 
+Error processing item 6: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:48:29 - pipeline - ERROR - 
+Error processing item 10: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:48:33 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:48:41 - pipeline - ERROR - 
+Error processing item 4: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:48:42 - pipeline - ERROR - 
+Error processing item 7: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:48:55 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:49:04 - pipeline - ERROR - 
+Error processing item 7: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:49:11 - pipeline - ERROR - 
+Error processing item 10: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:49:25 - pipeline - ERROR - 
+Error processing item 8: Invalid \escape: line 2 column 373 (char 374)
+2025-12-08 23:49:26 - pipeline - ERROR - 
+Error processing item 16: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:50:36 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:50:48 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:51:19 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:51:42 - pipeline - ERROR - 
+Error processing item 18: Expecting ',' delimiter: line 22 column 703 (char 4190)
+2025-12-08 23:52:46 - pipeline - ERROR - 
+Error processing item 10: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:52:59 - pipeline - ERROR - 
+Error processing item 9: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:53:41 - pipeline - ERROR - 
+Error processing item 14: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:54:30 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:54:37 - pipeline - ERROR - 
+Error processing item 10: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:56:02 - pipeline - ERROR - 
+Error processing item 16: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:56:13 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:56:13 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:56:40 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:57:48 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:57:50 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:58:26 - pipeline - ERROR - 
+Error processing item 9: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:58:33 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-08 23:58:50 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:00:02 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:00:23 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:00:30 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:01:16 - pipeline - ERROR - 
+Error processing item 9: Invalid \escape: line 6 column 2056 (char 2536)
+2025-12-09 00:01:57 - pipeline - ERROR - 
+Error processing item 13: Invalid \escape: line 6 column 4340 (char 4572)
+2025-12-09 00:01:58 - pipeline - ERROR - 
+Error processing item 14: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:02:10 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:03:08 - pipeline - ERROR - 
+Error processing item 8: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:03:22 - pipeline - ERROR - 
+Error processing item 15: Invalid \escape: line 6 column 1241 (char 1492)
+2025-12-09 00:03:41 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:03:54 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:04:58 - pipeline - ERROR - 
+Error processing item 16: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:05:07 - pipeline - ERROR - 
+Error processing item 10: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:11:05 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:11:06 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:12:38 - pipeline - ERROR - 
+Error processing item 13: Invalid \escape: line 22 column 573 (char 5127)
+2025-12-09 00:12:42 - pipeline - ERROR - 
+Error processing item 16: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:14:14 - pipeline - ERROR - 
+Error processing item 17: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:15:01 - pipeline - ERROR - 
+Error processing item 11: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:15:27 - pipeline - ERROR - 
+Error processing item 17: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:16:06 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:16:44 - pipeline - ERROR - 
+Error processing item 12: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:16:59 - pipeline - ERROR - 
+Error processing item 19: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:17:02 - pipeline - ERROR - 
+Error processing item 18: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:18:18 - pipeline - ERROR - 
+Error processing item 13: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:19:40 - pipeline - ERROR - 
+Error processing item 19: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:20:52 - pipeline - ERROR - 
+Error processing item 16: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:23:03 - pipeline - ERROR - 
+Error processing item 19: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:24:00 - pipeline - ERROR - 
+Error processing item 15: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:24:58 - pipeline - ERROR - 
+Error processing item 18: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:26:41 - pipeline - ERROR - 
+Error processing item 19: Invalid \escape: line 22 column 259 (char 3106)
+2025-12-09 00:33:34 - pipeline - ERROR - 
+Error processing item 19: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:36:11 - pipeline - ERROR - 
+Error processing item 20: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:37:05 - pipeline - ERROR - 
+Error processing item 18: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:41:07 - pipeline - ERROR - 
+Error processing item 22: Expecting value: line 1 column 1 (char 0)
+2025-12-09 00:42:43 - pipeline - ERROR - 
+Error processing item 23: Expecting value: line 1 column 1 (char 0)

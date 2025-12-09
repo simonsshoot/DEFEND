@@ -2,6 +2,7 @@
 # 每个类别包含 harmful 和 benign 两类数据
 
 # AgentHarm 的 8 个类别
+cd ..
 categories=("Copyright" "Cybercrime" "Disinformation" "Drugs" "Fraud" "Harassment" "Hate" "Sexual")
 
 for category in "${categories[@]}"; do

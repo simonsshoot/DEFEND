@@ -7,6 +7,7 @@ from utils import (
 from utils import retrieve_from_json
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import re
+import json
 from tools.code_tool import CodeDetection
 from tools.permission_tool import PermissionDetection
 from tools.web_tool import WebDetection
@@ -55,40 +56,106 @@ def match_in_memory_bool(text):
 def extract_json_from_text(output, index):
     import json
 
-    # Use regex to find JSON blocks in the text
-    json_pattern = re.compile(r"```json\n(.*?)\n```", re.DOTALL)
+    # Use regex to find JSON blocks in the text (支持多种格式)
+    json_pattern = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
     matches = json_pattern.findall(output)
+
+    # 如果没有找到 ```json 代码块，尝试直接提取 JSON
+    if not matches:
+        # 尝试查找 {} 或 [] 包裹的 JSON
+        brace_pattern = re.compile(r"(\{[^{}]*\}|\[[^\[\]]*\])", re.DOTALL)
+        matches = brace_pattern.findall(output)
+
+        # 如果还是没找到，尝试从整个文本中提取
+        if not matches:
+            # 查找第一个 { 到最后一个 }
+            start = output.find("{")
+            end = output.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                matches = [output[start : end + 1]]
+            else:
+                # 查找第一个 [ 到最后一个 ]
+                start = output.find("[")
+                end = output.rfind("]")
+                if start != -1 and end != -1 and end > start:
+                    matches = [output[start : end + 1]]
+
+    # 检查是否有足够的匹配项
+    if not matches:
+        raise ValueError(f"No JSON found in output: {output[:200]}...")
+
+    # 检查索引是否有效
+    if abs(index) > len(matches):
+        raise IndexError(
+            f"Index {index} out of range. Found {len(matches)} JSON blocks, output: {output[:200]}..."
+        )
+
+    # 获取指定索引的 JSON 字符串
+    json_str = matches[index]
 
     # Parse each JSON block and return a list of parsed objects
     if index == -1:
-        if matches[index][0] == "[":
-            matches[index] = matches[index][1:-1]
-        matches[index] = matches[index].replace("[", "{").replace("]", "}")
+        if json_str.strip()[0] == "[":
+            json_str = json_str.strip()[1:-1]
+        json_str = json_str.replace("[", "{").replace("]", "}")
 
-    return json.loads(matches[index])
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        # 尝试清理 JSON 字符串
+        json_str_cleaned = json_str.strip()
+        # 移除可能的尾部逗号
+        json_str_cleaned = re.sub(r",\s*}", "}", json_str_cleaned)
+        json_str_cleaned = re.sub(r",\s*]", "]", json_str_cleaned)
+        try:
+            return json.loads(json_str_cleaned)
+        except json.JSONDecodeError:
+            raise ValueError(
+                f"Failed to parse JSON from: {json_str[:500]}... Error: {str(e)}"
+            )
 
 
 def tool_call_from_react(output):
     reason_safety = []
-    steps = extract_json_from_text(output, -2)
+
+    # 添加错误处理
+    try:
+        steps = extract_json_from_text(output, -2)
+    except (ValueError, IndexError, json.JSONDecodeError) as e:
+        print(f"Warning: Failed to extract steps from react output: {e}")
+        return {}, []
+
+    # 确保 steps 是列表
+    if not isinstance(steps, list):
+        print(f"Warning: steps is not a list, got {type(steps)}")
+        if isinstance(steps, dict):
+            steps = [steps]
+        else:
+            return {}, []
+
     tool_dic = {}
     for i in range(len(steps)):
-        """
-        if steps[i]["Tool Call"] != "False":
-            if steps[i]["Tool Call"] not in tool_dic:
-                tool_dic[steps[i]["Tool Call"]] = []  # 初始化为空列表
-            tool_dic[steps[i]["Tool Call"]].append(steps[i])
-        else:
-            if steps[i]["Delete"] != "True":
-                reason_safety.append(steps[i]["Result"])
-        """
-        if steps[i]["Delete"] == "False":
-            if steps[i]["Tool Call"] != "False":
-                if steps[i]["Tool Call"] not in tool_dic:
-                    tool_dic[steps[i]["Tool Call"]] = []
-                tool_dic[steps[i]["Tool Call"]].append(steps[i])
-            else:
-                reason_safety.append(steps[i]["Result"])
+        try:
+            step = steps[i]
+            if not isinstance(step, dict):
+                print(f"Warning: step {i} is not a dict, skipping")
+                continue
+
+            # 使用 get 方法避免 KeyError
+            delete_flag = step.get("Delete", "False")
+            tool_call = step.get("Tool Call", "False")
+            result = step.get("Result", "")
+
+            if delete_flag == "False":
+                if tool_call != "False":
+                    if tool_call not in tool_dic:
+                        tool_dic[tool_call] = []
+                    tool_dic[tool_call].append(step)
+                else:
+                    reason_safety.append(result)
+        except Exception as e:
+            print(f"Warning: Error processing step {i}: {e}")
+            continue
 
     return tool_dic, reason_safety
 
@@ -374,12 +441,27 @@ def risk_analyst(
         model_name=agent_model,
     )
     print("############Analyst###########\n" + output)
-    check_list = extract_json_from_text(output, 0)
+
+    # 添加错误处理和重试机制
+    try:
+        check_list = extract_json_from_text(output, 0)
+    except (ValueError, IndexError, json.JSONDecodeError) as e:
+        print(f"Warning: Failed to extract check_list from analyst output: {e}")
+        print(f"Output (first 500 chars): {output[:500]}")
+        # 返回默认的 check_list
+        check_list = {"Action": memory_action, "Role-based Checking": {}}
+
     action_retrieve = retrieve_natural_language_action
-    action_learned = check_list["Action"]
-    embedding1 = model.encode(action_learned, convert_to_tensor=True)
-    embedding2 = model.encode(action_retrieve, convert_to_tensor=True)
-    similarity = util.pytorch_cos_sim(embedding1, embedding2)
+    action_learned = check_list.get("Action", memory_action)
+
+    try:
+        embedding1 = model.encode(action_learned, convert_to_tensor=True)
+        embedding2 = model.encode(action_retrieve, convert_to_tensor=True)
+        similarity = util.pytorch_cos_sim(embedding1, embedding2)
+    except Exception as e:
+        print(f"Warning: Failed to compute similarity: {e}")
+        similarity = 0.0
+
     in_memory = False
     if similarity > 0.80 or match_in_memory_bool(output):
         in_memory = True
@@ -416,9 +498,32 @@ def attack_defender(
         model_name=agent_model,
     )
     print("############Executor###########\n" + output)
-    check_list = extract_json_from_text(output, -1)
-    check_process = extract_json_from_text(output, -2)
-    tool_checks, reason_safety = tool_call_from_react(output)
+
+    # 添加错误处理
+    try:
+        check_list = extract_json_from_text(output, -1)
+    except (ValueError, IndexError, json.JSONDecodeError) as e:
+        print(f"Warning: Failed to extract check_list (-1) from executor output: {e}")
+        print(f"Output (first 500 chars): {output[:500]}")
+        check_list = {}
+
+    try:
+        check_process = extract_json_from_text(output, -2)
+    except (ValueError, IndexError, json.JSONDecodeError) as e:
+        print(
+            f"Warning: Failed to extract check_process (-2) from executor output: {e}"
+        )
+        print(f"Output (first 500 chars): {output[:500]}")
+        check_process = []
+
+    try:
+        tool_checks, reason_safety = tool_call_from_react(output)
+    except (ValueError, IndexError, json.JSONDecodeError, KeyError) as e:
+        print(f"Warning: Failed to extract tool_checks from executor output: {e}")
+        print(f"Output (first 500 chars): {output[:500]}")
+        tool_checks = {}
+        reason_safety = []
+
     return tool_checks, check_list, reason_safety, check_process, length
 
 

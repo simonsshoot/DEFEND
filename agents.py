@@ -37,6 +37,58 @@ from container import Container
 from utils import normalize_is_safe
 
 
+def parse_json_with_retry(
+    response_text: str,
+    max_retries: int = 3,
+    retry_prompt: str = None,
+    model_call_func=None,
+    extract_json_func=None,
+    logger=None,
+) -> Dict[str, Any]:
+    for attempt in range(max_retries):
+        try:
+            if extract_json_func:
+                cleaned_text = extract_json_func(response_text)
+            else:
+                text = re.sub(r"```json\s*", "", response_text)
+                text = re.sub(r"```\s*$", "", text)
+                text = text.strip()
+                first_brace = text.find("{")
+                last_brace = text.rfind("}")
+                if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+                    cleaned_text = text[first_brace : last_brace + 1]
+                else:
+                    cleaned_text = text
+
+            result = json.loads(cleaned_text)
+            return result
+
+        except json.JSONDecodeError as e:
+            if logger:
+                logger.warning(
+                    f"JSON 解析失败（第 {attempt + 1}/{max_retries} 次）: {str(e)}"
+                )
+
+            if attempt < max_retries - 1 and model_call_func and retry_prompt:
+                try:
+                    retry_message = f"{retry_prompt}\n\n上一次响应格式有误，请确保返回完整、有效的 JSON 格式。\n之前的响应: {response_text[:200]}...\n\n请重新生成完整的 JSON 响应，只返回json，不要返回其他内容。"
+                    response_text = model_call_func(retry_message)
+
+                    continue
+
+                except Exception as retry_error:
+                    if logger:
+                        logger.error(f"模型重试失败: {str(retry_error)}")
+
+            if attempt == max_retries - 1:
+                if logger:
+                    logger.error(f"JSON 解析失败，已达最大重试次数 {max_retries}")
+                raise
+    raise json.JSONDecodeError(
+        "Failed to parse JSON after all retries", response_text, 0
+    )
+
+
 class Agent:
     def __init__(self, model_name: str, logger: str = "general_logger"):
         self.model_name = model_name.lower()
@@ -265,18 +317,42 @@ class TarevoAgent(Agent):
             risk_categories=risk_categories,
             user_level=user_level,
         )
+
+        system_prompt = "你是一个专业而严谨的安全专家，专注于风险分析。"
+
         messages = [
             {
                 "role": "system",
-                "content": "你是一个专业而严谨的安全专家，专注于风险分析。",
+                "content": system_prompt,
             },
             {"role": "user", "content": prompt},
         ]
         response = self.inference(messages)
 
-        clean_response = self.extract_json(response)
+        try:
+            analysis_result = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse risk analysis after retries: {str(e)}")
+            # 返回默认的无风险结果
+            analysis_result = {
+                "need_tools": "no",
+                "reason": "JSON parsing failed after retries",
+                "new_risks": "no",
+                "risks": [],
+            }
 
-        analysis_result = json.loads(clean_response)
         return analysis_result
 
     def safetytool_definition(
@@ -294,17 +370,40 @@ class TarevoAgent(Agent):
             risk_analysis=json.dumps(risk, indent=2, ensure_ascii=False),
             user_level=user_level,
         )
+
+        system_prompt = "你是一个安全工具开发专家，专注于设计防护工具。"
+
         messages = [
             {
                 "role": "system",
-                "content": "你是一个安全工具开发专家，专注于设计防护工具。",
+                "content": system_prompt,
             },
             {"role": "user", "content": prompt},
         ]
         response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        self.logger.info(f"Safety Tool Definition Response: {clean_response}")
-        clean_response = json.loads(clean_response)
+        self.logger.info(f"Safety Tool Definition Response (raw): {response[:500]}...")
+
+        try:
+            clean_response = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"Failed to parse safety tool definition after retries: {str(e)}"
+            )
+            # 返回空工具列表而不是崩溃
+            clean_response = {"tools": []}
+
         return clean_response
 
     def targeted_evo(
@@ -424,8 +523,31 @@ class OptimAgent(Agent):
         ]
         time.sleep(2)
         response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        clean_response = json.loads(clean_response)
+
+        try:
+            clean_response = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {
+                            "role": "system",
+                            "content": "你是一个检索专家，负责检索现有的安全工具库中有没有与用户提出的工具相似的工具，进而避免后续重复开发。",
+                        },
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"Failed to parse search tool result after retries: {str(e)}"
+            )
+            # 返回空工具列表
+            clean_response = {"tools": []}
+
         return clean_response
 
     def optimize_tool(
@@ -475,9 +597,31 @@ class OptimAgent(Agent):
                 ]
                 time.sleep(2)
                 response = self.inference(messages)
-                clean_response = self.extract_json(response)
-                clean_response = json.loads(clean_response)
-                tool_workflow.append((clean_response, True))
+
+                try:
+                    clean_response = parse_json_with_retry(
+                        response_text=response,
+                        max_retries=3,
+                        retry_prompt=prompt,
+                        model_call_func=lambda retry_msg: self.inference(
+                            [
+                                {
+                                    "role": "system",
+                                    "content": "你是一个安全工具优化专家，负责根据用户提出的工具，优化现有的相似工具，目的在提高工具库的精简性同时兼容用户提出的工具。",
+                                },
+                                {"role": "user", "content": retry_msg},
+                            ]
+                        ),
+                        extract_json_func=self.extract_json,
+                        logger=self.logger,
+                    )
+                    tool_workflow.append((clean_response, True))
+                except json.JSONDecodeError as e:
+                    self.logger.error(
+                        f"Failed to parse optimize tool result after retries: {str(e)}"
+                    )
+                    # 使用原始工具而不是优化后的工具
+                    tool_workflow.append((item, False))
 
         return tool_workflow
 
@@ -700,18 +844,41 @@ class DoubtAgent(Agent):
             reason=reason,
         )
 
+        system_prompt = (
+            "你是一个安全工具修复专家，负责根据审核意见修复有风险的安全工具。"
+        )
+
         messages = [
             {
                 "role": "system",
-                "content": "你是一个安全工具修复专家，负责根据审核意见修复有风险的安全工具。",
+                "content": system_prompt,
             },
             {"role": "user", "content": prompt},
         ]
 
         time.sleep(2)
         response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        optimized_tool = json.loads(clean_response)
+
+        try:
+            optimized_tool = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"Failed to parse auto-optimized tool after retries: {str(e)}"
+            )
+            # 返回原始工具和失败标志
+            return tool_info, False
 
         return optimized_tool, True
 
@@ -734,6 +901,8 @@ class DoubtAgent(Agent):
         for item in feedback:
             tool_info, is_optimized, execution_result = item
             if not is_optimized:
+                system_prompt = "你是一个安全工具审核专家，用户的请求与代理执行的操作可能含有风险，需要使用安全工具进行防护。"
+
                 prompt = TOOL_DOUBT_PROMPT.format(
                     request=data["request"],
                     agent_actions=data["agent_actions"],
@@ -743,14 +912,36 @@ class DoubtAgent(Agent):
                 messages = [
                     {
                         "role": "system",
-                        "content": "你是一个安全工具审核专家，用户的请求与代理执行的操作可能含有风险，需要使用安全工具进行防护。",
+                        "content": system_prompt,
                     },
                     {"role": "user", "content": prompt},
                 ]
                 time.sleep(2)
                 response = self.inference(messages)
-                clean_response = self.extract_json(response)
-                clean_response = json.loads(clean_response)
+
+                try:
+                    clean_response = parse_json_with_retry(
+                        response_text=response,
+                        max_retries=3,
+                        retry_prompt=prompt,
+                        model_call_func=lambda retry_msg: self.inference(
+                            [
+                                {"role": "system", "content": system_prompt},
+                                {"role": "user", "content": retry_msg},
+                            ]
+                        ),
+                        extract_json_func=self.extract_json,
+                        logger=self.logger,
+                    )
+                except json.JSONDecodeError as e:
+                    self.logger.error(
+                        f"Failed to parse doubt tool result after retries: {str(e)}"
+                    )
+                    # 返回默认的安全结果
+                    clean_response = {
+                        "is_safe": "True",
+                        "reason": "JSON parsing failed, defaulting to safe",
+                    }
 
                 # 如果工具被判定有风险，自动尝试优化
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
@@ -772,6 +963,8 @@ class DoubtAgent(Agent):
                         pass
 
             elif is_optimized:
+                system_prompt_opt = "你是一个安全工具改进专家，用户的请求与代理执行的操作可能含有风险，现有的安全工具可被重用和优化来检测这些风险。"
+
                 origin_tool = self.search_original_tool(tool_info)
                 prompt = TOOL_DOUBT_OPTIMIZE_PROMPT.format(
                     request=data["request"],
@@ -785,14 +978,36 @@ class DoubtAgent(Agent):
                 messages = [
                     {
                         "role": "system",
-                        "content": "你是一个安全工具改进专家，用户的请求与代理执行的操作可能含有风险，现有的安全工具可被重用和优化来检测这些风险。",
+                        "content": system_prompt_opt,
                     },
                     {"role": "user", "content": prompt},
                 ]
                 time.sleep(2)
                 response = self.inference(messages)
-                clean_response = self.extract_json(response)
-                clean_response = json.loads(clean_response)
+                try:
+                    clean_response = parse_json_with_retry(
+                        response_text=response,
+                        max_retries=3,
+                        retry_prompt=prompt,
+                        model_call_func=lambda retry_msg: self.inference(
+                            [
+                                {"role": "system", "content": system_prompt_opt},
+                                {"role": "user", "content": retry_msg},
+                            ]
+                        ),
+                        extract_json_func=self.extract_json,
+                        logger=self.logger,
+                    )
+                except json.JSONDecodeError as e:
+                    self.logger.error(
+                        f"Failed to parse optimized doubt tool result after retries: {str(e)}"
+                    )
+                    # 返回默认的安全结果
+                    clean_response = {
+                        "is_safe": "True",
+                        "reason": "JSON parsing failed, defaulting to safe",
+                    }
+
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
                     risky_tools += 1
                     reoptimized_tool, success = self.auto_optimize_risky_tool(
@@ -926,8 +1141,34 @@ class DoubtAgent(Agent):
         ]
         time.sleep(2)
         response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        clean_response = json.loads(clean_response)
+
+        try:
+            clean_response = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {
+                            "role": "system",
+                            "content": "你是一个安全工具最终审核专家",
+                        },
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"Failed to parse doubt decision result after retries: {str(e)}"
+            )
+            # 默认返回不安全，阻止请求
+            clean_response = {
+                "is_safe": "False",
+                "reason": "JSON parsing failed, defaulting to unsafe",
+            }
+
         if normalize_is_safe(clean_response.get("is_safe", "")) == False:
             if debug_mode:
                 with open(debug_decision_path, "w", encoding="utf-8") as f:
@@ -991,8 +1232,30 @@ class SandBoxAgent(Agent):
             ]
             time.sleep(1)
             response = self.inference(messages)
-            clean_response = self.extract_json(response)
-            clean_response = json.loads(clean_response)
+            try:
+                clean_response = parse_json_with_retry(
+                    response_text=response,
+                    max_retries=3,
+                    retry_prompt=prompt,
+                    model_call_func=lambda retry_msg: self.inference(
+                        [
+                            {
+                                "role": "system",
+                                "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行安全工具的结果。",
+                            },
+                            {"role": "user", "content": retry_msg},
+                        ]
+                    ),
+                    extract_json_func=self.extract_json,
+                    logger=self.logger,
+                )
+            except json.JSONDecodeError as e:
+                self.logger.error(
+                    f"Failed to parse sandbox execute tool result after retries: {str(e)}"
+                )
+                # 默认返回无风险结果
+                clean_response = {"result": "False"}
+
             result = clean_response.get("result", "True")
             execution_results.append(
                 (tool_info, is_optimized, True if result == "True" else False)
@@ -1029,8 +1292,31 @@ class SandBoxAgent(Agent):
             ]
             time.sleep(1)
             response = self.inference(messages)
-            clean_response = self.extract_json(response)
-            clean_response = json.loads(clean_response)
+
+            try:
+                clean_response = parse_json_with_retry(
+                    response_text=response,
+                    max_retries=3,
+                    retry_prompt=prompt,
+                    model_call_func=lambda retry_msg: self.inference(
+                        [
+                            {
+                                "role": "system",
+                                "content": "你是一个LLM沙箱环境执行专家，负责模拟在沙箱环境中执行用户命令的结果。",
+                            },
+                            {"role": "user", "content": retry_msg},
+                        ]
+                    ),
+                    extract_json_func=self.extract_json,
+                    logger=self.logger,
+                )
+            except json.JSONDecodeError as e:
+                self.logger.error(
+                    f"Failed to parse sandbox execute action result after retries: {str(e)}"
+                )
+                # 返回默认空结果
+                clean_response = {"result": ""}
+
             result = clean_response.get("result", "")
             return [result]
 
@@ -1067,8 +1353,31 @@ class SandBoxAgent(Agent):
                 {"role": "user", "content": prompt},
             ]
             response = self.inference(messages)
-            clean_response = self.extract_json(response)
-            clean_response = json.loads(clean_response)
+
+            try:
+                clean_response = parse_json_with_retry(
+                    response_text=response,
+                    max_retries=3,
+                    retry_prompt=prompt,
+                    model_call_func=lambda retry_msg: self.inference(
+                        [
+                            {
+                                "role": "system",
+                                "content": "你是一个LLM沙箱环境执行专家，负责模拟执行bash命令。",
+                            },
+                            {"role": "user", "content": retry_msg},
+                        ]
+                    ),
+                    extract_json_func=self.extract_json,
+                    logger=self.logger,
+                )
+            except json.JSONDecodeError as e:
+                self.logger.error(
+                    f"Failed to parse tool action bash result after retries: {str(e)}"
+                )
+                # 返回默认空结果
+                clean_response = {"result": ""}
+
             return [clean_response.get("result", "")]
 
         # 执行每个工具调用
@@ -1122,8 +1431,16 @@ class SandBoxAgent(Agent):
 
                 # 尝试解析为JSON格式
                 if args_str_clean.startswith("{") and args_str_clean.endswith("}"):
-                    tool_args = json.loads(args_str_clean)
-                else:
+                    try:
+                        tool_args = json.loads(args_str_clean)
+                    except json.JSONDecodeError as e:
+                        self.logger.warning(
+                            f"Failed to parse tool args as JSON: {str(e)}, trying alternative parsing"
+                        )
+                        # 如果JSON解析失败，尝试其他解析方式
+                        pass
+
+                if not tool_args:
                     # 解析键值对参数：arg1='val1', arg2='val2'
                     # 或单个参数：'value'
                     if "=" in args_str_clean:
@@ -1180,8 +1497,16 @@ class SandBoxAgent(Agent):
             if args_str.strip():
                 args_str_clean = args_str.strip()
                 if args_str_clean.startswith("{") and args_str_clean.endswith("}"):
-                    tool_args = json.loads(args_str_clean)
-                else:
+                    try:
+                        tool_args = json.loads(args_str_clean)
+                    except json.JSONDecodeError as e:
+                        self.logger.warning(
+                            f"Failed to parse AgentHarm tool args as JSON: {str(e)}, trying alternative parsing"
+                        )
+                        # 如果JSON解析失败，尝试其他解析方式
+                        pass
+
+                if not tool_args:
                     # 简单解析
                     if "=" in args_str_clean:
                         parts = args_str_clean.split(",")
@@ -1211,8 +1536,29 @@ class SandBoxAgent(Agent):
                 {"role": "user", "content": prompt},
             ]
             response = self.inference(messages)
-            clean_response = self.extract_json(response)
-            result = json.loads(clean_response)
+            try:
+                result = parse_json_with_retry(
+                    response_text=response,
+                    max_retries=3,
+                    retry_prompt=prompt,
+                    model_call_func=lambda retry_msg: self.inference(
+                        [
+                            {"role": "system", "content": "你是一个工具执行模拟器。"},
+                            {"role": "user", "content": retry_msg},
+                        ]
+                    ),
+                    extract_json_func=self.extract_json,
+                    logger=self.logger,
+                )
+            except json.JSONDecodeError as e:
+                self.logger.error(
+                    f"Failed to parse agentharm tool simulation result after retries: {str(e)}"
+                )
+                result = {
+                    "success": False,
+                    "message": f"JSON parsing failed: {str(e)}",
+                    "output": "",
+                }
 
             self.logger.info(
                 f"Simulated AgentHarm tool {tool_name} with args {tool_args}: {result.get('success', False)}"
@@ -1261,8 +1607,31 @@ class SimulateAgent(Agent):
         ]
         time.sleep(2)
         response = self.inference(messages)
-        clean_response = self.extract_json(response)
-        clean_response = json.loads(clean_response)
+
+        try:
+            clean_response = parse_json_with_retry(
+                response_text=response,
+                max_retries=3,
+                retry_prompt=prompt,
+                model_call_func=lambda retry_msg: self.inference(
+                    [
+                        {
+                            "role": "system",
+                            "content": "你是一个模拟代理，负责输出代理在执行用户请求时可能会执行的操作。",
+                        },
+                        {"role": "user", "content": retry_msg},
+                    ]
+                ),
+                extract_json_func=self.extract_json,
+                logger=self.logger,
+            )
+        except json.JSONDecodeError as e:
+            self.logger.error(
+                f"Failed to parse simulate agent result after retries: {str(e)}"
+            )
+            # 返回默认值
+            clean_response = {"agent_actions": "", "environment": ""}
+
         simu_data = data
         simu_data["agent_actions"] = clean_response.get("agent_actions", "")
         simu_data["init"] = clean_response.get("environment", "")
@@ -1297,8 +1666,24 @@ class SimulateMultiRoundAgent(Agent):
                     user_round_prompt = {"role": "user", "content": prompt}
                     self.history.append(user_round_prompt)
                 agent_response = self.inference(self.history)
-                clean_response = self.extract_json(agent_response)
-                clean_response = json.loads(clean_response)
+                try:
+                    clean_response = parse_json_with_retry(
+                        response_text=agent_response,
+                        max_retries=3,
+                        retry_prompt=prompt,
+                        model_call_func=lambda retry_msg: self.inference(
+                            self.history[:-1] + [{"role": "user", "content": retry_msg}]
+                        ),
+                        extract_json_func=self.extract_json,
+                        logger=self.logger,
+                    )
+                except json.JSONDecodeError as e:
+                    self.logger.error(
+                        f"Failed to parse multi-round simulate result (round {round_num}) after retries: {str(e)}"
+                    )
+                    # 返回默认值
+                    clean_response = {"agent_actions": "", "environment": ""}
+
                 imple_data["agent_actions"].append(
                     clean_response.get("agent_actions", "")
                 )

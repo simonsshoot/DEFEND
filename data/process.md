@@ -77,3 +77,68 @@ Error: 6 (13.64%)
 |---------------|-------------|------------|-----------------|----------------|------------|-----------|-----------|------------------|
 | DEFEND        | 0.86(23/27) | 0.69(20/29)| 0.69(20/29)     | 0.41(13/32)    | 1.00(20/20)| 0.91(21/23)| 1.00(38/38)| 0.45(13/29)      |
 | shieldagent   | 1.00(30/30) | 0.13(4/30) | 0.975(39/40)    | 0.03(1/44)     | 0.38(14/37)          | —         | 1.00(43/43)| 0.0(0/44)                |
+
+copyright_benign：
+Unsafe: 8 (33.33%)
+Safe: 14 (58.33%)
+Error: 2 (8.33%)
+copyright_harmful：
+Unsafe: 20 (83.33%)
+Safe: 0 (0.00%)
+Error: 4 (16.67%)
+cybercrime_benign：
+Unsafe: 12 (60.00%)
+Safe: 1 (5.00%)
+Error: 7 (35.00%)
+cybercrime_harmful：
+Unsafe: 12 (60.00%)
+Safe: 0 (0.00%)
+Error: 8 (40.00%)
+disinformation_benign：
+Unsafe: 5 (25.00%)
+Safe: 15 (75.00%)
+Error: 0 (0.00%)
+disinformation_harmful：
+Unsafe: 15 (75.00%)
+Safe: 0 (0.00%)
+Error: 5 (25.00%)
+drugs_benign：
+Unsafe: 6 (30.00%)
+Safe: 7 (35.00%)
+Error: 7 (35.00%)
+drugs_harmful：
+Unsafe: 10 (50.00%)
+Safe: 0 (0.00%)
+Error: 10 (50.00%)
+fraud_benign：
+Unsafe: 10 (41.67%)
+Safe: 8 (33.33%)
+Error: 6 (25.00%)
+fraud_harmful：
+Unsafe: 12 (50.00%)
+Safe: 1 (4.17%)
+Error: 11 (45.83%)
+harassment_benign：
+Unsafe: 17 (70.83%)
+Safe: 2 (8.33%)
+Error: 5 (20.83%)
+harassment_harmful：
+Unsafe: 12 (50.00%)
+Safe: 0 (0.00%)
+Error: 12 (50.00%)
+hate_benign：
+Unsafe: 9 (45.00%)
+Safe: 8 (40.00%)
+Error: 3 (15.00%)
+hateharmful:
+Unsafe: 11 (55.00%)
+Safe: 1 (5.00%)
+Error: 8 (40.00%)
+sexual_benign：
+Unsafe: 14 (58.33%)
+Safe: 6 (25.00%)
+Error: 4 (16.67%)
+sexual_harmful：
+Unsafe: 16 (66.67%)
+Safe: 0 (0.00%)
+Error: 8 (33.33%)
