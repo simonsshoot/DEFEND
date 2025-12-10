@@ -1,0 +1,44 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.14s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:03,  1.54s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.37s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.02s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.16s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating rjudge_harmful dataset...
+Subfolder: Finance
+================================================================================
+
+Loaded 39 items from ../../data/R-Judge/Finance/harmful.json
+Evaluating:   0%|          | 0/39 [00:00<?, ?it/s]Evaluating:   3%|▎         | 1/39 [00:06<04:03,  6.40s/it]Evaluating:   5%|▌         | 2/39 [00:13<04:01,  6.53s/it]Evaluating:   8%|▊         | 3/39 [00:22<04:35,  7.66s/it]Evaluating:  10%|█         | 4/39 [00:30<04:44,  8.12s/it]Evaluating:  13%|█▎        | 5/39 [00:37<04:16,  7.53s/it]Evaluating:  15%|█▌        | 6/39 [00:45<04:16,  7.76s/it]Evaluating:  18%|█▊        | 7/39 [00:51<03:46,  7.08s/it]Evaluating:  21%|██        | 8/39 [00:59<03:49,  7.40s/it]Evaluating:  23%|██▎       | 9/39 [01:06<03:39,  7.31s/it]Evaluating:  26%|██▌       | 10/39 [01:11<03:11,  6.60s/it]Evaluating:  28%|██▊       | 11/39 [01:18<03:10,  6.81s/it]Evaluating:  31%|███       | 12/39 [01:24<02:57,  6.59s/it]Evaluating:  33%|███▎      | 13/39 [01:31<02:51,  6.60s/it]Evaluating:  36%|███▌      | 14/39 [01:39<02:58,  7.14s/it]Evaluating:  38%|███▊      | 15/39 [01:44<02:35,  6.48s/it]Evaluating:  41%|████      | 16/39 [01:52<02:35,  6.75s/it]Evaluating:  44%|████▎     | 17/39 [01:58<02:23,  6.51s/it]Evaluating:  46%|████▌     | 18/39 [02:06<02:31,  7.20s/it]Evaluating:  49%|████▊     | 19/39 [02:16<02:37,  7.89s/it]Evaluating:  51%|█████▏    | 20/39 [02:22<02:20,  7.38s/it]Evaluating:  54%|█████▍    | 21/39 [02:32<02:25,  8.07s/it]Evaluating:  56%|█████▋    | 22/39 [02:38<02:06,  7.42s/it]Evaluating:  59%|█████▉    | 23/39 [02:45<01:59,  7.50s/it]Evaluating:  62%|██████▏   | 24/39 [02:54<01:58,  7.92s/it]Evaluating:  64%|██████▍   | 25/39 [03:02<01:50,  7.90s/it]Evaluating:  67%|██████▋   | 26/39 [03:11<01:46,  8.19s/it]Evaluating:  69%|██████▉   | 27/39 [03:17<01:30,  7.57s/it]Evaluating:  72%|███████▏  | 28/39 [03:22<01:14,  6.79s/it]Evaluating:  74%|███████▍  | 29/39 [03:30<01:11,  7.14s/it]Evaluating:  77%|███████▋  | 30/39 [03:36<01:00,  6.75s/it]Evaluating:  79%|███████▉  | 31/39 [03:41<00:49,  6.20s/it]Evaluating:  82%|████████▏ | 32/39 [03:46<00:41,  5.93s/it]Evaluating:  85%|████████▍ | 33/39 [03:53<00:37,  6.17s/it]Evaluating:  87%|████████▋ | 34/39 [03:56<00:26,  5.35s/it]Evaluating:  90%|████████▉ | 35/39 [04:06<00:27,  6.80s/it]Evaluating:  92%|█████████▏| 36/39 [04:13<00:20,  6.76s/it]Evaluating:  95%|█████████▍| 37/39 [04:19<00:13,  6.63s/it]Evaluating:  97%|█████████▋| 38/39 [04:26<00:06,  6.58s/it]Evaluating: 100%|██████████| 39/39 [04:32<00:00,  6.40s/it]Evaluating: 100%|██████████| 39/39 [04:32<00:00,  6.98s/it]
+
+================================================================================
+Statistics for rjudge_harmful
+================================================================================
+Total samples: 39
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 39 (100.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 0 (0.00%)
+  Unsafe: 39 (100.00%)
+
+Accuracy: 39/39 (100.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 39
+  True Negative (Safe correctly): 0
+  False Positive (Safe → Unsafe): 0
+  False Negative (Unsafe → Safe): 0
+
+Precision: 100.00%
+Recall: 100.00%
+F1 Score: 100.00%
+================================================================================
+
+Results saved to results/rjudge/rjudge/Finance/rjudge_harmful_results.csv
+
+Summary saved to results/rjudge/summary.txt
+
+Evaluation completed!

@@ -124,6 +124,32 @@ def read_data(data_type: str):
                 data = data["behaviors"]
             return data
     
+    # 支持 R-Judge 按子文件夹读取
+    # 格式: rjudge_<subfolder>_harmful 或 rjudge_<subfolder>_benign
+    rjudge_subfolders = ["Application", "Finance", "IoT", "Program", "Web"]
+    
+    for subfolder in rjudge_subfolders:
+        if data_type == f"rjudge_{subfolder}_harmful":
+            data_path = f"data/R-Judge/{subfolder}/harmful.json"
+            with open(data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            # R-Judge 数据需要包装处理
+            wrapped_data = []
+            for item in data:
+                wrapped_item = data_wrapper(item, data_type)
+                wrapped_data.append(wrapped_item)
+            return wrapped_data
+        elif data_type == f"rjudge_{subfolder}_benign":
+            data_path = f"data/R-Judge/{subfolder}/benign.json"
+            with open(data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            # R-Judge 数据需要包装处理
+            wrapped_data = []
+            for item in data:
+                wrapped_item = data_wrapper(item, data_type)
+                wrapped_data.append(wrapped_item)
+            return wrapped_data
+    
     if data_type == "safeOS_harmful":
         data_path = "/home/beihang/yx/DEFEND/data/os.json"
     elif data_type == "environment":
@@ -247,7 +273,7 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["agent_actions"] = ""
         target_data["init"] = ""
 
-    elif agent_type == "rjudge_harmful" or agent_type == "rjudge_benign":
+    elif agent_type.startswith("rjudge_"):
         # R-Judge 数据集格式
         target_data = {}
 

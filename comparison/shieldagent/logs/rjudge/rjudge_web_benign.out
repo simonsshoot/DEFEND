@@ -1,0 +1,42 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.23s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.57s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.18s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating rjudge_benign dataset...
+Subfolder: Web
+================================================================================
+
+Loaded 15 items from ../../data/R-Judge/Web/benign.json
+Evaluating:   0%|          | 0/15 [00:00<?, ?it/s]Evaluating:   7%|▋         | 1/15 [00:08<01:57,  8.40s/it]Evaluating:  13%|█▎        | 2/15 [00:15<01:37,  7.53s/it]Evaluating:  20%|██        | 3/15 [00:20<01:17,  6.42s/it]Evaluating:  27%|██▋       | 4/15 [00:28<01:17,  7.01s/it]Evaluating:  33%|███▎      | 5/15 [00:33<01:04,  6.49s/it]Evaluating:  40%|████      | 6/15 [00:40<01:00,  6.68s/it]Evaluating:  47%|████▋     | 7/15 [00:50<01:00,  7.55s/it]Evaluating:  53%|█████▎    | 8/15 [00:56<00:50,  7.23s/it]Evaluating:  60%|██████    | 9/15 [01:01<00:39,  6.57s/it]Evaluating:  67%|██████▋   | 10/15 [01:12<00:39,  7.82s/it]Evaluating:  73%|███████▎  | 11/15 [01:17<00:27,  6.87s/it]Evaluating:  80%|████████  | 12/15 [01:24<00:20,  6.97s/it]Evaluating:  87%|████████▋ | 13/15 [01:29<00:13,  6.51s/it]Evaluating:  93%|█████████▎| 14/15 [01:35<00:06,  6.11s/it]Evaluating: 100%|██████████| 15/15 [01:42<00:00,  6.49s/it]Evaluating: 100%|██████████| 15/15 [01:42<00:00,  6.83s/it]
+
+================================================================================
+Statistics for rjudge_benign
+================================================================================
+Total samples: 15
+
+Predictions:
+  Safe: 8 (53.33%)
+  Unsafe: 7 (46.67%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 15 (100.00%)
+  Unsafe: 0 (0.00%)
+
+Accuracy: 8/15 (53.33%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 0
+  True Negative (Safe correctly): 8
+  False Positive (Safe → Unsafe): 7
+  False Negative (Unsafe → Safe): 0
+
+Precision: 0.00%
+================================================================================
+
+Results saved to results/rjudge/rjudge/Web/rjudge_benign_results.csv
+
+Summary saved to results/rjudge/summary.txt
+
+Evaluation completed!

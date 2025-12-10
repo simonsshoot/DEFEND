@@ -1,0 +1,44 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.22s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.56s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.18s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating rjudge_harmful dataset...
+Subfolder: Web
+================================================================================
+
+Loaded 20 items from ../../data/R-Judge/Web/harmful.json
+Evaluating:   0%|          | 0/20 [00:00<?, ?it/s]Evaluating:   5%|▌         | 1/20 [00:09<03:08,  9.90s/it]Evaluating:  10%|█         | 2/20 [00:18<02:45,  9.19s/it]Evaluating:  15%|█▌        | 3/20 [00:23<02:00,  7.09s/it]Evaluating:  20%|██        | 4/20 [00:28<01:41,  6.32s/it]Evaluating:  25%|██▌       | 5/20 [00:34<01:32,  6.16s/it]Evaluating:  30%|███       | 6/20 [00:40<01:27,  6.24s/it]Evaluating:  35%|███▌      | 7/20 [00:47<01:22,  6.32s/it]Evaluating:  40%|████      | 8/20 [00:54<01:20,  6.70s/it]Evaluating:  45%|████▌     | 9/20 [01:01<01:15,  6.90s/it]Evaluating:  50%|█████     | 10/20 [01:08<01:09,  6.93s/it]Evaluating:  55%|█████▌    | 11/20 [01:13<00:55,  6.13s/it]Evaluating:  60%|██████    | 12/20 [01:19<00:48,  6.12s/it]Evaluating:  65%|██████▌   | 13/20 [01:24<00:41,  5.91s/it]Evaluating:  70%|███████   | 14/20 [01:32<00:37,  6.31s/it]Evaluating:  75%|███████▌  | 15/20 [01:36<00:29,  5.83s/it]Evaluating:  80%|████████  | 16/20 [01:42<00:23,  5.76s/it]Evaluating:  85%|████████▌ | 17/20 [01:48<00:17,  5.76s/it]Evaluating:  90%|█████████ | 18/20 [01:52<00:10,  5.50s/it]Evaluating:  95%|█████████▌| 19/20 [01:57<00:05,  5.29s/it]Evaluating: 100%|██████████| 20/20 [02:01<00:00,  4.96s/it]Evaluating: 100%|██████████| 20/20 [02:01<00:00,  6.10s/it]
+
+================================================================================
+Statistics for rjudge_harmful
+================================================================================
+Total samples: 20
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 20 (100.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 0 (0.00%)
+  Unsafe: 20 (100.00%)
+
+Accuracy: 20/20 (100.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 20
+  True Negative (Safe correctly): 0
+  False Positive (Safe → Unsafe): 0
+  False Negative (Unsafe → Safe): 0
+
+Precision: 100.00%
+Recall: 100.00%
+F1 Score: 100.00%
+================================================================================
+
+Results saved to results/rjudge/rjudge/Web/rjudge_harmful_results.csv
+
+Summary saved to results/rjudge/summary.txt
+
+Evaluation completed!

@@ -1,0 +1,44 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.22s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.56s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.18s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating rjudge_harmful dataset...
+Subfolder: Program
+================================================================================
+
+Loaded 68 items from ../../data/R-Judge/Program/harmful.json
+Evaluating:   0%|          | 0/68 [00:00<?, ?it/s]Evaluating:   1%|▏         | 1/68 [00:08<09:04,  8.13s/it]Evaluating:   3%|▎         | 2/68 [00:15<08:13,  7.48s/it]Evaluating:   4%|▍         | 3/68 [00:25<09:36,  8.86s/it]Evaluating:   6%|▌         | 4/68 [00:35<09:40,  9.08s/it]Evaluating:   7%|▋         | 5/68 [00:42<09:04,  8.65s/it]Evaluating:   9%|▉         | 6/68 [00:51<08:46,  8.48s/it]Evaluating:  10%|█         | 7/68 [00:55<07:16,  7.15s/it]Evaluating:  12%|█▏        | 8/68 [01:00<06:25,  6.43s/it]Evaluating:  13%|█▎        | 9/68 [01:05<05:48,  5.90s/it]Evaluating:  15%|█▍        | 10/68 [01:12<06:13,  6.44s/it]Evaluating:  16%|█▌        | 11/68 [01:17<05:33,  5.86s/it]Evaluating:  18%|█▊        | 12/68 [01:22<05:14,  5.61s/it]Evaluating:  19%|█▉        | 13/68 [01:26<04:36,  5.02s/it]Evaluating:  21%|██        | 14/68 [01:32<04:58,  5.53s/it]Evaluating:  22%|██▏       | 15/68 [01:37<04:40,  5.29s/it]Evaluating:  24%|██▎       | 16/68 [01:42<04:24,  5.09s/it]Evaluating:  25%|██▌       | 17/68 [01:45<03:59,  4.70s/it]Evaluating:  26%|██▋       | 18/68 [01:51<04:11,  5.03s/it]Evaluating:  28%|██▊       | 19/68 [01:57<04:13,  5.18s/it]Evaluating:  29%|██▉       | 20/68 [02:03<04:20,  5.43s/it]Evaluating:  31%|███       | 21/68 [02:11<05:01,  6.41s/it]Evaluating:  32%|███▏      | 22/68 [02:18<04:57,  6.47s/it]Evaluating:  34%|███▍      | 23/68 [02:27<05:18,  7.07s/it]Evaluating:  35%|███▌      | 24/68 [02:35<05:27,  7.44s/it]Evaluating:  37%|███▋      | 25/68 [02:42<05:16,  7.37s/it]Evaluating:  38%|███▊      | 26/68 [02:49<05:01,  7.17s/it]Evaluating:  40%|███▉      | 27/68 [02:55<04:38,  6.80s/it]Evaluating:  41%|████      | 28/68 [03:02<04:35,  6.89s/it]Evaluating:  43%|████▎     | 29/68 [03:08<04:16,  6.58s/it]Evaluating:  44%|████▍     | 30/68 [03:13<03:58,  6.29s/it]Evaluating:  46%|████▌     | 31/68 [03:18<03:39,  5.94s/it]Evaluating:  47%|████▋     | 32/68 [03:24<03:33,  5.93s/it]Evaluating:  49%|████▊     | 33/68 [03:31<03:35,  6.15s/it]Evaluating:  50%|█████     | 34/68 [03:38<03:33,  6.28s/it]Evaluating:  51%|█████▏    | 35/68 [03:42<03:11,  5.81s/it]Evaluating:  53%|█████▎    | 36/68 [03:48<03:03,  5.73s/it]Evaluating:  54%|█████▍    | 37/68 [03:53<02:52,  5.55s/it]Evaluating:  56%|█████▌    | 38/68 [03:59<02:52,  5.75s/it]Evaluating:  57%|█████▋    | 39/68 [04:05<02:44,  5.68s/it]Evaluating:  59%|█████▉    | 40/68 [04:11<02:44,  5.86s/it]Evaluating:  60%|██████    | 41/68 [04:16<02:32,  5.66s/it]Evaluating:  62%|██████▏   | 42/68 [04:22<02:30,  5.78s/it]Evaluating:  63%|██████▎   | 43/68 [04:29<02:30,  6.00s/it]Evaluating:  65%|██████▍   | 44/68 [04:35<02:26,  6.12s/it]Evaluating:  66%|██████▌   | 45/68 [04:41<02:19,  6.05s/it]Evaluating:  68%|██████▊   | 46/68 [04:49<02:25,  6.62s/it]Evaluating:  69%|██████▉   | 47/68 [04:54<02:10,  6.19s/it]Evaluating:  71%|███████   | 48/68 [05:00<01:59,  5.98s/it]Evaluating:  72%|███████▏  | 49/68 [05:05<01:48,  5.69s/it]Evaluating:  74%|███████▎  | 50/68 [05:11<01:44,  5.83s/it]Evaluating:  75%|███████▌  | 51/68 [05:15<01:33,  5.49s/it]Evaluating:  76%|███████▋  | 52/68 [05:21<01:29,  5.58s/it]Evaluating:  78%|███████▊  | 53/68 [05:27<01:24,  5.62s/it]Evaluating:  79%|███████▉  | 54/68 [05:37<01:38,  7.03s/it]Evaluating:  81%|████████  | 55/68 [05:43<01:25,  6.60s/it]Evaluating:  82%|████████▏ | 56/68 [05:48<01:13,  6.17s/it]Evaluating:  84%|████████▍ | 57/68 [05:52<00:59,  5.43s/it]Evaluating:  85%|████████▌ | 58/68 [05:56<00:51,  5.13s/it]Evaluating:  87%|████████▋ | 59/68 [06:02<00:46,  5.21s/it]Evaluating:  88%|████████▊ | 60/68 [06:11<00:52,  6.61s/it]Evaluating:  90%|████████▉ | 61/68 [06:17<00:43,  6.25s/it]Evaluating:  91%|█████████ | 62/68 [06:22<00:35,  5.98s/it]Evaluating:  93%|█████████▎| 63/68 [06:28<00:29,  5.81s/it]Evaluating:  94%|█████████▍| 64/68 [06:33<00:22,  5.71s/it]Evaluating:  96%|█████████▌| 65/68 [06:40<00:18,  6.04s/it]Evaluating:  97%|█████████▋| 66/68 [06:47<00:12,  6.24s/it]Evaluating:  99%|█████████▊| 67/68 [06:52<00:06,  6.11s/it]Evaluating: 100%|██████████| 68/68 [06:58<00:00,  5.92s/it]Evaluating: 100%|██████████| 68/68 [06:58<00:00,  6.15s/it]
+
+================================================================================
+Statistics for rjudge_harmful
+================================================================================
+Total samples: 68
+
+Predictions:
+  Safe: 0 (0.00%)
+  Unsafe: 68 (100.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 0 (0.00%)
+  Unsafe: 68 (100.00%)
+
+Accuracy: 68/68 (100.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 68
+  True Negative (Safe correctly): 0
+  False Positive (Safe → Unsafe): 0
+  False Negative (Unsafe → Safe): 0
+
+Precision: 100.00%
+Recall: 100.00%
+F1 Score: 100.00%
+================================================================================
+
+Results saved to results/rjudge/rjudge/Program/rjudge_harmful_results.csv
+
+Summary saved to results/rjudge/summary.txt
+
+Evaluation completed!

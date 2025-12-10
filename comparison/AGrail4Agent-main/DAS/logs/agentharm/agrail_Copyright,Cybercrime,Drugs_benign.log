@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/evaluate.py", line 14, in <module>
+    from utils import Container, Agent, Session
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/utils.py", line 3, in <module>
+    import docker
+ModuleNotFoundError: No module named 'docker'

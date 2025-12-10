@@ -1,0 +1,13 @@
+ShieldAgent Evaluation Summary
+================================================================================
+
+Dataset: rjudge_harmful
+--------------------------------------------------------------------------------
+Total samples: 20
+Valid samples: 20
+Accuracy: 100.00%
+TP: 20, TN: 0, FP: 0, FN: 0
+Precision: 100.00%
+Recall: 100.00%
+F1 Score: 100.00%
+

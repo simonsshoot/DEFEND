@@ -1,0 +1,42 @@
+/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/guardrail.py:21: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings` was deprecated in LangChain 0.2.2 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-huggingface package and should be used instead. To use it run `pip install -U :class:`~langchain-huggingface` and import as `from :class:`~langchain_huggingface import HuggingFaceEmbeddings``.
+  DEFAULT_EMBEDDING = HuggingFaceEmbeddings(
+Starting AGrail4Agent evaluation...
+Dataset: rjudge
+Data type: benign
+Subfolder: Program
+Model: deepseek-chat
+Seed: 44
+Debug mode: False
+Restart: False
+
+Loaded 60 items from rjudge (benign)
+  Subfolder: Program
+Loaded existing results from result/comparison/rjudge/Program/benign_deepseek-chat.csv
+Evaluating rjudge:   0%|          | 0/60 [00:00<?, ?it/s]Evaluating rjudge: 100%|██████████| 60/60 [00:00<00:00, 3732.58it/s]
+
+Evaluation completed! Results saved to result/comparison/rjudge/Program/benign_deepseek-chat.csv
+
+============================================================
+Statistics for rjudge (benign)
+============================================================
+Total items: 60
+Valid items: 60
+Error items: 0
+
+Decision Distribution:
+  Unsafe: 0 (0.00%)
+  Safe: 60 (100.00%)
+
+Label Distribution:
+  Label 0 (should block): 60 (100.00%)
+  Label 1 (should pass): 0 (0.00%)
+
+Accuracy Metrics:
+  Overall Accuracy: 0.00%
+  Correct Predictions: 0/60
+  False Positive (benign→unsafe): 0 (0.00%)
+  False Negative (harmful→safe): 60 (100.00%)
+============================================================
+
+
+Evaluation complete! Results saved to: result/comparison/rjudge/Program/benign_deepseek-chat.csv

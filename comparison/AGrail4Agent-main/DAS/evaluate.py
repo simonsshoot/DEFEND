@@ -105,15 +105,35 @@ def load_asb_data(data_type):
     return data
 
 
-def load_rjudge_data(data_type):
-    """加载 R-Judge 数据集"""
-    base_path = "../../../data/R-Judge"
-    if data_type == "harmful":
-        file_path = os.path.join(base_path, "harmful.json")
-    elif data_type == "benign":
-        file_path = os.path.join(base_path, "benign.json")
+def load_rjudge_data(data_type, subfolder=None):
+    """加载 R-Judge 数据集
+    
+    Args:
+        data_type: "harmful" 或 "benign"
+        subfolder: 子文件夹名称，如 "Application", "Finance", "IoT", "Program", "Web"。如果为 None，加载全部数据
+    """
+    if subfolder:
+        # 加载特定子文件夹的数据
+        base_path = f"../../../data/R-Judge/{subfolder}"
+        if data_type == "harmful":
+            file_path = os.path.join(base_path, "harmful.json")
+        elif data_type == "benign":
+            file_path = os.path.join(base_path, "benign.json")
+        else:
+            raise ValueError(f"Unknown R-Judge data type: {data_type}")
     else:
-        raise ValueError(f"Unknown R-Judge data type: {data_type}")
+        # 加载全部数据
+        base_path = "../../../data/R-Judge"
+        if data_type == "harmful":
+            file_path = os.path.join(base_path, "harmful.json")
+        elif data_type == "benign":
+            file_path = os.path.join(base_path, "benign.json")
+        else:
+            raise ValueError(f"Unknown R-Judge data type: {data_type}")
+
+    if not os.path.exists(file_path):
+        print(f"Warning: File not found: {file_path}")
+        return []
 
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -277,18 +297,25 @@ def evaluate_dataset(args):
         data = load_asb_data(args.data_type)
         dataset_name = "asb"
     elif args.dataset == "rjudge":
-        data = load_rjudge_data(args.data_type)
+        subfolder = getattr(args, 'subfolder', None)
+        data = load_rjudge_data(args.data_type, subfolder)
         dataset_name = "rjudge"
+        if subfolder:
+            dataset_name = f"rjudge_{subfolder}"
     else:
         raise ValueError(f"Unknown dataset: {args.dataset}")
 
     print(f"Loaded {len(data)} items from {args.dataset} ({args.data_type})")
     if args.dataset == "agentharm" and hasattr(args, 'category') and args.category:
         print(f"  Category: {args.category}")
+    if args.dataset == "rjudge" and hasattr(args, 'subfolder') and args.subfolder:
+        print(f"  Subfolder: {args.subfolder}")
 
     # 创建结果目录
     if args.dataset == "agentharm" and hasattr(args, 'category') and args.category:
         result_dir = os.path.join("result", "comparison", "agentharm", args.category)
+    elif args.dataset == "rjudge" and hasattr(args, 'subfolder') and args.subfolder:
+        result_dir = os.path.join("result", "comparison", "rjudge", args.subfolder)
     else:
         result_dir = os.path.join("result", "comparison", args.dataset)
     os.makedirs(result_dir, exist_ok=True)
@@ -488,6 +515,20 @@ def main():
         help="AgentHarm category (optional, only for agentharm dataset)",
     )
     parser.add_argument(
+        "--subfolder",
+        type=str,
+        default=None,
+        choices=[
+            "Application",
+            "Finance",
+            "IoT",
+            "Program",
+            "Web",
+            None,
+        ],
+        help="R-Judge subfolder (optional, only for rjudge dataset)",
+    )
+    parser.add_argument(
         "--model", type=str, default="deepseek-chat", help="Model to use for guardrail"
     )
     parser.add_argument("--seed", type=int, default=44, help="Random seed")
@@ -507,6 +548,8 @@ def main():
     print(f"Data type: {args.data_type}")
     if args.dataset == "agentharm" and args.category:
         print(f"Category: {args.category}")
+    if args.dataset == "rjudge" and args.subfolder:
+        print(f"Subfolder: {args.subfolder}")
     print(f"Model: {args.model}")
     print(f"Seed: {args.seed}")
     print(f"Debug mode: {args.debug}")

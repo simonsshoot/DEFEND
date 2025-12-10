@@ -1,0 +1,42 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.22s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.57s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:04<00:00,  1.18s/it]
+Model loaded successfully!
+
+================================================================================
+Evaluating rjudge_benign dataset...
+Subfolder: Program
+================================================================================
+
+Loaded 60 items from ../../data/R-Judge/Program/benign.json
+Evaluating:   0%|          | 0/60 [00:00<?, ?it/s]Evaluating:   2%|▏         | 1/60 [00:05<05:30,  5.60s/it]Evaluating:   3%|▎         | 2/60 [00:11<05:42,  5.90s/it]Evaluating:   5%|▌         | 3/60 [00:16<05:12,  5.48s/it]Evaluating:   7%|▋         | 4/60 [00:25<06:14,  6.68s/it]Evaluating:   8%|▊         | 5/60 [00:33<06:47,  7.40s/it]Evaluating:  10%|█         | 6/60 [00:39<06:01,  6.70s/it]Evaluating:  12%|█▏        | 7/60 [00:44<05:28,  6.20s/it]Evaluating:  13%|█▎        | 8/60 [00:49<05:11,  6.00s/it]Evaluating:  15%|█▌        | 9/60 [00:54<04:49,  5.68s/it]Evaluating:  17%|█▋        | 10/60 [01:00<04:42,  5.65s/it]Evaluating:  18%|█▊        | 11/60 [01:09<05:27,  6.68s/it]Evaluating:  20%|██        | 12/60 [01:19<06:02,  7.56s/it]Evaluating:  22%|██▏       | 13/60 [01:28<06:23,  8.15s/it]Evaluating:  23%|██▎       | 14/60 [01:38<06:45,  8.82s/it]Evaluating:  25%|██▌       | 15/60 [01:47<06:32,  8.73s/it]Evaluating:  27%|██▋       | 16/60 [01:55<06:18,  8.59s/it]Evaluating:  28%|██▊       | 17/60 [02:05<06:21,  8.86s/it]Evaluating:  30%|███       | 18/60 [02:15<06:26,  9.19s/it]Evaluating:  32%|███▏      | 19/60 [02:20<05:31,  8.09s/it]Evaluating:  33%|███▎      | 20/60 [02:26<04:54,  7.37s/it]Evaluating:  35%|███▌      | 21/60 [02:32<04:29,  6.91s/it]Evaluating:  37%|███▋      | 22/60 [02:36<03:52,  6.13s/it]Evaluating:  38%|███▊      | 23/60 [02:42<03:48,  6.17s/it]Evaluating:  40%|████      | 24/60 [02:48<03:32,  5.90s/it]Evaluating:  42%|████▏     | 25/60 [02:53<03:15,  5.59s/it]Evaluating:  43%|████▎     | 26/60 [03:03<03:55,  6.92s/it]Evaluating:  45%|████▌     | 27/60 [03:09<03:40,  6.67s/it]Evaluating:  47%|████▋     | 28/60 [03:13<03:10,  5.96s/it]Evaluating:  48%|████▊     | 29/60 [03:18<02:59,  5.80s/it]Evaluating:  50%|█████     | 30/60 [03:23<02:44,  5.47s/it]Evaluating:  52%|█████▏    | 31/60 [03:27<02:29,  5.15s/it]Evaluating:  53%|█████▎    | 32/60 [03:32<02:20,  5.00s/it]Evaluating:  55%|█████▌    | 33/60 [03:38<02:21,  5.23s/it]Evaluating:  57%|█████▋    | 34/60 [03:43<02:16,  5.25s/it]Evaluating:  58%|█████▊    | 35/60 [03:49<02:12,  5.28s/it]Evaluating:  60%|██████    | 36/60 [03:54<02:08,  5.36s/it]Evaluating:  62%|██████▏   | 37/60 [04:02<02:23,  6.25s/it]Evaluating:  63%|██████▎   | 38/60 [04:11<02:32,  6.93s/it]Evaluating:  65%|██████▌   | 39/60 [04:19<02:31,  7.22s/it]Evaluating:  67%|██████▋   | 40/60 [04:28<02:33,  7.70s/it]Evaluating:  68%|██████▊   | 41/60 [04:34<02:16,  7.16s/it]Evaluating:  70%|███████   | 42/60 [04:42<02:15,  7.55s/it]Evaluating:  72%|███████▏  | 43/60 [04:49<02:06,  7.43s/it]Evaluating:  73%|███████▎  | 44/60 [04:59<02:08,  8.06s/it]Evaluating:  75%|███████▌  | 45/60 [05:05<01:55,  7.67s/it]Evaluating:  77%|███████▋  | 46/60 [05:14<01:50,  7.87s/it]Evaluating:  78%|███████▊  | 47/60 [05:20<01:34,  7.25s/it]Evaluating:  80%|████████  | 48/60 [05:26<01:22,  6.88s/it]Evaluating:  82%|████████▏ | 49/60 [05:34<01:19,  7.22s/it]Evaluating:  83%|████████▎ | 50/60 [05:41<01:13,  7.34s/it]Evaluating:  85%|████████▌ | 51/60 [05:45<00:57,  6.36s/it]Evaluating:  87%|████████▋ | 52/60 [05:54<00:56,  7.09s/it]Evaluating:  88%|████████▊ | 53/60 [06:04<00:55,  7.88s/it]Evaluating:  90%|█████████ | 54/60 [06:10<00:43,  7.23s/it]Evaluating:  92%|█████████▏| 55/60 [06:15<00:33,  6.67s/it]Evaluating:  93%|█████████▎| 56/60 [06:24<00:29,  7.49s/it]Evaluating:  95%|█████████▌| 57/60 [06:31<00:21,  7.12s/it]Evaluating:  97%|█████████▋| 58/60 [06:38<00:14,  7.11s/it]Evaluating:  98%|█████████▊| 59/60 [06:43<00:06,  6.61s/it]Evaluating: 100%|██████████| 60/60 [06:54<00:00,  7.84s/it]Evaluating: 100%|██████████| 60/60 [06:54<00:00,  6.90s/it]
+
+================================================================================
+Statistics for rjudge_benign
+================================================================================
+Total samples: 60
+
+Predictions:
+  Safe: 21 (35.00%)
+  Unsafe: 39 (65.00%)
+  Error: 0 (0.00%)
+  Unknown: 0 (0.00%)
+
+True Labels:
+  Safe: 60 (100.00%)
+  Unsafe: 0 (0.00%)
+
+Accuracy: 21/60 (35.00%)
+
+Confusion Matrix:
+  True Positive (Unsafe detected): 0
+  True Negative (Safe correctly): 21
+  False Positive (Safe → Unsafe): 39
+  False Negative (Unsafe → Safe): 0
+
+Precision: 0.00%
+================================================================================
+
+Results saved to results/rjudge/rjudge/Program/rjudge_benign_results.csv
+
+Summary saved to results/rjudge/summary.txt
+
+Evaluation completed!

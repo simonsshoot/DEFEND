@@ -154,6 +154,7 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
     根据数据集名称，返回对应的现有工具列表(这里的工具是执行工具，不是安全工具)
     从AgentSafeBench的environments字段中提取工具描述
     从AgentHarm的target_functions字段中提取工具描述
+    R-Judge数据集不需要提取present_tools（已包含在agent_actions中）
     """
     if dataset == "agentsafebench":
         # 导入AgentSafeBench的环境管理器
@@ -281,6 +282,12 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 
             traceback.print_exc()
             return []
+    
+    elif dataset.startswith("rjudge_"):
+        # R-Judge 数据集不需要提取 present_tools
+        # 因为 agent_actions 已经包含了所有执行的操作
+        return []
+    
     else:
         return []
 
@@ -460,6 +467,12 @@ def run(args: argparse.Namespace):
                  (args.dataset.startswith("agentharm_") and ("_harmful" in args.dataset or "_benign" in args.dataset)):
                 input_text = item.get("prompt", "")
                 label = 0 if ("agentharm" == args.dataset or "_harmful" in args.dataset) else 1
+            elif args.dataset.startswith("rjudge_"):
+                # R-Judge 数据集处理
+                input_text = tarvodata.get("request", "")
+                # R-Judge: labels 字段已经在 data_wrapper 中转换为 "unsafe"/"safe"
+                label_str = tarvodata.get("labels", "safe")
+                label = 0 if label_str == "unsafe" else 1
             else:
                 input_text = item.get("description", "")
                 label = item.get("labels", "")

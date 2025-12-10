@@ -548,3 +548,333 @@ Error processing item 18: Expecting value: line 1 column 1 (char 0)
 Error processing item 22: Expecting value: line 1 column 1 (char 0)
 2025-12-09 00:42:43 - pipeline - ERROR - 
 Error processing item 23: Expecting value: line 1 column 1 (char 0)
+2025-12-10 09:58:58 - pipeline - ERROR - 
+Error processing item 61: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:09 - pipeline - ERROR - 
+Error processing item 62: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:10 - pipeline - ERROR - 
+Error processing item 32: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:17 - pipeline - ERROR - 
+Error processing item 33: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:20 - pipeline - ERROR - 
+Error processing item 63: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:22 - pipeline - ERROR - 
+Error processing item 33: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:28 - pipeline - ERROR - 
+Error processing item 34: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:32 - pipeline - ERROR - 
+Error processing item 64: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:33 - pipeline - ERROR - 
+Error processing item 34: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:40 - pipeline - ERROR - 
+Error processing item 35: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:43 - pipeline - ERROR - 
+Error processing item 65: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:44 - pipeline - ERROR - 
+Error processing item 35: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:51 - pipeline - ERROR - 
+Error processing item 36: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:54 - pipeline - ERROR - 
+Error processing item 66: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 09:59:55 - pipeline - ERROR - 
+Error processing item 36: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:02 - pipeline - ERROR - 
+Error processing item 37: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:05 - pipeline - ERROR - 
+Error processing item 67: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:06 - pipeline - ERROR - 
+Error processing item 37: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:14 - pipeline - ERROR - 
+Error processing item 38: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:17 - pipeline - ERROR - 
+Error processing item 68: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:18 - pipeline - ERROR - 
+Error processing item 38: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:25 - pipeline - ERROR - 
+Error processing item 39: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:28 - pipeline - ERROR - 
+Error processing item 69: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:29 - pipeline - ERROR - 
+Error processing item 39: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:36 - pipeline - ERROR - 
+Error processing item 40: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:39 - pipeline - ERROR - 
+Error processing item 70: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:41 - pipeline - ERROR - 
+Error processing item 40: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:47 - pipeline - ERROR - 
+Error processing item 41: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:51 - pipeline - ERROR - 
+Error processing item 71: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:52 - pipeline - ERROR - 
+Error processing item 41: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:00:59 - pipeline - ERROR - 
+Error processing item 42: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:02 - pipeline - ERROR - 
+Error processing item 72: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:03 - pipeline - ERROR - 
+Error processing item 42: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:10 - pipeline - ERROR - 
+Error processing item 43: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:14 - pipeline - ERROR - 
+Error processing item 73: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:15 - pipeline - ERROR - 
+Error processing item 43: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:21 - pipeline - ERROR - 
+Error processing item 44: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:25 - pipeline - ERROR - 
+Error processing item 74: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:26 - pipeline - ERROR - 
+Error processing item 44: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:33 - pipeline - ERROR - 
+Error processing item 45: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:36 - pipeline - ERROR - 
+Error processing item 75: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:37 - pipeline - ERROR - 
+Error processing item 45: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:44 - pipeline - ERROR - 
+Error processing item 46: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:48 - pipeline - ERROR - 
+Error processing item 76: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:49 - pipeline - ERROR - 
+Error processing item 46: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:55 - pipeline - ERROR - 
+Error processing item 47: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:01:59 - pipeline - ERROR - 
+Error processing item 77: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:00 - pipeline - ERROR - 
+Error processing item 47: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:07 - pipeline - ERROR - 
+Error processing item 48: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:11 - pipeline - ERROR - 
+Error processing item 78: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:11 - pipeline - ERROR - 
+Error processing item 48: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:18 - pipeline - ERROR - 
+Error processing item 49: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:22 - pipeline - ERROR - 
+Error processing item 79: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:23 - pipeline - ERROR - 
+Error processing item 49: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:29 - pipeline - ERROR - 
+Error processing item 50: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:34 - pipeline - ERROR - 
+Error processing item 80: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:34 - pipeline - ERROR - 
+Error processing item 50: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:45 - pipeline - ERROR - 
+Error processing item 51: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:45 - pipeline - ERROR - 
+Error processing item 81: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:45 - pipeline - ERROR - 
+Error processing item 51: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:57 - pipeline - ERROR - 
+Error processing item 52: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:57 - pipeline - ERROR - 
+Error processing item 82: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:02:57 - pipeline - ERROR - 
+Error processing item 52: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:13 - pipeline - ERROR - 
+Error processing item 53: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:13 - pipeline - ERROR - 
+Error processing item 53: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:14 - pipeline - ERROR - 
+Error processing item 83: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:25 - pipeline - ERROR - 
+Error processing item 54: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:25 - pipeline - ERROR - 
+Error processing item 54: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:25 - pipeline - ERROR - 
+Error processing item 84: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:36 - pipeline - ERROR - 
+Error processing item 55: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:36 - pipeline - ERROR - 
+Error processing item 55: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:37 - pipeline - ERROR - 
+Error processing item 85: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:48 - pipeline - ERROR - 
+Error processing item 56: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:48 - pipeline - ERROR - 
+Error processing item 56: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:48 - pipeline - ERROR - 
+Error processing item 86: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:59 - pipeline - ERROR - 
+Error processing item 57: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:03:59 - pipeline - ERROR - 
+Error processing item 57: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:00 - pipeline - ERROR - 
+Error processing item 87: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:10 - pipeline - ERROR - 
+Error processing item 58: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:11 - pipeline - ERROR - 
+Error processing item 58: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:11 - pipeline - ERROR - 
+Error processing item 88: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:27 - pipeline - ERROR - 
+Error processing item 59: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:27 - pipeline - ERROR - 
+Error processing item 89: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:27 - pipeline - ERROR - 
+Error processing item 59: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:38 - pipeline - ERROR - 
+Error processing item 60: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:40 - pipeline - ERROR - 
+Error processing item 60: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:40 - pipeline - ERROR - 
+Error processing item 90: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:50 - pipeline - ERROR - 
+Error processing item 61: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:51 - pipeline - ERROR - 
+Error processing item 61: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:04:52 - pipeline - ERROR - 
+Error processing item 91: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:01 - pipeline - ERROR - 
+Error processing item 62: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:02 - pipeline - ERROR - 
+Error processing item 62: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:03 - pipeline - ERROR - 
+Error processing item 92: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:12 - pipeline - ERROR - 
+Error processing item 63: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:13 - pipeline - ERROR - 
+Error processing item 63: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:14 - pipeline - ERROR - 
+Error processing item 93: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:24 - pipeline - ERROR - 
+Error processing item 64: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:25 - pipeline - ERROR - 
+Error processing item 64: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:25 - pipeline - ERROR - 
+Error processing item 94: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:35 - pipeline - ERROR - 
+Error processing item 65: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:36 - pipeline - ERROR - 
+Error processing item 65: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:37 - pipeline - ERROR - 
+Error processing item 95: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:46 - pipeline - ERROR - 
+Error processing item 66: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:47 - pipeline - ERROR - 
+Error processing item 66: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:48 - pipeline - ERROR - 
+Error processing item 96: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:58 - pipeline - ERROR - 
+Error processing item 67: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:59 - pipeline - ERROR - 
+Error processing item 67: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:05:59 - pipeline - ERROR - 
+Error processing item 97: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:06:11 - pipeline - ERROR - 
+Error processing item 98: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:06:22 - pipeline - ERROR - 
+Error processing item 99: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:06:34 - pipeline - ERROR - 
+Error processing item 100: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:06:45 - pipeline - ERROR - 
+Error processing item 101: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:06:56 - pipeline - ERROR - 
+Error processing item 102: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:07:07 - pipeline - ERROR - 
+Error processing item 103: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:07:19 - pipeline - ERROR - 
+Error processing item 104: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:07:30 - pipeline - ERROR - 
+Error processing item 105: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:07:41 - pipeline - ERROR - 
+Error processing item 106: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:07:53 - pipeline - ERROR - 
+Error processing item 107: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:08:05 - pipeline - ERROR - 
+Error processing item 108: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:08:16 - pipeline - ERROR - 
+Error processing item 109: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:08:27 - pipeline - ERROR - 
+Error processing item 110: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:08:39 - pipeline - ERROR - 
+Error processing item 111: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:08:50 - pipeline - ERROR - 
+Error processing item 112: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:01 - pipeline - ERROR - 
+Error processing item 113: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:12 - pipeline - ERROR - 
+Error processing item 114: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:24 - pipeline - ERROR - 
+Error processing item 115: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:35 - pipeline - ERROR - 
+Error processing item 116: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:46 - pipeline - ERROR - 
+Error processing item 117: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:09:57 - pipeline - ERROR - 
+Error processing item 118: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:10:09 - pipeline - ERROR - 
+Error processing item 119: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:10:20 - pipeline - ERROR - 
+Error processing item 120: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:10:31 - pipeline - ERROR - 
+Error processing item 121: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:10:42 - pipeline - ERROR - 
+Error processing item 122: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:10:54 - pipeline - ERROR - 
+Error processing item 123: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:11:05 - pipeline - ERROR - 
+Error processing item 124: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:11:16 - pipeline - ERROR - 
+Error processing item 125: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:11:27 - pipeline - ERROR - 
+Error processing item 126: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:11:39 - pipeline - ERROR - 
+Error processing item 127: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:11:50 - pipeline - ERROR - 
+Error processing item 128: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:01 - pipeline - ERROR - 
+Error processing item 129: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:13 - pipeline - ERROR - 
+Error processing item 130: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:24 - pipeline - ERROR - 
+Error processing item 131: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:35 - pipeline - ERROR - 
+Error processing item 132: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:46 - pipeline - ERROR - 
+Error processing item 133: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:12:58 - pipeline - ERROR - 
+Error processing item 134: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:13:09 - pipeline - ERROR - 
+Error processing item 135: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:13:20 - pipeline - ERROR - 
+Error processing item 136: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:13:32 - pipeline - ERROR - 
+Error processing item 137: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:13:43 - pipeline - ERROR - 
+Error processing item 138: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:13:54 - pipeline - ERROR - 
+Error processing item 139: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:14:05 - pipeline - ERROR - 
+Error processing item 140: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:14:16 - pipeline - ERROR - 
+Error processing item 141: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:14:28 - pipeline - ERROR - 
+Error processing item 142: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:14:39 - pipeline - ERROR - 
+Error processing item 143: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:14:50 - pipeline - ERROR - 
+Error processing item 144: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:01 - pipeline - ERROR - 
+Error processing item 145: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:13 - pipeline - ERROR - 
+Error processing item 146: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:24 - pipeline - ERROR - 
+Error processing item 147: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:35 - pipeline - ERROR - 
+Error processing item 148: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:46 - pipeline - ERROR - 
+Error processing item 149: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:15:58 - pipeline - ERROR - 
+Error processing item 150: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:16:09 - pipeline - ERROR - 
+Error processing item 151: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:16:25 - pipeline - ERROR - 
+Error processing item 152: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:16:36 - pipeline - ERROR - 
+Error processing item 153: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 10:16:48 - pipeline - ERROR - 
+Error processing item 154: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}

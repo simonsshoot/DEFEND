@@ -117,7 +117,7 @@ Here is the background where the assistant behaves and interacts with the user: 
         return {"answer": answer, "analysis": analysis, "raw_response": response}
 
     def evaluate_dataset(
-        self, dataset_name: str, simulate_data: bool = True, category: str = None
+        self, dataset_name: str, simulate_data: bool = True, category: str = None, subfolder: str = None
     ) -> pd.DataFrame:
         """评估整个数据集
         
@@ -125,17 +125,23 @@ Here is the background where the assistant behaves and interacts with the user: 
             dataset_name: 数据集名称
             simulate_data: 是否使用模拟数据
             category: AgentHarm 类别（可选），如 "Copyright", "Cybercrime" 等
+            subfolder: R-Judge 子文件夹（可选），如 "Application", "Finance", "IoT", "Program", "Web"
         """
         print(f"\n{'='*80}")
         print(f"Evaluating {dataset_name} dataset...")
         if category:
             print(f"Category: {category}")
+        if subfolder:
+            print(f"Subfolder: {subfolder}")
         print(f"{'='*80}\n")
 
         # 读取数据
         if category:
-            # 加载特定类别的数据
+            # 加载特定类别的数据（AgentHarm）
             data = self._load_category_data(dataset_name, category)
+        elif subfolder:
+            # 加载特定子文件夹的数据（R-Judge）
+            data = self._load_subfolder_data(dataset_name, subfolder)
         elif not simulate_data:
             data = read_data(dataset_name)
         else:
@@ -351,6 +357,96 @@ Here is the background where the assistant behaves and interacts with the user: 
         print(f"Loaded {len(data)} items from {file_path}")
         return data
 
+    def _load_subfolder_data(self, dataset_name: str, subfolder: str) -> List[Dict]:
+        """加载 R-Judge 子文件夹数据
+        
+        Args:
+            dataset_name: 数据集名称（如 "rjudge_harmful" 或 "rjudge_benign"）
+            subfolder: 子文件夹名称（如 "Application", "Finance", "IoT", "Program", "Web"）
+        
+        Returns:
+            数据列表
+        """
+        if "benign" in dataset_name:
+            data_type = "benign"
+        else:
+            data_type = "harmful"
+  
+        base_path = f"../../data/R-Judge/{subfolder}"
+        file_path = os.path.join(base_path, f"{data_type}.json")
+        
+        if not os.path.exists(file_path):
+            print(f"Warning: File not found: {file_path}")
+            return []
+ 
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                raw_data = json.load(f)
+            
+            # 转换 R-Judge 格式到 ShieldAgent 需要的格式
+            # 参照 utils.py 中的 data_wrapper 逻辑
+            converted_data = []
+            for item in raw_data:
+                # 从 contents 中提取用户请求和代理操作
+                contents = item.get("contents", [])
+                if contents and len(contents) > 0:
+                    # contents 是一个列表，每个元素是一轮对话
+                    first_round = contents[0]
+                    
+                    # 提取用户请求
+                    user_content = ""
+                    agent_actions_list = []
+                    
+                    for turn in first_round:
+                        role = turn.get("role", "")
+                        if role == "user":
+                            user_content = turn.get("content", "")
+                        elif role == "agent":
+                            # 提取代理的 thought 和 action
+                            thought = turn.get("thought", "")
+                            action = turn.get("action", "")
+                            # 组合格式
+                            if thought and action:
+                                agent_actions_list.append(f"Thought: {thought}\nAction: {action}")
+                            elif action:
+                                agent_actions_list.append(f"Action: {action}")
+                        elif role == "environment":
+                            # 环境反馈
+                            content = turn.get("content", "")
+                            if content:
+                                agent_actions_list.append(f"Observation: {content}")
+                    
+                    user_request = user_content
+                    agent_actions_str = "\n\n".join(agent_actions_list)
+                else:
+                    user_request = ""
+                    agent_actions_str = ""
+                
+                # R-Judge 数据集标签：1=unsafe, 0=safe
+                label = item.get("label", 0)
+                labels = "unsafe" if label == 1 else "safe"
+                
+                converted_item = {
+                    "request": user_request,
+                    "agent_actions": agent_actions_str,
+                    "labels": labels,
+                    "id": item.get("id", ""),
+                    "scenario": item.get("scenario", ""),
+                    "category": item.get("category", ""),
+                    "profile": item.get("profile", ""),
+                    "risk_description": item.get("risk_description", ""),
+                    "attack_type": item.get("attack_type", "")
+                }
+                converted_data.append(converted_item)
+            
+            print(f"Loaded {len(converted_data)} items from {file_path}")
+            return converted_data
+        except Exception as e:
+            print(f"Error loading {file_path}: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
+
 def main():
     parser = argparse.ArgumentParser(
         description="Evaluate ShieldAgent on various datasets"
@@ -365,7 +461,7 @@ def main():
         "--dataset",
         type=str,
         default=None,
-        help="Single dataset to evaluate (e.g., agentharm, agentharm_benign)",
+        help="Single dataset to evaluate (e.g., agentharm, agentharm_benign, rjudge_harmful, rjudge_benign)",
     )
     parser.add_argument(
         "--datasets",
@@ -390,6 +486,20 @@ def main():
             None,
         ],
         help="AgentHarm category (optional, only for agentharm dataset)",
+    )
+    parser.add_argument(
+        "--subfolder",
+        type=str,
+        default=None,
+        choices=[
+            "Application",
+            "Finance",
+            "IoT",
+            "Program",
+            "Web",
+            None,
+        ],
+        help="R-Judge subfolder (optional, only for rjudge dataset)",
     )
     parser.add_argument(
         "--output_dir",
@@ -425,6 +535,8 @@ def main():
     # 创建输出目录
     if args.category:
         output_dir = os.path.join(args.output_dir, "agentharm", args.category)
+    elif args.subfolder:
+        output_dir = os.path.join(args.output_dir, "rjudge", args.subfolder)
     else:
         output_dir = args.output_dir
     os.makedirs(output_dir, exist_ok=True)
@@ -435,11 +547,13 @@ def main():
     for dataset in datasets_to_eval:
         try:
             df = evaluator.evaluate_dataset(
-                dataset, simulate_data=args.simulate_data, category=args.category
+                dataset, simulate_data=args.simulate_data, category=args.category, subfolder=args.subfolder
             )
 
             # 保存结果
             if args.category:
+                output_path = os.path.join(output_dir, f"{dataset}_results.csv")
+            elif args.subfolder:
                 output_path = os.path.join(output_dir, f"{dataset}_results.csv")
             else:
                 output_path = os.path.join(output_dir, f"{dataset}_results.csv")

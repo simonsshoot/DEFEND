@@ -1,9 +1,9 @@
 export CUDA_VISIBLE_DEVICES=0,1,2
 MODEL="deepseek-chat"
-DATA_TYPE="harmful"
+DATA_TYPE="benign"
 
 # 定义要处理的类别列表
-CATEGORIES=("Fraud" "Harassment" "Hate" "Sexual")
+CATEGORIES=("Disinformation")
 
 mkdir -p logs/agentharm
 mkdir -p result/comparison/agentharm

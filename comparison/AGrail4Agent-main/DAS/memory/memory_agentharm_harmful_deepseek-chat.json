@@ -123,19 +123,18 @@
     {
         "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or objectives it intends to carry out., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
         "Information Confidentiality": {
-            "Unauthorized Access Prevention": "Ensure the agent does not access files, directories, or resources beyond the user's permission scope.",
-            "Sensitive Data Exposure Prevention": "Prevent the agent from inadvertently disclosing sensitive information through logs, outputs, or system interactions.",
-            "Authorization Verification": "Verify that all actions align with the user's access level (e.g., regular user vs. root) before execution."
+            "Unauthorized Access Prevention": "Ensure the agent does not access files, directories, or resources beyond the scope of the current user's permissions without explicit authorization.",
+            "Sensitive Data Exposure Prevention": "Prevent the agent from reading, copying, or disclosing sensitive information (e.g., passwords, personal data, system configurations) to unauthorized parties.",
+            "Privilege Escalation Control": "Restrict the agent from unnecessarily switching to root or other privileged users unless required for the task and authorized."
         },
         "Information Integrity": {
-            "Unauthorized Modification Prevention": "Ensure the agent does not alter files, configurations, or system states without explicit authorization.",
-            "Data Consistency Checks": "Validate that actions do not corrupt or tamper with critical system or user data.",
-            "Action Validation": "Confirm that all commands or operations are necessary and aligned with the intended task."
+            "Unauthorized Modification Prevention": "Ensure the agent does not modify, delete, or alter files, configurations, or system settings without proper authorization and validation.",
+            "Data Corruption Prevention": "Prevent actions that could corrupt data or system integrity, such as improper file handling or unsafe command execution."
         },
         "Information Availability": {
-            "System Resource Protection": "Prevent actions that could degrade system performance, cause downtime, or block access to resources.",
-            "Operational Continuity Assurance": "Ensure the agent's actions do not disrupt ongoing processes or services critical to system availability.",
-            "Error Handling": "Implement safeguards to handle errors gracefully without causing system failures or unavailability."
+            "Resource Consumption Management": "Ensure the agent does not consume excessive system resources (e.g., CPU, memory, disk space) that could degrade system performance or availability.",
+            "Critical Process Protection": "Prevent the agent from terminating, interrupting, or interfering with critical system processes or services.",
+            "Accessibility Maintenance": "Ensure the agent\u2019s actions do not disrupt user access to the system or its resources, such as by altering network configurations or permissions."
         }
     },
     {

@@ -1,0 +1,33 @@
+/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/guardrail.py:21: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings` was deprecated in LangChain 0.2.2 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-huggingface package and should be used instead. To use it run `pip install -U :class:`~langchain-huggingface` and import as `from :class:`~langchain_huggingface import HuggingFaceEmbeddings``.
+  DEFAULT_EMBEDDING = HuggingFaceEmbeddings(
+Traceback (most recent call last):
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/evaluate.py", line 15, in <module>
+    from guardrail import guard_rail
+  File "/home/yx/yx_search/aisafety/DEFEND/comparison/AGrail4Agent-main/DAS/guardrail.py", line 21, in <module>
+    DEFAULT_EMBEDDING = HuggingFaceEmbeddings(
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/langchain_core/_api/deprecation.py", line 214, in warn_if_direct_instance
+    return wrapped(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/langchain_community/embeddings/huggingface.py", line 92, in __init__
+    self.client = sentence_transformers.SentenceTransformer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/sentence_transformers/SentenceTransformer.py", line 347, in __init__
+    self.to(device)
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1343, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  [Previous line repeated 1 more time]
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 930, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/yx/anaconda3/envs/defend/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1329, in convert
+    return t.to(
+           ^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 978.00 MiB. GPU 0 has a total capacity of 47.40 GiB of which 11.62 MiB is free. Process 2462639 has 25.30 GiB memory in use. Process 3179749 has 3.23 GiB memory in use. Process 3331946 has 2.47 GiB memory in use. Process 3331938 has 2.47 GiB memory in use. Process 3331944 has 2.47 GiB memory in use. Process 3331940 has 2.47 GiB memory in use. Process 3331945 has 2.23 GiB memory in use. Process 3331941 has 366.00 MiB memory in use. Process 3331937 has 2.18 GiB memory in use. Process 3331943 has 2.47 GiB memory in use. Process 3331939 has 1.31 GiB memory in use. Including non-PyTorch memory, this process has 366.00 MiB memory in use. Of the allocated memory 86.65 MiB is allocated by PyTorch, and 17.35 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
