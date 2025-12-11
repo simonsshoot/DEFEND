@@ -18,6 +18,9 @@ os.environ["DEEPSEEK_BASE_URL"] = DEEPSEEK_BASE_URL
 os.environ["OPENAI_API_KEY"] = DEEPSEEK_API_KEY  # Set as OpenAI API key for compatibility
 os.environ["OPENAI_API_BASE"] = DEEPSEEK_BASE_URL  # Set as OpenAI API base for compatibility
 
+os.environ['http_proxy'] = 'http://127.0.0.1:7897' 
+os.environ['https_proxy'] = 'http://127.0.0.1:7897'
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -67,6 +70,9 @@ def create_parser():
     # data
     parser.add_argument('--case_idx', type=int, default=0, help='case id for the test case')
     parser.add_argument('--data_dir', type=str, default='../assets/medicine_data.json', help='path to the test case')
+    parser.add_argument('--dataset', type=str, default=None, choices=['rjudge', None], help='dataset type, use rjudge for R-Judge dataset')
+    parser.add_argument('--subfolder', type=str, default=None, choices=['Application', 'Finance', 'IoT', 'Program', 'Web', None], help='R-Judge subfolder')
+    parser.add_argument('--data_type', type=str, default=None, choices=['harmful', 'benign', None], help='R-Judge data type')
 
     # evaluation only
     parser.add_argument('--eval_only', action='store_true', help='only do evaluation')
@@ -75,6 +81,44 @@ def create_parser():
     args = parser.parse_args()
 
     return args
+
+
+def transform_rjudge_case(rjudge_case, case_idx):
+    """Transform R-Judge format to TrustAgent expected format"""
+    contents = rjudge_case.get('contents', [[]])[0]
+    
+    # Extract user request and agent actions
+    user_request = ""
+    agent_actions = []
+    for turn in contents:
+        role = turn.get('role', '')
+        if role == 'user':
+            user_request = turn.get('content', '')
+        elif role == 'agent':
+            action = turn.get('action', '')
+            thought = turn.get('thought', '')
+            if thought:
+                agent_actions.append(f"Thought: {thought}\nAction: {action}")
+            elif action:
+                agent_actions.append(action)
+    
+    agent_actions_str = "\n\n".join(agent_actions)
+    
+    # Create TrustAgent format
+    transformed_case = {
+        'name': f"rjudge_{case_idx}",
+        'Toolkits': [],  # R-Judge doesn't specify toolkits
+        'User Instruction': user_request,
+        'Underspecifications': {},
+        'Expected Achievements': [],
+        'Potential Risky Outcomes': rjudge_case.get('risk_description', ''),
+        'Potential Risky Actions': rjudge_case.get('risk_description', ''),
+        'Ground Truth': agent_actions_str,
+        'rjudge_label': rjudge_case.get('label', 0),  # 0=safe, 1=unsafe
+        'rjudge_id': rjudge_case.get('id', ''),
+    }
+    
+    return transformed_case
         
 
 if __name__ == "__main__":
@@ -97,23 +141,50 @@ if __name__ == "__main__":
 
     ## Select from our curated test cases
     case_dir = args.data_dir
-    cases = read_file(case_dir)
-    case_idx = args.case_idx # Choose your case id here
-    case = cases[case_idx]
-    domain = case['name'].split('_')[0]
-
-    if args.eval_only and args.save_file_path:
-        domain = args.save_file_path.split('/')[-1].split('_')[1]
-        case_idx = int(args.save_file_path.split('/')[-1].split('_')[2])
-        case_dir = '../assets/{}_data.json'.format(domain)
+    
+    # Handle R-Judge dataset
+    if args.dataset == 'rjudge' and args.subfolder and args.data_type:
+        case_dir = f'../../../data/R-Judge/{args.subfolder}/{args.data_type}.json'
         cases = read_file(case_dir)
+        case_idx = args.case_idx
         case = cases[case_idx]
+        domain = 'rjudge'
+        # Transform R-Judge format to TrustAgent expected format
+        case = transform_rjudge_case(case, case_idx)
     else:
-        case_dir = args.data_dir
+        # Original logic for other datasets
         cases = read_file(case_dir)
         case_idx = args.case_idx # Choose your case id here
         case = cases[case_idx]
         domain = case['name'].split('_')[0]
+
+    if args.eval_only and args.save_file_path:
+        if 'rjudge' in args.save_file_path:
+            domain = 'rjudge'
+            # Extract subfolder and data_type from save_file_path
+            parts = args.save_file_path.split('/')[-1].split('_')
+            # Expecting format: deepseek-chat_rjudge_{subfolder}_{data_type}_{idx}_{methods}_{time}.jsonl
+            if len(parts) >= 4 and parts[1] == 'rjudge':
+                subfolder = parts[2]
+                data_type = parts[3]
+                case_idx = int(parts[4]) if len(parts) > 4 and parts[4].isdigit() else 0
+                case_dir = f'../../../data/R-Judge/{subfolder}/{data_type}.json'
+                cases = read_file(case_dir)
+                case = cases[case_idx]
+                case = transform_rjudge_case(case, case_idx)
+        else:
+            domain = args.save_file_path.split('/')[-1].split('_')[1]
+            case_idx = int(args.save_file_path.split('/')[-1].split('_')[2])
+            case_dir = '../assets/{}_data.json'.format(domain)
+            cases = read_file(case_dir)
+            case = cases[case_idx]
+    else:
+        if not (args.dataset == 'rjudge'):
+            case_dir = args.data_dir
+            cases = read_file(case_dir)
+            case_idx = args.case_idx # Choose your case id here
+            case = cases[case_idx]
+            domain = case['name'].split('_')[0]
 
     ## safety methods
     safety_methods = []
@@ -131,168 +202,228 @@ if __name__ == "__main__":
     logger.log("::::::print safety_methods: {}::::::".format(str(safety_methods)))
 
     if not args.eval_only:
-        # ######### planning agent #########
-        # The planning LLM
-        agent_llm = load_openai_llm(
-            model_name=get_fixed_model_name(agent_llm_type),
-            temperature=agent_temp,
-            request_timeout=300,
-            # streaming=True,
-            callbacks=[StreamingStdOutCallbackHandler()],
-        )
-
-        # The emulator LLM
-        simulator_llm = load_openai_llm(
-            model_name=get_fixed_model_name(simulator_llm_type),
-            temperature=0.0,
-            request_timeout=300,
-            streaming=True,
-            callbacks=[StreamingStdOutCallbackHandler()],
-        )
-
-        # The safety checker LLM
-        safety_checker_llm = load_openai_llm(
-            model_name=get_fixed_model_name(safety_checker_llm_type),
-            temperature=0.0,
-            request_timeout=300,
-            streaming=True,
-            callbacks=[StreamingStdOutCallbackHandler()],
-        )
-
-        encoding = tiktoken.get_encoding("cl100k_base")
-
-        # safety regulation retriever
-        if args.use_retriever == 'contriever':
-            retrieval_tokenizer = AutoTokenizer.from_pretrained(
-                "facebook/contriever-msmarco", cache_dir="pretrained_models",
+        # R-Judge 数据已经包含完整的 agent actions，跳过执行阶段
+        if args.dataset == 'rjudge':
+            print("-----------R-Judge dataset: skipping agent execution, using pre-existing actions-----------")
+            # 直接构建一个简化的 trajectory 用于评估
+            simplified_traj = {
+                'input': case.get('User Instruction', ''),
+                'output': case.get('Ground Truth', ''),
+                'intermediate_steps': []
+            }
+            
+            agent_llm_type = agent_llm_type.replace('/', '_')
+            args.save_file_path = "results/trajectory/{}_{}_{}_{}_{}_{}.jsonl".format(
+                agent_llm_type, 'rjudge', args.subfolder, args.data_type, 
+                case_idx, '_'.join(safety_methods) if safety_methods else 'no_safety'
             )
-            retrieval_model = AutoModel.from_pretrained(
-                "facebook/contriever-msmarco", cache_dir="pretrained_models",
-            )
-            #regulation_domains = ['chemistry', 'cooking', 'finance', 'medicine', 'general_domain']
-            regulation_domains = embedding_computation_contriever(
-                retrieval_tokenizer,
-                retrieval_model,
-                "../safety_regulation/safety_regulation.json",
-                "../safety_regulation/",
-            )
-        elif args.use_retriever == 'mistral':
-            retrieval_tokenizer = AutoTokenizer.from_pretrained('intfloat/e5-mistral-7b-instruct', cache_dir='pretrained_models/')
-            retrieval_model = AutoModel.from_pretrained('intfloat/e5-mistral-7b-instruct', cache_dir='pretrained_models/')
-            #regulation_domains = ['chemistry', 'cooking', 'finance', 'medicine', 'general_domain']
-            regulation_domains = embedding_computation_contriever(
-                retrieval_tokenizer,
-                retrieval_model,
-                "../safety_regulation/safety_regulation.json",
-                "../safety_regulation/",
-            )
+            
+            if os.path.exists(args.save_file_path):
+                args.save_file_path = "results/trajectory/{}_{}_{}_{}_{}_{}.jsonl".format(
+                    agent_llm_type, 'rjudge', args.subfolder, args.data_type, 
+                    case_idx, '_'.join(safety_methods) if safety_methods else 'no_safety' + '_' + time_string
+                )
+            
+            # 保存 trajectory
+            def save_traj(path, simplified_traj):
+                results= {}
+                results["sim_type"] = "R-Judge"
+                results["agent_llm"] = agent_llm_type
+                results["agent_temp"] = agent_temp
+                results["case_idx"] = case['name']
+                results["trajectory"] = simplified_traj
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                with open(path, 'w') as f:
+                    results_string = json.dumps(results)
+                    f.write(results_string + '\n')
+            
+            save_traj(args.save_file_path, simplified_traj)
         else:
-            regulation_domains = embedding_computation_openai(
-                "../safety_regulation/safety_regulation.json", 
-                "../safety_regulation/",
-                use_local=True,
-                local_model_path="/data/Content_Moderation/BAAI-bge-m3"
+            # 原有的执行逻辑（非 R-Judge 数据集）
+            # ######### planning agent #########
+            # The planning LLM
+            agent_llm = load_openai_llm(
+                model_name=get_fixed_model_name(agent_llm_type),
+                temperature=agent_temp,
+                request_timeout=300,
+                # streaming=True,
+                callbacks=[StreamingStdOutCallbackHandler()],
             )
-            retrieval_tokenizer = None
-            retrieval_model = None
 
-        ######### setting basic components
-        agent_memory = []
-        learnt_regulation = []
-        hindsight_memory_directory = "material/hindsight_memory.jsonl"
-        build_agent_executor = partial(
-            build_agent_executor,
-            agent_llm=agent_llm,
-            agent_type=agent_type,
-            simulator_llm=simulator_llm,
-            safety_checker_llm=safety_checker_llm,
-            retrieval_tokenizer=retrieval_tokenizer,
-            retrieval_model=retrieval_model,
-            regulation_domains=regulation_domains,
-            agent_memory=agent_memory,
-            learnt_regulation=learnt_regulation,
-            logger=logger,
-            domain=domain,
-            base_model_name=agent_llm_type,
-            safety_methods = safety_methods,
-            hindsight_memory_directory=hindsight_memory_directory,
-            case_name = case['name'],
-        )
-        '''
-        函数柯里化(currying)或部分应用技术，这里先固定参数，后续根据参数决定返回哪个类型的agent
-        '''
-
-        def query_agent(case, simulator_type="std_thought", max_iterations=15):
-            agent_executer = build_agent_executor(
-                get_toolkit_names(case),
-                simulator_type=simulator_type,
-                max_iterations=max_iterations,
+            # The emulator LLM
+            simulator_llm = load_openai_llm(
+                model_name=get_fixed_model_name(simulator_llm_type),
+                temperature=0.0,
+                request_timeout=300,
+                streaming=True,
+                callbacks=[StreamingStdOutCallbackHandler()],
             )
-            del case['Ground Truth']
-            prompt_inputs = case_to_input_dict(case)
-            if "adv" in simulator_type:
-                return agent_executer(prompt_inputs)
+
+            # The safety checker LLM
+            safety_checker_llm = load_openai_llm(
+                model_name=get_fixed_model_name(safety_checker_llm_type),
+                temperature=0.0,
+                request_timeout=300,
+                streaming=True,
+                callbacks=[StreamingStdOutCallbackHandler()],
+            )
+
+            encoding = tiktoken.get_encoding("cl100k_base")
+
+            # safety regulation retriever
+            if args.use_retriever == 'contriever':
+                retrieval_tokenizer = AutoTokenizer.from_pretrained(
+                    "facebook/contriever-msmarco", cache_dir="pretrained_models",
+                )
+                retrieval_model = AutoModel.from_pretrained(
+                    "facebook/contriever-msmarco", cache_dir="pretrained_models",
+                )
+                #regulation_domains = ['chemistry', 'cooking', 'finance', 'medicine', 'general_domain']
+                regulation_domains = embedding_computation_contriever(
+                    retrieval_tokenizer,
+                    retrieval_model,
+                    "../safety_regulation/safety_regulation.json",
+                    "../safety_regulation/",
+                )
+            elif args.use_retriever == 'mistral':
+                retrieval_tokenizer = AutoTokenizer.from_pretrained('intfloat/e5-mistral-7b-instruct', cache_dir='pretrained_models/')
+                retrieval_model = AutoModel.from_pretrained('intfloat/e5-mistral-7b-instruct', cache_dir='pretrained_models/')
+                #regulation_domains = ['chemistry', 'cooking', 'finance', 'medicine', 'general_domain']
+                regulation_domains = embedding_computation_contriever(
+                    retrieval_tokenizer,
+                    retrieval_model,
+                    "../safety_regulation/safety_regulation.json",
+                    "../safety_regulation/",
+                )
             else:
-                return agent_executer(prompt_inputs["input"])
+                regulation_domains = embedding_computation_openai(
+                    "../safety_regulation/safety_regulation.json", 
+                    "../safety_regulation/",
+                    use_local=True,
+                    local_model_path="/data/Content_Moderation/BAAI-bge-m3"
+                )
+                retrieval_tokenizer = None
+                retrieval_model = None
 
-        def display_prompt(prompt):
-            print(make_colorful("human", prompt.split("Human:")[1]))
+            ######### setting basic components
+            agent_memory = []
+            learnt_regulation = []
+            hindsight_memory_directory = "material/hindsight_memory.jsonl"
+            build_agent_executor = partial(
+                build_agent_executor,
+                agent_llm=agent_llm,
+                agent_type=agent_type,
+                simulator_llm=simulator_llm,
+                safety_checker_llm=safety_checker_llm,
+                retrieval_tokenizer=retrieval_tokenizer,
+                retrieval_model=retrieval_model,
+                regulation_domains=regulation_domains,
+                agent_memory=agent_memory,
+                learnt_regulation=learnt_regulation,
+                logger=logger,
+                domain=domain,
+                base_model_name=agent_llm_type,
+                safety_methods = safety_methods,
+                hindsight_memory_directory=hindsight_memory_directory,
+                case_name = case['name'],
+            )
+            '''
+            函数柯里化(currying)或部分应用技术，这里先固定参数，后续根据参数决定返回哪个类型的agent
+            '''
 
-        ######### planning agent prompt #########
-        toolkit = get_toolkit_names(case)
-        agent_executor = build_agent_executor(
-            toolkits=toolkit, simulator_type=simulator_type,
-        )
+            def query_agent(case, simulator_type="std_thought", max_iterations=15):
+                agent_executer = build_agent_executor(
+                    get_toolkit_names(case),
+                    simulator_type=simulator_type,
+                    max_iterations=max_iterations,
+                )
+                del case['Ground Truth']
+                prompt_inputs = case_to_input_dict(case)
+                if "adv" in simulator_type:
+                    return agent_executer(prompt_inputs)
+                else:
+                    return agent_executer(prompt_inputs["input"])
 
-        agent_prompt_temp = agent_executor.agent.llm_chain.prompt
-        agent_prompt = agent_prompt_temp.format(
-            **{k: "test" for k in agent_prompt_temp.input_variables}
-        )
-        if show_prompt:
-            display_prompt(agent_prompt)
-            print("\n\n>>>>Token lengths:", len(encoding.encode(agent_prompt)))
+            def display_prompt(prompt):
+                print(make_colorful("human", prompt.split("Human:")[1]))
 
-        simulator_prompt_temp = agent_executor.llm_simulator_chain.prompt
-        simulator_prompt = simulator_prompt_temp.format(
-            **{k: "test" for k in simulator_prompt_temp.input_variables}
-        )
-        if show_prompt:
-            display_prompt(simulator_prompt)
-            print("\n\n>>>>Token lengths:", len(encoding.encode(simulator_prompt)))
+            ######### planning agent prompt #########
+            toolkit = get_toolkit_names(case)
+            agent_executor = build_agent_executor(
+                toolkits=toolkit, simulator_type=simulator_type,
+            )
+
+            agent_prompt_temp = agent_executor.agent.llm_chain.prompt
+            agent_prompt = agent_prompt_temp.format(
+                **{k: "test" for k in agent_prompt_temp.input_variables}
+            )
+            if show_prompt:
+                display_prompt(agent_prompt)
+                print("\n\n>>>>Token lengths:", len(encoding.encode(agent_prompt)))
+
+            simulator_prompt_temp = agent_executor.llm_simulator_chain.prompt
+            simulator_prompt = simulator_prompt_temp.format(
+                **{k: "test" for k in simulator_prompt_temp.input_variables}
+            )
+            if show_prompt:
+                display_prompt(simulator_prompt)
+                print("\n\n>>>>Token lengths:", len(encoding.encode(simulator_prompt)))
 
 
-        ######### actual agent planning + simulation start here #########
-        print("-----------actually running experiments-----------")
-        results = query_agent(case=case, simulator_type=simulator_type)
-        simplified_traj = construct_simple_trajec(results)
+            ######### actual agent planning + simulation start here #########
+            print("-----------actually running experiments-----------")
+            results = query_agent(case=case, simulator_type=simulator_type)
+            simplified_traj = construct_simple_trajec(results)
 
-        def save_traj(path, simplified_traj):
-            results= {}
-            # This is an ad-hoc fix for dumping langchain result
-            sim_type = "Standard" if simulator_type == "std_thought" else "Adversarial"
-            results["sim_type"] = sim_type
-            results["agent_llm"] = agent_llm_type
-            results["agent_temp"] = agent_temp
-            results["case_idx"] = case['name']
-            results["trajectory"] = simplified_traj
-            with open(path, 'a') as f:
-                results_string = json.dumps(results)
-                f.write(results_string + '\n')
+            def save_traj(path, simplified_traj):
+                results= {}
+                # This is an ad-hoc fix for dumping langchain result
+                sim_type = "Standard" if simulator_type == "std_thought" else "Adversarial"
+                results["sim_type"] = sim_type
+                results["agent_llm"] = agent_llm_type
+                results["agent_temp"] = agent_temp
+                results["case_idx"] = case['name']
+                results["trajectory"] = simplified_traj
+                with open(path, 'a') as f:
+                    results_string = json.dumps(results)
+                    f.write(results_string + '\n')
 
-        agent_llm_type = agent_llm_type.replace('/', '_')
-        args.save_file_path = "results/trajectory/{}_{}_{}.jsonl".format(agent_llm_type,case['name'], '_'.join(safety_methods))
-        if os.path.exists(args.save_file_path):
-            args.save_file_path = "results/trajectory/{}_{}_{}_{}.jsonl".format(agent_llm_type,case['name'], '_'.join(safety_methods), time_string)
-        save_traj(args.save_file_path, simplified_traj)
+            agent_llm_type = agent_llm_type.replace('/', '_')
+            if args.dataset == 'rjudge':
+                args.save_file_path = "results/trajectory/{}_{}_{}_{}_{}_{}.jsonl".format(
+                    agent_llm_type, 'rjudge', args.subfolder, args.data_type, 
+                    case_idx, '_'.join(safety_methods) if safety_methods else 'no_safety'
+                )
+            else:
+                args.save_file_path = "results/trajectory/{}_{}_{}.jsonl".format(
+                    agent_llm_type, case['name'], '_'.join(safety_methods) if safety_methods else 'no_safety'
+                )
+            if os.path.exists(args.save_file_path):
+                if args.dataset == 'rjudge':
+                    args.save_file_path = "results/trajectory/{}_{}_{}_{}_{}_{}.jsonl".format(
+                        agent_llm_type, 'rjudge', args.subfolder, args.data_type, 
+                        case_idx, ('_'.join(safety_methods) if safety_methods else 'no_safety') + '_' + time_string
+                    )
+                else:
+                    args.save_file_path = "results/trajectory/{}_{}_{}_{}.jsonl".format(
+                        agent_llm_type, case['name'], '_'.join(safety_methods) if safety_methods else 'no_safety', time_string
+                    )
+            save_traj(args.save_file_path, simplified_traj)
 
     ######### perform evaluation here #########
     print("-----------start running evaluation-----------")
     prompt_inputs, prompt_postinputs = load_data_in_evaluation(args.save_file_path, case_dir)
 
-    result = construct_result(prompt_inputs, prompt_postinputs)
+    # Check if this is R-Judge dataset
+    is_rjudge = args.dataset == 'rjudge' or 'rjudge' in args.save_file_path
+    rjudge_label = case.get('rjudge_label', None) if is_rjudge else None
+    
+    result = construct_result(prompt_inputs, prompt_postinputs, is_rjudge=is_rjudge, rjudge_label=rjudge_label)
+    result["dataset"] = 'rjudge' if is_rjudge else domain
+    result["data_idx"] = case_idx
     print(result)
     
-    save_result_path = args.save_file_path.replace('trajectory', 'score')
-    with open(save_result_path, 'w') as f:
-        json.dump(result, f)
+    save_path = f"results/score/{args.dataset if is_rjudge else domain}_{args.subfolder}_{args.data_type}.jsonl"
+    with open(save_path, 'a') as f:
+        json.dump(result, f, indent=2)
 
