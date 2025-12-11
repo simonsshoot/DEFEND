@@ -896,10 +896,12 @@ class DoubtAgent(Agent):
         doubt_results = []
         user_level = data.get("user_level", "user")
         permission_policy = self.__load_permission_policy(user_level)
-        risky_tools = 0
 
         for item in feedback:
             tool_info, is_optimized, execution_result = item
+            # 为每个工具单独记录是否有风险（0或1）
+            tool_has_risk = 0
+            
             if not is_optimized:
                 system_prompt = "你是一个安全工具审核专家，用户的请求与代理执行的操作可能含有风险，需要使用安全工具进行防护。"
 
@@ -945,7 +947,7 @@ class DoubtAgent(Agent):
 
                 # 如果工具被判定有风险，自动尝试优化
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
-                    risky_tools += 1
+                    tool_has_risk = 1  # 标记该工具曾被识别为有风险
                     optimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get("reason", "工具存在安全风险"),
@@ -1009,7 +1011,7 @@ class DoubtAgent(Agent):
                     }
 
                 if normalize_is_safe(clean_response.get("is_safe", "")) == False:
-                    risky_tools += 1
+                    tool_has_risk = 1  # 标记该工具曾被识别为有风险
                     reoptimized_tool, success = self.auto_optimize_risky_tool(
                         tool_info=tool_info,
                         reason=clean_response.get(
@@ -1028,7 +1030,7 @@ class DoubtAgent(Agent):
                     else:
                         is_optimized = False
             doubt_results.append(
-                (tool_info, clean_response, is_optimized, execution_result, risky_tools)
+                (tool_info, clean_response, is_optimized, execution_result, tool_has_risk)
             )
         return doubt_results
 

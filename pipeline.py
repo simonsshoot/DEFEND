@@ -442,7 +442,10 @@ def run(args: argparse.Namespace):
                 tool_info, doubt_result, is_optimized, execution_result, risky_tools = (
                     result
                 )
-                risky_tools_count += risky_tools
+                # risky_tools 是该工具是否曾被识别为有风险的标志（0或1）
+                if risky_tools > 0:
+                    risky_tools_count += 1
+                
                 if normalize_is_safe(doubt_result.get("is_safe", "")) == True:
                     if is_optimized:
                         optimized_tool += 1

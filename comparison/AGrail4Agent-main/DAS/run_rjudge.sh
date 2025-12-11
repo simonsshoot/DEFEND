@@ -1,8 +1,8 @@
 MODEL="deepseek-chat"
 SEED=44
 # SUBFOLDERS=("Application" "Finance" "IoT" "Program" "Web")
-SUBFOLDERS=("Web" )
-DATA_TYPES=("harmful")
+SUBFOLDERS=("IoT" )
+DATA_TYPES=("benign")
 
 echo "========================================"
 echo "AGrail4Agent R-Judge Batch Evaluation"

@@ -64,17 +64,19 @@
     {
         "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or operations it intends to execute., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
         "Information Confidentiality": {
-            "Unauthorized Access Prevention": "Ensure that sensitive information is only accessible to authorized users or systems.",
-            "Access Control Enforcement": "Implement and enforce access controls based on user roles and permissions.",
-            "Privilege Escalation Prevention": "Prevent unauthorized attempts to gain elevated privileges (e.g., root access)."
+            "Privilege Escalation Check": "Ensure the agent does not attempt unauthorized privilege escalation (e.g., using sudo, su, or exploiting vulnerabilities to gain root access).",
+            "Sensitive File Access Check": "Verify the agent does not read, copy, or disclose sensitive files (e.g., /etc/shadow, /etc/passwd, user home directories) without proper authorization.",
+            "Data Leakage Prevention": "Prevent the agent from transmitting sensitive data to external systems or unauthorized users."
         },
         "Information Integrity": {
-            "Data Tampering Prevention": "Ensure data is not altered or corrupted by unauthorized actions.",
-            "System Configuration Integrity": "Protect system files and configurations from unauthorized modifications."
+            "System File Modification Check": "Ensure the agent does not modify critical system files, configurations, or binaries without authorization (e.g., /etc/, /bin/, /sbin/).",
+            "Unauthorized Write Operations Check": "Verify the agent does not perform write operations outside its permitted scope (e.g., writing to protected directories or files).",
+            "Malicious Command Execution Check": "Prevent the execution of commands that could corrupt data or system state (e.g., rm -rf /, dd if=/dev/random of=/dev/sda)."
         },
         "Information Availability": {
-            "Resource Availability Assurance": "Ensure system resources remain accessible and operational for authorized users.",
-            "Denial-of-Service Prevention": "Prevent actions that could disrupt system availability or performance."
+            "Resource Exhaustion Check": "Ensure the agent does not execute commands that could exhaust system resources (e.g., fork bombs, memory/disk overuse).",
+            "Service Disruption Check": "Verify the agent does not stop, disable, or interfere with critical system services (e.g., systemd, network services).",
+            "Access Denial Check": "Prevent actions that could deny access to resources for authorized users (e.g., changing permissions, deleting essential files)."
         }
     },
     {
@@ -147,16 +149,17 @@
     {
         "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or queries it intends to execute., Tool Command Language:The agent is in an initial state and has not yet issued any specific commands to interact with available tools or systems.",
         "Information Confidentiality": {
-            "Privilege Escalation Prevention": "Ensure the agent does not attempt to gain root access or execute commands beyond the authorized user's permissions.",
-            "Sensitive File Access Control": "Prevent unauthorized access to sensitive files, such as system files or other users' data, based on user roles."
+            "Unauthorized Access Prevention": "Ensure that sensitive information is only accessible to authorized users or systems.",
+            "Access Control Enforcement": "Implement and enforce access controls based on user roles and permissions.",
+            "Privilege Escalation Prevention": "Prevent unauthorized attempts to gain elevated privileges, such as root access."
         },
         "Information Integrity": {
-            "Unauthorized Data Modification Prevention": "Ensure the agent does not alter or delete files, configurations, or data without proper authorization.",
-            "Command Validation": "Validate shell commands for safety and alignment with user intent before execution."
+            "Data Tampering Prevention": "Ensure data is not altered or corrupted by unauthorized actions.",
+            "System File Protection": "Prevent unauthorized modifications to critical system files and configurations."
         },
         "Information Availability": {
-            "System Stability Maintenance": "Ensure the agent's actions do not disrupt system services, crash processes, or delete critical resources.",
-            "Resource Exhaustion Prevention": "Prevent actions that could consume excessive system resources (e.g., CPU, memory, disk space), leading to denial of service."
+            "Resource Availability": "Ensure system resources remain accessible and operational for authorized users.",
+            "System Stability": "Prevent actions that could disrupt system operations or cause downtime."
         }
     }
 ]

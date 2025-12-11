@@ -878,3 +878,111 @@ Error processing item 152: Error code: 402 - {'error': {'message': 'Insufficient
 Error processing item 153: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
 2025-12-10 10:16:48 - pipeline - ERROR - 
 Error processing item 154: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:08:46 - pipeline - ERROR - 
+Error processing item 59: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137948 tokens (135900 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:10:08 - pipeline - ERROR - 
+Error processing item 60: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137597 tokens (135549 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:15:35 - pipeline - ERROR - 
+Error processing item 62: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137919 tokens (135871 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:17:04 - pipeline - ERROR - 
+Error processing item 63: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 137920 tokens (135872 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:40:40 - pipeline - ERROR - 
+Error processing item 68: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 143969 tokens (141921 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:42:26 - pipeline - ERROR - 
+Error processing item 70: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 131464 tokens (129416 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 15:57:02 - pipeline - ERROR - 
+Error processing item 75: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 131378 tokens (129330 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:07:02 - pipeline - ERROR - 
+Error processing item 78: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 144241 tokens (142193 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:24:21 - pipeline - ERROR - 
+Error processing item 83: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 133171 tokens (131123 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:25:24 - pipeline - ERROR - 
+Error processing item 84: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 132539 tokens (130491 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:26:37 - pipeline - ERROR - 
+Error processing item 85: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 132827 tokens (130779 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:32:58 - pipeline - ERROR - 
+Error processing item 87: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147824 tokens (145776 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:34:25 - pipeline - ERROR - 
+Error processing item 88: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148184 tokens (146136 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:35:40 - pipeline - ERROR - 
+Error processing item 89: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134120 tokens (132072 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:36:58 - pipeline - ERROR - 
+Error processing item 90: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147917 tokens (145869 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:39:16 - pipeline - ERROR - 
+Error processing item 91: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134382 tokens (132334 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:43:52 - pipeline - ERROR - 
+Error processing item 93: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 133779 tokens (131731 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:46:17 - pipeline - ERROR - 
+Error processing item 94: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134535 tokens (132487 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:51:18 - pipeline - ERROR - 
+Error processing item 96: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134499 tokens (132451 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 16:59:32 - pipeline - ERROR - 
+Error processing item 99: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147893 tokens (145845 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:00:57 - pipeline - ERROR - 
+Error processing item 100: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134511 tokens (132463 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:02:23 - pipeline - ERROR - 
+Error processing item 101: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134388 tokens (132340 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:03:46 - pipeline - ERROR - 
+Error processing item 102: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134529 tokens (132481 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:04:55 - pipeline - ERROR - 
+Error processing item 103: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147660 tokens (145612 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:07:53 - pipeline - ERROR - 
+Error processing item 104: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 133960 tokens (131912 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:09:18 - pipeline - ERROR - 
+Error processing item 105: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148206 tokens (146158 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:15:46 - pipeline - ERROR - 
+Error processing item 107: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147925 tokens (145877 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:17:59 - pipeline - ERROR - 
+Error processing item 108: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134148 tokens (132100 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:22:42 - pipeline - ERROR - 
+Error processing item 110: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148034 tokens (145986 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:23:52 - pipeline - ERROR - 
+Error processing item 111: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134049 tokens (132001 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:26:10 - pipeline - ERROR - 
+Error processing item 112: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148154 tokens (146106 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:27:14 - pipeline - ERROR - 
+Error processing item 113: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 133781 tokens (131733 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:28:38 - pipeline - ERROR - 
+Error processing item 114: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148198 tokens (146150 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:35:20 - pipeline - ERROR - 
+Error processing item 116: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147922 tokens (145874 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:36:42 - pipeline - ERROR - 
+Error processing item 117: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134484 tokens (132436 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:39:42 - pipeline - ERROR - 
+Error processing item 118: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 133862 tokens (131814 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:41:54 - pipeline - ERROR - 
+Error processing item 119: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134114 tokens (132066 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:43:10 - pipeline - ERROR - 
+Error processing item 120: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 142494 tokens (140446 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:44:24 - pipeline - ERROR - 
+Error processing item 121: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134242 tokens (132194 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:47:43 - pipeline - ERROR - 
+Error processing item 122: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134515 tokens (132467 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:49:28 - pipeline - ERROR - 
+Error processing item 124: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134073 tokens (132025 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:51:48 - pipeline - ERROR - 
+Error processing item 125: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148156 tokens (146108 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:53:02 - pipeline - ERROR - 
+Error processing item 126: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 147801 tokens (145753 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 17:59:16 - pipeline - ERROR - 
+Error processing item 128: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134803 tokens (132755 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:11:53 - pipeline - ERROR - 
+Error processing item 132: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134689 tokens (132641 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:15:10 - pipeline - ERROR - 
+Error processing item 133: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134988 tokens (132940 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:16:20 - pipeline - ERROR - 
+Error processing item 134: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134500 tokens (132452 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:18:33 - pipeline - ERROR - 
+Error processing item 135: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148438 tokens (146390 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:20:42 - pipeline - ERROR - 
+Error processing item 138: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 148574 tokens (146526 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:25:43 - pipeline - ERROR - 
+Error processing item 141: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134562 tokens (132514 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:28:12 - pipeline - ERROR - 
+Error processing item 145: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 134163 tokens (132115 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:33:59 - pipeline - ERROR - 
+Error processing item 148: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 150857 tokens (148809 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:39:32 - pipeline - ERROR - 
+Error processing item 152: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 151652 tokens (149604 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-10 18:40:48 - pipeline - ERROR - 
+Error processing item 153: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 151575 tokens (149527 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
