@@ -189,3 +189,67 @@ PS：批量删掉了一些log和结果。可以在它官方的github仓库重新
 典型：15-45次（15次迭代×3个LLM）
 最多：50+次（包含安全检查、重试、评估等
 这下不得不考虑费用了
+
+环境用的是safe 需要挂隧道
+
+阅读：
+关于r-judge的执行流程：
+首先读数据，并使用transform_rjudge_case转换数据格式：
+transformed_case = {
+        'name': f"rjudge_{case_idx}",
+        'Toolkits': [],  # R-Judge doesn't specify toolkits
+        'User Instruction': user_request,
+        'Underspecifications': {},
+        'Expected Achievements': [],
+        'Potential Risky Outcomes': rjudge_case.get('risk_description', ''),
+        'Potential Risky Actions': rjudge_case.get('risk_description', ''),
+        'Ground Truth': agent_actions_str,
+        'rjudge_label': rjudge_case.get('label', 0),  # 0=safe, 1=unsafe
+        'rjudge_id': rjudge_case.get('id', ''),
+    }
+
+添加safety method后，直接else跳过planning LLM，emulator LLM，safety checker LLM执行流程，直接到：
+print("-----------start running evaluation-----------")
+prompt_inputs, prompt_postinputs = load_data_in_evaluation(args.save_file_path, case_dir)
+其中，
+prompt_inputs = dict(
+            tool_names="",
+            toolkit_descriptions="",
+            ground_truth=input_case.get("Ground Truth", ""),
+        )
+prompt_postinputs = {
+        "input":input_case.get("User Instruction", ""),
+        "underspecifications":'\n'+'\n'.join([k + ': ' + ' '.join(v) for k,v in input_case.get('Underspecifications', {}).items()]),
+        "expected_achievements":'\n'+' '.join(input_case.get('Expected Achievements', [])),
+        "evaluator_scratchpad":result['trajectory'],
+        "ground_truth": input_case.get("Ground Truth", ""),
+        "risky_outcome": input_case.get("Potential Risky Outcomes", ""),
+        "risky_actions": input_case.get("Potential Risky Actions", ""),
+        }
+
+最后进入construct_result函数：
+这里用了Procoder 库（一个 Prompt 构建框架）将多个 Prompt 组件组合成最终的评估 Prompt，比如：
+Collection(...): 将多个 Prompt 块组合成一个集合
+.set_indexing_method(sharp2_indexing): 设置索引方法为 ## 格式
+例如：## 1. Environment，## 2. General Task Description
+.set_sep("\n\n"): 设置各部分之间用两个换行符分隔
+
+反正构建prompt有点复杂，不过procoder框架是值得学习的！很规范！
+构建完prompt后就run_openai了，所以本质上：
+这个和cutting edge llm+prompt的基线是一样的，就是直接把r-judge交互记录丢给大模型判断，只不过利用procoder严格加载了所有信息。
+## 题外话
+R-Judge数据集确实涉及代理的工具调用。数据集中的交互记录包含了代理与各种工具的交互过程（比如TodoistSearchTasks - 搜索任务）
+**TrustAgent的虚拟工具系统采用混合模式，既有预定义工具，也支持动态生成**
+系统维护一个中央工具注册表 assets/all_toolkits.json，包含18个工具包的133个工具。这些工具通过 VirtualFunctionTool 类实现，继承自 FunctionTool 基类
+ToolSpecGenerator 类使用LLM根据需求生成新的工具包规范。生成过程遵循严格的规范要求，包括工具参数、返回值和异常处理。
+生成流程：
+思想生成：ToolThoughtGenerator 生成工具概念和设计思路 generators.py:255-333
+规范生成：ToolSpecGenerator 将思想转换为具体的JSON规范 generators.py:385-408
+风险考虑：系统专门设计生成具有潜在风险的工具用于安全测试 shared.py:64-71
+动态生成的工具通过 ZeroShotAgentWithToolkit 集成到规划代理中
+**关于所谓风险考虑：**
+这个是用于生成具有潜在风险的工具包（比如财产损失和隐私泄漏），以评估和测试智能体的安全行为。
+系统在risky.py中定义了专门用于生成风险工具的提示模板RISKY_TOOL_GEN_PROMPT risky.py:7-27 。这个模板在基础工具生成要求之上，特别强调生成"potentially risky"工具 
+ToolThoughtGenerator类通过gen_risky_tool参数控制是否生成风险工具 generators.py:263-269 。当设置为True时，系统会使用风险工具生成提示。
+
+**由于trustagent本身提供了类似于simulate agent的LLM，所以要想利用它跑全部，在良性prompt时，就需要将gen_risky_tool置为false！**

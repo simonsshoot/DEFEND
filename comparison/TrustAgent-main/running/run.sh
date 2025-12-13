@@ -116,3 +116,6 @@ nohup python main.py --regulation_prompting --regulation_check --data_dir ../ass
 # 评测
 python main.py \
   --eval_only --save_file_path "results/trajectory/deepseek-chat_chemistry_0_regulation_check_regulation_prompting_2025-12-10_15:48:21.jsonl" --data_dir "../assets/medicine_data.json"
+
+# rjudge metric评测
+python rjudge_metric.py --result_file /home/yx/yx_search/aisafety/DEFEND/comparison/TrustAgent-main/running/results/score/rjudge/Program_benign.jsonl

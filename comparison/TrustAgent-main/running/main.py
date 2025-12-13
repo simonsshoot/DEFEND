@@ -423,7 +423,8 @@ if __name__ == "__main__":
     result["data_idx"] = case_idx
     print(result)
     
-    save_path = f"results/score/{args.dataset if is_rjudge else domain}_{args.subfolder}_{args.data_type}.jsonl"
-    with open(save_path, 'a') as f:
-        json.dump(result, f, indent=2)
-
+    save_path = f"results/score/{args.dataset if is_rjudge else domain}/{args.subfolder}_{args.data_type}.jsonl"
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    with open(save_path, 'a', encoding='utf-8') as f:
+        json_line = json.dumps(result, ensure_ascii=False) 
+        f.write(json_line + '\n')  
