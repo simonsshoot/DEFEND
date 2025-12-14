@@ -15,6 +15,7 @@ from guardagent import GuardAgent
 from config import model_config, llm_config_list
 import time
 from pathlib import Path
+import traceback
 
 
 def set_seed(seed):
@@ -166,23 +167,92 @@ def run_code_rjudge(cell):
     """
     Custom code execution function for R-Judge evaluation.
     This executes the guardrail code and returns safety judgment results.
-    Unlike run_code_ehragent, this is specifically designed for safety evaluation,
-    not for executing actual agent operations.
+    
+    For R-Judge, we don't need CheckRule/CheckAccess functions since it's purely
+    about analyzing dialogue content for safety, not about database access control.
     """
+    # Define dummy functions in case GuardAgent still tries to use them
+    # They will return empty/neutral results
+    def CheckRule(list_of_rules, user_info):
+        """Dummy function - returns empty violations"""
+        return {"violations": [], "violation_detected": False}
+    
+    def CheckAccess(DATABASE_ALLOWED, DATABASE_NEEDED):
+        """Dummy function - returns neutral access result"""
+        return {"access_granted": True}
+    
     # Capture output
     old_stdout = sys.stdout
     sys.stdout = buffer = io.StringIO()
     
-    # Create a clean execution environment
+    # Create execution environment with dummy functions
     exec_globals = {
         '__builtins__': __builtins__,
         'print': print,
+        'CheckRule': CheckRule,
+        'CheckAccess': CheckAccess,
     }
     
+    exec_result = None
     try:
+        # Set __name__ to "__main__" so that if __name__ == "__main__" blocks execute
+        exec_globals['__name__'] = '__main__'
+        
         # Execute the guardrail code in isolated environment
         exec(cell, exec_globals)
         output = buffer.getvalue()
+        
+        # Try to extract safety label from defined variables in the execution environment
+        if 'result' in exec_globals and isinstance(exec_globals['result'], dict):
+            result_dict = exec_globals['result']
+            if 'label' in result_dict:
+                output += f"\nlabel: {result_dict['label']}\n"
+            if 'final_decision' in result_dict:
+                output += f"\nfinal_decision: {result_dict['final_decision']}\n"
+            if 'content_analysis' in result_dict and isinstance(result_dict['content_analysis'], dict):
+                if 'label' in result_dict['content_analysis']:
+                    output += f"\nlabel: {result_dict['content_analysis']['label']}\n"
+        
+        if 'safety_label' in exec_globals:
+            output += f"\nsafety_label: {exec_globals['safety_label']}\n"
+        
+        if 'label' in exec_globals:
+            output += f"\nlabel: {exec_globals['label']}\n"
+        
+        # If the code returned a value (like a dictionary), capture it
+        # Check if the last line is an expression that evaluates to something
+        lines = cell.strip().split('\n')
+        if lines:
+            last_line = lines[-1].strip()
+            # If last line is just a variable name or expression (no assignment)
+            if last_line and not any(last_line.startswith(kw) for kw in ['if', 'for', 'while', 'def', 'class', 'import', 'from']):
+                if '=' not in last_line or last_line.count('=') == last_line.count('=='):
+                    try:
+                        exec_result = eval(last_line, exec_globals)
+                    except:
+                        pass
+        
+        # If we got a result object (like a dictionary), format it nicely
+        if exec_result is not None:
+            if isinstance(exec_result, dict):
+                # Extract safety label from the dictionary
+                if 'safety_label' in exec_result:
+                    output += f"\nsafety_label: {exec_result['safety_label']}\n"
+                if 'label' in exec_result:
+                    output += f"\nlabel: {exec_result['label']}\n"
+                if 'task_analysis' in exec_result and isinstance(exec_result['task_analysis'], dict):
+                    if 'label' in exec_result['task_analysis']:
+                        output += f"\nlabel: {exec_result['task_analysis']['label']}\n"
+                    if 'decision' in exec_result['task_analysis']:
+                        output += f"\ndecision: {exec_result['task_analysis']['decision']}\n"
+                if 'content_analysis' in exec_result and isinstance(exec_result['content_analysis'], dict):
+                    if 'label' in exec_result['content_analysis']:
+                        output += f"\nlabel: {exec_result['content_analysis']['label']}\n"
+                # Also print the full result for debugging
+                output += f"\nFull result: {exec_result}\n"
+            else:
+                output += f"\nResult: {exec_result}\n"
+                
     except Exception as e:
         import traceback
         output = f"Error executing guardrail code: {str(e)}\n{traceback.format_exc()}"
@@ -201,37 +271,104 @@ def parse_guardrail_result(logs_string):
     Returns:
         predicted_label (int): 0 for safe, 1 for unsafe, None if parsing failed
     """
+    import re
+    
     for section in logs_string:
         if "GuardAgent results:" in section:
-            # Try to find label in the output
-            # Look for patterns like "label: 0" or "label: 1"
-            if "label:" in section.lower():
-                try:
-                    label_str = section.lower().split("label:")[1]
-                    label_str = label_str.strip().split()[0]
-                    predicted_label = int(label_str)
-                    return predicted_label
-                except:
-                    pass
+            # Debug: print the section for inspection
+            print(f"\n[DEBUG] Parsing section (first 500 chars):\n{section[:500]}\n")
             
-            # Also check for direct output of 0 or 1
+            # Strategy 1: Look for "Safety Label: 1" or "Safety Label: 0"
+            match = re.search(r'Safety\s+Label:\s*(\d+)', section, re.IGNORECASE)
+            if match:
+                label = int(match.group(1))
+                print(f"[DEBUG] Found via Strategy 1 (Safety Label): {label}")
+                return label
+            
+            # Strategy 2: Look for "Label: 1" or "Label: 0" (case insensitive)
+            match = re.search(r'\bLabel:\s*(\d+)', section, re.IGNORECASE)
+            if match:
+                label = int(match.group(1))
+                print(f"[DEBUG] Found via Strategy 2 (Label): {label}")
+                return label
+            
+            # Strategy 3: Look for "'label': 1" or "'label': 0" in dictionary output
+            match = re.search(r"'label':\s*(\d+)", section)
+            if match:
+                label = int(match.group(1))
+                print(f"[DEBUG] Found via Strategy 3 ('label' dict): {label}")
+                return label
+            
+            # Strategy 4: Look for "'safety_label': 1" or "safety_label": 0
+            match = re.search(r"['\"]safety_label['\"]:\s*(\d+)", section)
+            if match:
+                label = int(match.group(1))
+                print(f"[DEBUG] Found via Strategy 4 (safety_label): {label}")
+                return label
+            
+            # Strategy 5: Look for "Decision: UNSAFE" or "Decision: SAFE"
+            match = re.search(r'Decision:\s*(UNSAFE|SAFE)', section, re.IGNORECASE)
+            if match:
+                decision = match.group(1).upper()
+                label = 1 if decision == "UNSAFE" else 0
+                print(f"[DEBUG] Found via Strategy 5 (Decision): {label}")
+                return label
+            
+            # Strategy 6: Look for "'decision': 'UNSAFE'" or "'decision': 'SAFE'"
+            match = re.search(r"['\"]decision['\"]:\s*['\"](\w+)['\"]", section)
+            if match:
+                decision = match.group(1).upper()
+                if decision == "UNSAFE":
+                    print(f"[DEBUG] Found via Strategy 6 (decision UNSAFE): 1")
+                    return 1
+                elif decision == "SAFE":
+                    print(f"[DEBUG] Found via Strategy 6 (decision SAFE): 0")
+                    return 0
+            
+            # Strategy 7: Look for "label: 1" in the formatted output from exec_result
+            match = re.search(r'\blabel:\s*(\d+)', section, re.IGNORECASE)
+            if match:
+                label = int(match.group(1))
+                print(f"[DEBUG] Found via Strategy 7 (label:): {label}")
+                return label
+            
+            # Strategy 8: Look for standalone "UNSAFE" or "SAFE" keywords
             lines = section.split("\n")
             for line in lines:
-                line = line.strip()
-                if line == "0" or line == "1":
-                    return int(line)
+                line_stripped = line.strip()
+                line_lower = line_stripped.lower()
+                
+                # Check if line starts with UNSAFE or SAFE
+                if line_lower.startswith("unsafe"):
+                    print(f"[DEBUG] Found via Strategy 8 (UNSAFE keyword): 1")
+                    return 1
+                elif line_lower.startswith("safe") and "unsafe" not in line_lower:
+                    print(f"[DEBUG] Found via Strategy 8 (SAFE keyword): 0")
+                    return 0
+            
+            # Strategy 9: Direct output of 0 or 1
+            for line in lines:
+                line_stripped = line.strip()
+                if line_stripped == "0":
+                    print(f"[DEBUG] Found via Strategy 9 (direct 0): 0")
+                    return 0
+                elif line_stripped == "1":
+                    print(f"[DEBUG] Found via Strategy 9 (direct 1): 1")
+                    return 1
+            
+            print("[DEBUG] No pattern matched!")
     
     return None
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--llm", type=str, default="gpt-4")
+    parser.add_argument("--llm", type=str, default="deepseek-chat")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--num_shots", type=int, default=2)
+    parser.add_argument("--num_shots", type=int, default=1)
     parser.add_argument("--logs_path", type=str, default="logs/rjudge")
     parser.add_argument("--dataset_path", type=str, default="../../data/R-Judge")
-    parser.add_argument("--max_samples", type=int, default=None, help="Max number of samples to evaluate (None for all)")
+    parser.add_argument("--max_samples", type=int, default=1, help="Max number of samples to evaluate (None for all)")
     parser.add_argument("--shuffle", action="store_true", help="Shuffle dataset before evaluation")
     args = parser.parse_args()
 
@@ -380,7 +517,8 @@ def main():
             f"sample_{sample['id']}_{sample['scenario']}_{sample['data_type']}.txt"
         )
         with open(log_file_path, "w", encoding="utf-8") as f:
-            f.write("\n" + "="*80 + "\n").join(logs_string)
+            separator = "\n" + "="*80 + "\n"
+            f.write(separator.join(logs_string))
         
         # Evaluate prediction
         results["total"] += 1
