@@ -6,7 +6,7 @@ from typing import List, Dict,Any
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import requests
 from openai import OpenAI
-from config import API_KEY,BASE_URL
+from config import API_KEY,BASE_URL,MODEL_NAME
 
 def append_to_json(file_path, data):
     if not os.path.exists(file_path):
@@ -160,14 +160,13 @@ def run_model(prompt: str) -> str:
     client = OpenAI(api_key=API_KEY,
                     base_url=BASE_URL)
     response = client.chat.completions.create(
-        model="claude-3-5-haiku-20241022",
+        model=MODEL_NAME,
         messages=[
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": prompt},
         ],
         stream=False,
         temperature=0,
-        response_format={"type": "json"},
     )
     return response.choices[0].message.content
 
@@ -414,7 +413,7 @@ def main():
     max_workers = 6   # 预留一个CPU核心
     
     # AgentHarm 数据集根目录
-    agentharm_root = '../../data/agentharm'
+    agentharm_root = '/home/yx/yx_search/aisafety/DEFEND/data/agentharm'
     output_root = './risk_patterns_agentharm'
     error_root = './error/agentharm'
     

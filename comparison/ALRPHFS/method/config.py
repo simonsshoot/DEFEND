@@ -3,9 +3,10 @@ CHROMA_PERSIST_DIR = "./chroma"
 
 # BM25 配置
 BM25_STORAGE_PATH = "./bm25_data"
+MODEL_NAME ="deepseek-chat"
 
-API_KEY = " "
-BASE_URL = " "
+API_KEY = "sk-bcb9f72045274fab98c083a1901dfa31"
+BASE_URL = "https://api.deepseek.com"
 
 # Collection 名称
 COLLECTIONS = {
