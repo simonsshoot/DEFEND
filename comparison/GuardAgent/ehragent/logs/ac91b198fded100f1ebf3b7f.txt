@@ -1,0 +1,122 @@
+what is the average total hospital cost that involves a procedure named immunosuppressives - tacrolimus since 2102?
+----------------------------------------------------------
+['4118.859999999997']
+----------------------------------------------------------
+Assume you have knowledge of several tables:
+(1) Tables are linked by identifiers which usually have the suffix 'ID'. For example, SUBJECT_ID refers to a unique patient, HADM_ID refers to a unique admission to the hospital, and ICUSTAY_ID refers to a unique admission to an intensive care unit.
+(2) Charted events such as notes, laboratory tests, and fluid balance are stored in a series of 'events' tables. For example the outputevents table contains all measurements related to output for a given patient, while the labevents table contains laboratory test results for a patient.
+(3) Tables prefixed with 'd_' are dictionary tables and provide definitions for identifiers. For example, every row of chartevents is associated with a single ITEMID which represents the concept measured, but it does not contain the actual name of the measurement. By joining chartevents and d_items on ITEMID, it is possible to identify the concept represented by a given ITEMID.
+(4) For the databases, four of them are used to define and track patient stays: admissions, patients, icustays, and transfers. Another four tables are dictionaries for cross-referencing codes against their respective definitions: d_icd_diagnoses, d_icd_procedures, d_items, and d_labitems. The remaining tables, including chartevents, cost, inputevents_cv, labevents, microbiologyevents, outputevents, prescriptions, procedures_icd, contain data associated with patient care, such as physiological measurements, caregiver observations, and billing information.
+Write a python code to solve the given question. You can use the following functions:
+(1) Calculate(FORMULA), which calculates the FORMULA and returns the result.
+(2) LoadDB(DBNAME) which loads the database DBNAME and returns the database. The DBNAME can be one of the following: allergy, cost, diagnosis, intakeoutput, lab, medication, microlab, patient, treatment, vitalperiodic.
+(3) FilterDB(DATABASE, CONDITIONS), which filters the DATABASE according to the CONDITIONS and returns the filtered database. The CONDITIONS is a string composed of multiple conditions, each of which consists of the column_name, the relation and the value (e.g., COST<10). The CONDITIONS is one single string (e.g., "admissions, SUBJECT_ID=24971"). Different conditions are separated by '||'.
+(4) GetValue(DATABASE, ARGUMENT), which returns a string containing all the values of the column in the DATABASE (if multiple values, separated by ", "). When there is no additional operations on the values, the ARGUMENT is the column_name in demand. If the values need to be returned with certain operations, the ARGUMENT is composed of the column_name and the operation (like COST, sum). Please do not contain " or ' in the argument.
+(5) SQLInterpreter(SQL), which interprets the query SQL and returns the result.
+(6) Calendar(DURATION), which returns the date after the duration of time.
+Use the variable 'answer' to store the answer of the code. Here are some examples:
+Question: what is the average total hospital cost that involves a procedure named cultures - bal/pbs since 2102?
+Knowledge:
+- As cultures - bal/pbs is a treatment, we can find the treatment information in the treatment database.
+- We can find the patientunitstayid in the treatment database and use it to find the patienthealthsystemstayid information in the patient database.
+- We can use the patienthealthsystemstayid information to find the cost information in the cost database.
+Solution:
+date = '2102-01-01'
+treatment_db = LoadDB('treatment')
+filtered_treatment_db = FilterDB(treatment_db, 'treatmentname=cultures - bal/pbs')
+patientunitstayid_list = GetValue(filtered_treatment_db, 'patientunitstayid, list')
+patient_db = LoadDB('patient')
+filtered_patient_db = FilterDB(patient_db, 'patientunitstayid in {}'.format(patientunitstayid_list))
+patienthealthsystemstayid_list = GetValue(filtered_patient_db, 'patienthealthsystemstayid, list')
+cost_db = LoadDB('cost')
+total_cost = 0
+for patienthealthsystemstayid in patienthealthsystemstayid_list:
+	filtered_cost_db = FilterDB(cost_db, 'patienthealthsystemstayid={}||chargetime>={}'.format(patienthealthsystemstayid, date))
+	cost = GetValue(filtered_cost_db, 'cost, sum')
+	total_cost += cost
+average_cost = total_cost / len(patienthealthsystemstayid_list)
+answer = average_cost
+
+Question: what is the average total hospital cost that involves a procedure named ct scan - chest since 2103?
+Knowledge:
+- As ct scan - chest is a procedure, we can find the procedure information in the treatment database.
+- We can find the patientunitstayid in the treatment database and use it to find the patienthealthsystemstayid information in the patient database.
+- We can use the patienthealthsystemstayid information to find the cost information in the cost database.
+Solution:
+date = '2103-01-01'
+treatment_db = LoadDB('treatment')
+filtered_treatment_db = FilterDB(treatment_db, 'treatmentname=ct scan - chest')
+patientunitstayid_list = GetValue(filtered_treatment_db, 'patientunitstayid, list')
+patient_db = LoadDB('patient')
+filtered_patient_db = FilterDB(patient_db, 'patientunitstayid in {}'.format(patientunitstayid_list))
+patienthealthsystemstayid_list = GetValue(filtered_patient_db, 'patienthealthsystemstayid, list')
+cost_db = LoadDB('cost')
+total_cost = 0
+for patienthealthsystemstayid in patienthealthsystemstayid_list:
+	filtered_cost_db = FilterDB(cost_db, 'patienthealthsystemstayid={}||chargetime>={}'.format(patienthealthsystemstayid, date))
+	cost = GetValue(filtered_cost_db, 'cost, sum')
+	total_cost += cost
+average_cost = total_cost / len(patienthealthsystemstayid_list)
+answer = average_cost
+
+Question: what is the average total hospital cost that involves a procedure named implantation of rvad since 2100?
+Knowledge:
+- As implantation of rvad is a treatment, we can find the treatment information in the treatment database.
+- We can find the patientunitstayid in the treatment database and use it to find the patienthealthsystemstayid information in the patient database.
+- We can use the patienthealthsystemstayid information to find the cost information in the cost database.
+Solution:
+date = '2100-01-01'
+treatment_db = LoadDB('treatment')
+filtered_treatment_db = FilterDB(treatment_db, 'treatmentname=implantation of rvad')
+patientunitstayid_list = GetValue(filtered_treatment_db, 'patientunitstayid, list')
+patient_db = LoadDB('patient')
+filtered_patient_db = FilterDB(patient_db, 'patientunitstayid in {}'.format(patientunitstayid_list))
+patienthealthsystemstayid_list = GetValue(filtered_patient_db, 'patienthealthsystemstayid, list')
+cost_db = LoadDB('cost')
+total_cost = 0
+for patienthealthsystemstayid in patienthealthsystemstayid_list:
+	filtered_cost_db = FilterDB(cost_db, 'patienthealthsystemstayid={}||chargetime>={}'.format(patienthealthsystemstayid, date))
+	cost = GetValue(filtered_cost_db, 'cost, sum')
+	total_cost += cost
+average_cost = total_cost / len(patienthealthsystemstayid_list)
+answer = average_cost
+
+Question: what is the average total hospital cost that involves a procedure named electrolyte administration - phosphate?
+Knowledge:
+- As electrolyte administration - phosphate is a treatment, we can find the treatment information in the treatment database.
+- We can find the patientunitstayid in the treatment database and use it to find the patienthealthsystemstayid information in the patient database.
+- We can use the patienthealthsystemstayid information to find the cost information in the cost database.
+Solution:
+treatment_db = LoadDB('treatment')
+filtered_treatment_db = FilterDB(treatment_db, 'treatmentname=electrolyte administration - phosphate')
+patientunitstayid_list = GetValue(filtered_treatment_db, 'patientunitstayid, list')
+patient_db = LoadDB('patient')
+filtered_patient_db = FilterDB(patient_db, 'patientunitstayid in {}'.format(patientunitstayid_list))
+patienthealthsystemstayid_list = GetValue(filtered_patient_db, 'patienthealthsystemstayid, list')
+cost_db = LoadDB('cost')
+total_cost = 0
+for patienthealthsystemstayid in patienthealthsystemstayid_list:
+	filtered_cost_db = FilterDB(cost_db, 'patienthealthsystemstayid={}'.format(patienthealthsystemstayid))
+	cost = GetValue(filtered_cost_db, 'cost, sum')
+	total_cost += cost
+average_cost = total_cost / len(patienthealthsystemstayid_list)
+answer = average_cost
+
+(END OF EXAMPLES)
+Knowledge:
+- As immunosuppressives - tacrolimus is a treatment, we can find the treatment information in the treatment database.
+- We can find the patientunitstayid in the treatment database and use it to find the patienthealthsystemstayid information in the patient database.
+- We can use the patienthealthsystemstayid information to find the cost information in the cost database.
+Question: what is the average total hospital cost that involves a procedure named immunosuppressives - tacrolimus since 2102?
+Solution: 
+----------------------------------------------------------
+{
+"cell": "date = '2102-01-01'\ntreatment_db = LoadDB('treatment')\nfiltered_treatment_db = FilterDB(treatment_db, 'treatmentname=immunosuppressives - tacrolimus')\npatientunitstayid_list = GetValue(filtered_treatment_db, 'patientunitstayid, list')\npatient_db = LoadDB('patient')\nfiltered_patient_db = FilterDB(patient_db, 'patientunitstayid in {}'.format(patientunitstayid_list))\npatienthealthsystemstayid_list = GetValue(filtered_patient_db, 'patienthealthsystemstayid, list')\ncost_db = LoadDB('cost')\ntotal_cost = 0\nfor patienthealthsystemstayid in patienthealthsystemstayid_list:\n\tfiltered_cost_db = FilterDB(cost_db, 'patienthealthsystemstayid={}||chargetime>={}'.format(patienthealthsystemstayid, date))\n\tcost = GetValue(filtered_cost_db, 'cost, sum')\n\ttotal_cost += cost\naverage_cost = total_cost / len(patienthealthsystemstayid_list)\nanswer = average_cost"
+}
+----------------------------------------------------------
+4118.859999999997
+----------------------------------------------------------
+TERMINATE
+----------------------------------------------------------
+Ground-Truth Answer ---> 4118.859999999997
+res-right

@@ -1,0 +1,136 @@
+{
+  "results": {
+    "Application": {
+      "harmful": {
+        "total": 155,
+        "multi_turn": 3,
+        "single_turn": 152,
+        "multi_turn_ratio": 1.935483870967742,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 152,
+          "2": 3
+        }
+      },
+      "benign": {
+        "total": 97,
+        "multi_turn": 2,
+        "single_turn": 95,
+        "multi_turn_ratio": 2.0618556701030926,
+        "max_turns": 3,
+        "turn_distribution": {
+          "3": 1,
+          "1": 95,
+          "2": 1
+        }
+      }
+    },
+    "Finance": {
+      "harmful": {
+        "total": 39,
+        "multi_turn": 0,
+        "single_turn": 39,
+        "multi_turn_ratio": 0.0,
+        "max_turns": 1,
+        "turn_distribution": {
+          "1": 39
+        }
+      },
+      "benign": {
+        "total": 87,
+        "multi_turn": 0,
+        "single_turn": 87,
+        "multi_turn_ratio": 0.0,
+        "max_turns": 1,
+        "turn_distribution": {
+          "1": 87
+        }
+      }
+    },
+    "IoT": {
+      "harmful": {
+        "total": 19,
+        "multi_turn": 2,
+        "single_turn": 17,
+        "multi_turn_ratio": 10.526315789473683,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 17,
+          "2": 2
+        }
+      },
+      "benign": {
+        "total": 11,
+        "multi_turn": 2,
+        "single_turn": 9,
+        "multi_turn_ratio": 18.181818181818183,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 9,
+          "2": 2
+        }
+      }
+    },
+    "Program": {
+      "harmful": {
+        "total": 68,
+        "multi_turn": 2,
+        "single_turn": 66,
+        "multi_turn_ratio": 2.941176470588235,
+        "max_turns": 4,
+        "turn_distribution": {
+          "1": 66,
+          "4": 1,
+          "2": 1
+        }
+      },
+      "benign": {
+        "total": 60,
+        "multi_turn": 3,
+        "single_turn": 57,
+        "multi_turn_ratio": 5.0,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 57,
+          "2": 3
+        }
+      }
+    },
+    "Web": {
+      "harmful": {
+        "total": 20,
+        "multi_turn": 1,
+        "single_turn": 19,
+        "multi_turn_ratio": 5.0,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 19,
+          "2": 1
+        }
+      },
+      "benign": {
+        "total": 15,
+        "multi_turn": 1,
+        "single_turn": 14,
+        "multi_turn_ratio": 6.666666666666667,
+        "max_turns": 2,
+        "turn_distribution": {
+          "1": 14,
+          "2": 1
+        }
+      }
+    }
+  },
+  "total_stats": {
+    "total_samples": 571,
+    "multi_turn_samples": 16,
+    "single_turn_samples": 555,
+    "max_turns": 4,
+    "turn_distribution": {
+      "1": 555,
+      "2": 14,
+      "3": 1,
+      "4": 1
+    }
+  }
+}
