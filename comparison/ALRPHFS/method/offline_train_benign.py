@@ -1,13 +1,14 @@
 import json
 from typing import List, Dict, Any
 import random
+import re  # 添加re模块导入
 from defence_offline import SecurityEvaluator
 from embedding import ChromaDBManager,get_embedding
 from utils import LLMClient
 from sentence_transformers import util
 import os
 from Hybrid_retrieval import HybridDBManager
-from config import API_KEY,BASE_URL,BM25_STORAGE_PATH,CHROMA_PERSIST_DIR,THRESOLD_LOW,THRESOLD_HIGH
+from config import API_KEY,BASE_URL,BM25_STORAGE_PATH,CHROMA_PERSIST_DIR,THRESOLD_LOW,THRESOLD_HIGH,MODEL_NAME
 
 benign_reflect_and_optimize = """
 You are an AI safety expert tasked with improving a safety defense system to reduce false positives while maintaining strong protection against actual attacks. Your job is to analyze why a benign user query was incorrectly flagged as harmful and refine the attack essence database accordingly.
@@ -563,25 +564,118 @@ class BenignTrainer:
 
 # Usage example
 if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='AgentHarm对抗性自学习训练 - Benign模式')
+    parser.add_argument('--category', type=str, default=None, 
+                        help='指定AgentHarm类别进行训练（如：Harassment, Fraud等）。不指定则使用所有类别。')
+    parser.add_argument('--max_retry_attempts', type=int, default=2, 
+                        help='最大重试次数（默认：2）')
+    parser.add_argument('--data_dir', type=str, default='/home/yx/yx_search/aisafety/DEFEND/data/agentharm',
+                        help='AgentHarm数据集目录（包含八个子类别文件夹）')
+    parser.add_argument('--output_dir', type=str, default='./train_history/benign_agentharm_benign',
+                        help='训练结果输出目录')
+    args = parser.parse_args()
+    
+    print("=" * 80)
+    print("AgentHarm 对抗性自学习训练 - Benign 模式")
+    print("=" * 80)
+
+    def load_benign_data(data_dir, target_category=None):
+        """加载AgentHarm数据集中的benign_simulate.jsonl文件"""
+        agentharm_categories = [
+            "Fraud", "Harassment", "Drugs", 
+            "Copyright", "Hate", "Sexual", "Cybercrime","Disinformation"
+        ]
+        
+        if target_category:
+            if target_category not in agentharm_categories:
+                print(f"错误：无效的类别 '{target_category}'")
+                print(f"可用类别: {', '.join(agentharm_categories)}")
+                return []
+            categories_to_load = [target_category]
+        else:
+            categories_to_load = agentharm_categories
+        
+        all_data = []
+        
+        for category in categories_to_load:
+            benign_file = os.path.join(data_dir, category, "benign_simulate.jsonl")
+            
+            if not os.path.exists(benign_file):
+                print(f"警告：文件不存在 {benign_file}，跳过...")
+                continue
+            
+            print(f"正在加载: {benign_file}")
+            
+            with open(benign_file, 'r', encoding='utf-8') as f:
+                count = 0
+                for line in f:
+                    if line.strip():
+                        item = json.loads(line)
+                        # 添加类别信息
+                        item['agentharm_category'] = category
+                        # 重命名字段以匹配训练器期望的格式
+                        item['instruction'] = item.get('request', '')
+                        item['risk_description'] = f"Benign task: {item.get('agentharm_name', 'Unknown')}"
+                        user_query=item["instruction"]
+                        agent_actions=item.get("agent_actions",[])
+                        agent_trajectory = [
+                            {"role": "user", "content": user_query},
+                            {"role": "agent", "thought": "", "action": agent_actions}
+                        ]
+                        item['agent_trajectory'] = agent_trajectory
+                        all_data.append(item)
+                        count += 1
+                
+                print(f"  加载了 {count} 条数据")
+        
+        return all_data
+    
+    if not os.path.exists(args.data_dir):
+        print(f"错误：数据目录 {args.data_dir} 不存在！")
+        print("请确保AgentHarm数据集已正确放置。")
+        exit(1)
+    
+    agentharm_data = load_benign_data(args.data_dir, args.category)
+    
+    if not agentharm_data:
+        print("错误：未加载到任何数据！")
+        exit(1)
+    
+    print(f"\n总数据量：{len(agentharm_data)} 条")
+    
+    categories = {}
+    for item in agentharm_data:
+        cat = item.get('agentharm_category', 'Unknown')
+        categories[cat] = categories.get(cat, 0) + 1
+    
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    
+    print("初始化LLM客户端...")
     llm_client2 = LLMClient(
         api_key=API_KEY,
         base_url=BASE_URL,
-        model="claude-3-5-haiku-20241022"
+        model=MODEL_NAME
     )
     llm_client3 = LLMClient(
         api_key=API_KEY,
         base_url=BASE_URL,
-        model="claude-3-5-haiku-20241022"
+        model=MODEL_NAME
     )
-    # Initialize database managers
-    db_manager1=HybridDBManager(
-        collection_name="attack_essence",
+    
+    db_manager1 = HybridDBManager(
+        collection_name="attack_essence_agentharm",
         persist_dir=CHROMA_PERSIST_DIR,
         alpha=0.3,
-        bm25_storage_path=BM25_STORAGE_PATH
+        bm25_storage_path=os.path.join(BM25_STORAGE_PATH, "attack_essence")
     )
-    db_manager2 = ChromaDBManager(collection_name="harmful_result",persist_dir =CHROMA_PERSIST_DIR)
-    # Initialize Blue Team security evaluator
+    db_manager2 = ChromaDBManager(
+        collection_name="harmful_result_agentharm",
+        persist_dir=CHROMA_PERSIST_DIR
+    )
+
     blue_evaluator = SecurityEvaluator(
         llm_client=llm_client3,
         db_manager=db_manager1,
@@ -589,25 +683,64 @@ if __name__ == "__main__":
         threshold_low=0.4,
         enable_guardrail=True,
     )
+
     trainer = BenignTrainer(
         llm_client=llm_client2,
         red_db_manager=db_manager2,
         blue_evaluator=blue_evaluator,
-        max_retry_attempts=2,
+        max_retry_attempts=args.max_retry_attempts,
     )
-    file_path = "./train_history/benign/safe.json"
-    # Seed query to begin training
-    with open(file_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    # 逐条处理并保存
-    for i in range(len(data)):
-        if "is_trained" in data[i]:
-            print(f"Training progress: {i + 1}/{len(data)}")
-            continue
-        data[i] = trainer.train(data[i])
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"Training progress: {i+1}/{len(data)}")
+    
+    print("=" * 80)
+    print("开始Benign训练（减少误报）")
+    print("=" * 80)
+    
+    for category, count in sorted(categories.items()):
+        print(f"\n{'='*80}")
+        print(f"训练类别: {category} ({count} 条数据)")
+        print(f"{'='*80}\n")
+        
+        # 过滤当前类别的数据
+        category_data = [item for item in agentharm_data 
+                        if item.get('agentharm_category') == category]
+        
+        # 设置保存文件路径
+        safe_category = re.sub(r'[\\/:\*\?"<>\|]', '_', category)
+        output_file = os.path.join(args.output_dir, f"{safe_category}.json")
+        
+        # 如果文件已存在，加载已训练的进度
+        if os.path.exists(output_file):
+            with open(output_file, 'r', encoding='utf-8') as f:
+                category_data = json.load(f)
+            print(f"加载已有训练进度: {output_file}")
+        
+        # 逐条处理并保存
+        trained_count = 0
+        for i in range(len(category_data)):
+            if category_data[i].get("is_trained"):
+                trained_count += 1
+                continue
+            
+            try:
+                print(f"\n处理第 {i+1}/{len(category_data)} 条数据...")
+                category_data[i] = trainer.train(category_data[i])
+                trained_count += 1
+                
+                # 保存进度
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    json.dump(category_data, f, ensure_ascii=False, indent=2)
+                
+                print(f"✓ 训练进度: {trained_count}/{len(category_data)}")
+            except Exception as e:
+                print(f"✗ 处理失败: {e}")
+                import traceback
+                traceback.print_exc()
+                continue
+        
+        print(f"\n✓ 类别 '{category}' 训练完成！已训练 {trained_count}/{len(category_data)} 条\n")
+    
+    print("\n" + "=" * 80)
+    print("✓ 所有类别Benign训练完成！")
+    print("=" * 80)
 
 

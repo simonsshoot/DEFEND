@@ -281,16 +281,13 @@ def process_dataset(
 
 
 def process_agentharm_item(item: Dict, category: str, error_path: str="./error/error.json") -> Dict:
-    """处理单个 AgentHarm 数据项的函数"""
     if "attack_essence" in item:
         return item
-    
-    # 从 AgentHarm 格式提取字段
+
     user_query = item.get("request", "")
     agent_actions = item.get("agent_actions", "")
     category = item.get("agentharm_category", category)
-    
-    # 构造 agent_trajectory 格式（模拟为简单的用户请求和智能体动作）
+
     agent_trajectory = [
         {"role": "user", "content": user_query},
         {"role": "agent", "thought": "", "action": agent_actions}
@@ -360,32 +357,23 @@ def process_agentharm_jsonl(
         start_index: int = 0,
         end_index: int = None
 ):
-    """处理 AgentHarm 的 JSONL 文件"""
-    # 读取 JSONL 数据
     data = []
     with open(jsonl_path, 'r', encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 data.append(json.loads(line))
     
-    print(f"Loaded {len(data)} items from {jsonl_path}")
-    
-    # 根据起始和结束索引切片
     if end_index is None:
         end_index = len(data)
-    
-    # 切片处理的数据
+
     data_slice = data[start_index:end_index]
-    
-    # 使用进程池并行处理
+
     futures_map = {}
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        # 提交任务并记录原始索引
         for local_idx, item in enumerate(data_slice):
             future = executor.submit(process_agentharm_item, item, category, error_path)
             futures_map[future] = local_idx
         
-        # 处理已完成的 future
         processed_count = 0
         for future in as_completed(futures_map.keys()):
             local_idx = futures_map[future]
@@ -396,38 +384,32 @@ def process_agentharm_jsonl(
                 processed_count += 1
             except Exception as e:
                 print(f"Error processing item {start_index + local_idx}: {e}")
-            
-            # 定期保存
+
             if processed_count % 5 == 0:
                 with open(output_path, 'w', encoding='utf-8') as file:
                     json.dump(data, file, ensure_ascii=False, indent=4)
                 print(f"Saved progress at item {start_index + local_idx + 1}")
-    
-    # 最终保存为 JSON
+
     with open(output_path, 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
     print(f"Completed processing {category}, saved to {output_path}")
 
 
 def main():
-    max_workers = 6   # 预留一个CPU核心
-    
+    max_workers = 6   
     # AgentHarm 数据集根目录
     agentharm_root = '/home/yx/yx_search/aisafety/DEFEND/data/agentharm'
     output_root = './risk_patterns_agentharm'
     error_root = './error/agentharm'
-    
-    # 创建输出和错误目录
+ 
     os.makedirs(output_root, exist_ok=True)
     os.makedirs(error_root, exist_ok=True)
-    
-    # AgentHarm 的八个类别
+
     categories = [
         'Copyright', 'Cybercrime', 'Disinformation', 'Drugs',
         'Fraud', 'Harassment', 'Hate', 'Sexual'
     ]
-    
-    # 遍历每个类别文件夹
+
     for category in categories:
         category_path = os.path.join(agentharm_root, category)
         jsonl_path = os.path.join(category_path, 'harmful_simulate.jsonl')
@@ -444,8 +426,7 @@ def main():
         print(f"输入文件: {jsonl_path}")
         print(f"输出文件: {output_path}")
         print(f"{'='*60}\n")
-        
-        # 处理该类别的 JSONL 文件
+
         process_agentharm_jsonl(
             jsonl_path=jsonl_path,
             output_path=output_path,

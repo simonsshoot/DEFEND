@@ -19,26 +19,16 @@ _embedding_model = None
 _embedding_tokenizer = None
 
 def load_local_embedding_model(model_path="/data/Content_Moderation/BAAI-bge-m3"):
-    """
-    加载本地 BGE-M3 embedding 模型（仅加载一次）
-    """
     global _embedding_model, _embedding_tokenizer
     
     if _embedding_model is None:
-        print(f"正在加载本地 embedding 模型: {model_path}")
         _embedding_tokenizer = AutoTokenizer.from_pretrained(model_path)
         _embedding_model = AutoModel.from_pretrained(model_path)
         
-        # 如果有GPU，使用GPU
         if torch.cuda.is_available():
             _embedding_model = _embedding_model.cuda()
-            print("使用 GPU 进行 embedding 计算")
-        else:
-            print("使用 CPU 进行 embedding 计算")
-        
         _embedding_model.eval()
         print("模型加载完成")
-    
     return _embedding_tokenizer, _embedding_model
 
 
@@ -51,8 +41,7 @@ def get_embedding(text, model_path="/data/Content_Moderation/BAAI-bge-m3"):
     """
     try:
         tokenizer, model = load_local_embedding_model(model_path)
-        
-        # Tokenize
+
         inputs = tokenizer(
             text, 
             return_tensors="pt", 
@@ -60,12 +49,10 @@ def get_embedding(text, model_path="/data/Content_Moderation/BAAI-bge-m3"):
             truncation=True, 
             max_length=512
         )
-        
-        # 移动到GPU（如果可用）
+
         if torch.cuda.is_available():
             inputs = {k: v.cuda() for k, v in inputs.items()}
-        
-        # 获取 embedding
+
         with torch.no_grad():
             outputs = model(**inputs)
             # 使用 [CLS] token 的 embedding 或者 mean pooling
@@ -203,7 +190,7 @@ def select_greedy_medoids_from_label_groups(
         }
 
     return result
-#保存结果
+
 def default_bm25_tokenizer(text: str):
     doc = nlp(text)
     return [token.text for token in doc if not token.is_stop and not token.is_punct]
@@ -298,12 +285,10 @@ def save_medoids_to_json(medoid_groups: Dict[int, Dict[str, List]], output_path:
     
     for label, group in medoid_groups.items():
         for item in group["items"]:
-            # 添加聚类标签到数据项
             item_copy = item.copy()
             item_copy["cluster_label"] = int(label)
             output_data.append(item_copy)
     
-    # 保存到文件
     os.makedirs(os.path.dirname(output_path) if os.path.dirname(output_path) else ".", exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
@@ -325,9 +310,6 @@ def load_agentharm_risk_patterns(folder_path="./risk_patterns_agentharm"):
         print(f"错误：文件夹 {folder_path} 不存在！")
         return attacks
     
-    print(f"正在从 {folder_path} 加载 AgentHarm 风险模式...")
-    
-    # 遍历文件夹中的所有 JSON 文件
     for filename in os.listdir(folder_path):
         if filename.endswith(".json"):
             file_path = os.path.join(folder_path, filename)
@@ -337,44 +319,28 @@ def load_agentharm_risk_patterns(folder_path="./risk_patterns_agentharm"):
                     data = json.load(f)
                     count = 0
                     for item in data:
-                        # 只保留包含 attack_essence 字段的数据项
                         if "attack_essence" in item:
                             attacks.append(item)
                             count += 1
-                    print(f"    从 {filename} 提取了 {count} 条风险模式")
             except Exception as e:
                 print(f"    错误：读取 {filename} 时出错: {e}")
-    
     print(f"\n总共加载了 {len(attacks)} 条风险模式数据\n")
     return attacks
 
 
-# ——— 使用示例 ———
 if __name__ == "__main__":
-    # ===== 配置参数 =====
-    # AgentHarm 风险模式数据目录
     AGENTHARM_PATTERNS_DIR = "./risk_patterns_agentharm"
-    
-    # DBSCAN 聚类参数
-    EPS = 0.3              # 聚类半径（余弦距离）
-    MIN_SAMPLES = 1        # 最小样本数
-    
-    # Medoid 选择参数
+    EPS = 0.3            
+    MIN_SAMPLES = 1        
+
     TOP_K_MEDOIDS = 3      # 每簇最多保留的代表性样本数
     MIN_REQUIRED_DIST = 0.2  # Medoid 之间的最小距离
-    
-    # 保存路径配置
+
     CHROMA_PERSIST_DIR = "./chroma_agentharm"
     BM25_STORAGE_PATH = "./bm25_agentharm"
     
-    # 本地 embedding 模型路径
     EMBEDDING_MODEL_PATH = "/data/Content_Moderation/BAAI-bge-m3"
     
-    print("=" * 80)
-    print("AgentHarm 数据集去重优化流程")
-    print("=" * 80)
-    
-    # ===== Step 1: 加载 AgentHarm 风险模式数据 =====
     print("\n[Step 1] 加载 AgentHarm 风险模式数据...")
     attacks = load_agentharm_risk_patterns(folder_path=AGENTHARM_PATTERNS_DIR)
     
@@ -382,55 +348,27 @@ if __name__ == "__main__":
         print("错误：未加载到任何数据，请检查数据路径！")
         exit(1)
     
-    # ===== Step 2: 使用 DBSCAN 进行聚类 =====
     print(f"\n[Step 2] 使用 DBSCAN 进行聚类（eps={EPS}, min_samples={MIN_SAMPLES}）...")
-    print(f"使用本地 embedding 模型: {EMBEDDING_MODEL_PATH}")
-    
     clustered_result = cluster_items_dbscan_group_by_label(
         items=attacks,
         field="attack_essence",
         eps=EPS,
         min_samples=MIN_SAMPLES
     )
-    
-    print(f"聚类完成！共生成 {len(clustered_result)} 个簇")
-    for label, group in clustered_result.items():
-        cluster_name = "噪声点" if label == -1 else f"簇 {label}"
-        print(f"  {cluster_name}: {len(group['items'])} 个样本")
-    
-    # ===== Step 3: 贪心 Medoid 选择 =====
+
     print(f"\n[Step 3] 从每个簇中选择代表性样本（top_k={TOP_K_MEDOIDS}, min_dist={MIN_REQUIRED_DIST}）...")
-    
     topk_medoid_groups = select_greedy_medoids_from_label_groups(
         clustered_items=clustered_result,
         top_k=TOP_K_MEDOIDS,
         min_required_dist=MIN_REQUIRED_DIST
     )
     
-    # 统计去重后的样本数
     total_medoids = sum(len(grp['items']) for grp in topk_medoid_groups.values())
     print(f"\n去重完成！从 {len(attacks)} 条原始数据中选出 {total_medoids} 条代表性样本")
-    
-    # 查看每个簇的代表性样本
-    print("\n各簇代表性样本详情：")
-    for lab, grp in topk_medoid_groups.items():
-        cluster_name = "噪声点" if lab == -1 else f"簇 {lab}"
-        print(f"\n{cluster_name} 保留 {len(grp['items'])} 个 Medoid:")
-        for idx, itm in enumerate(grp["items"], 1):
-            essence = itm.get("attack_essence", "N/A")
-            category = itm.get("agentharm_category", "N/A")
-            print(f"   {idx}. [{category}] {essence}")
-    
-    # ===== Step 4: 保存去重结果为 JSON 文件 =====
-    print(f"\n[Step 4] 保存去重结果为 JSON 文件...")
+
     json_output_path = "./deduplicated_agentharm_patterns.json"
     save_medoids_to_json(topk_medoid_groups, output_path=json_output_path)
-    
-    # ===== Step 5: 保存到 ChromaDB 和 BM25 索引 =====
-    print(f"\n[Step 5] 保存去重结果到 ChromaDB 和 BM25 索引...")
-    
-    # 保存 attack_essence 字段（同时保存 ChromaDB 和 BM25）
-    print(f"\n保存 attack_essence 字段...")
+
     save_medoid_groups_to_chroma_and_bm25(
         medoid_groups=topk_medoid_groups,
         field="attack_essence",
@@ -440,8 +378,6 @@ if __name__ == "__main__":
         save_bm25=True
     )
     
-    # 保存 harmful_result 字段（仅保存 ChromaDB）
-    print(f"\n保存 harmful_result 字段...")
     save_medoid_groups_to_chroma_and_bm25(
         medoid_groups=topk_medoid_groups,
         field="harmful_result",
@@ -451,9 +387,7 @@ if __name__ == "__main__":
         save_bm25=False
     )
     
-    # ===== 完成 =====
     print("\n" + "=" * 80)
-    print("✓ AgentHarm 数据集去重优化流程完成！")
     print(f"✓ 去重结果 JSON 文件: {json_output_path}")
     print(f"✓ ChromaDB 索引保存至: {CHROMA_PERSIST_DIR}")
     print(f"✓ BM25 索引保存至: {BM25_STORAGE_PATH}")
@@ -461,7 +395,6 @@ if __name__ == "__main__":
     print(f"✓ 去重后数据量: {total_medoids} 条")
     print(f"✓ 去重比例: {total_medoids/len(attacks)*100:.2f}%")
     print("=" * 80)
-    
-    # 保存去重结果到 JSON 文件
+
     OUTPUT_JSON_PATH = "./deduplicated_agentharm.json"
     save_medoids_to_json(topk_medoid_groups, output_path=OUTPUT_JSON_PATH)

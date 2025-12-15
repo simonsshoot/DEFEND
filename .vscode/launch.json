@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: alpr 调试",
+      "type": "debugpy",
+      "request": "launch",
+      // 1. 指定要跑的脚本
+      "program": "${workspaceFolder}/comparison/ALRPHFS/method/offline_train_benign.py",
+      // 2. 把 cwd 直接设到目标目录
+      "cwd": "${workspaceFolder}/comparison/ALRPHFS/method",
+      // 3. 让 debugpy 用 alpr 环境里的解释器
+      "python": "/home/yx/anaconda3/envs/alpr/bin/python",
+      // 4. 其余默认
+      "console": "integratedTerminal"
+    }
+  ]
+}

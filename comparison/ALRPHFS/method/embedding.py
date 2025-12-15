@@ -5,28 +5,69 @@ from chromadb.config import Settings
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
-from openai import OpenAI
 import torch
 from sentence_transformers import util
-def get_embedding(text, model="text-embedding-3-large"):
-    """
-    获取文本的embedding向量。
-    :param text: 要转换的文本 (str)
-    :param model: 使用的模型 (str)，默认是 text-embedding-3-large
-    :return: embedding向量 (Tensor)
-    """
-    client = OpenAI(api_key='sk-1AenZJt8Az8saFqCRg8dtL1LjX8Hl1CLhLh7p5zM4HGctubk',
-                    base_url='https://api.openai-proxy.org/v1')
-    try:
-        response = client.embeddings.create(
-            input=text,
-            model=model
+from transformers import AutoTokenizer, AutoModel
 
+# 全局变量，用于缓存本地embedding模型
+_embedding_model = None
+_embedding_tokenizer = None
+
+def load_local_embedding_model(model_path="/data/Content_Moderation/BAAI-bge-m3"):
+    """
+    加载本地 BGE-M3 embedding 模型（仅加载一次）
+    """
+    global _embedding_model, _embedding_tokenizer
+    
+    if _embedding_model is None:
+        print(f"正在加载本地 embedding 模型: {model_path}")
+        _embedding_tokenizer = AutoTokenizer.from_pretrained(model_path)
+        _embedding_model = AutoModel.from_pretrained(model_path)
+        
+        # 使用CPU，避免GPU内存问题
+        print("使用 CPU 进行 embedding 计算")
+        _embedding_model.eval()
+        print("模型加载完成")
+    
+    return _embedding_tokenizer, _embedding_model
+
+
+def get_embedding(text, model_path="/data/Content_Moderation/BAAI-bge-m3"):
+    """
+    使用本地 BGE-M3 模型获取文本的 embedding 向量。
+    :param text: 要转换的文本 (str)
+    :param model_path: 本地模型路径
+    :return: embedding向量 (list)
+    """
+    try:
+        tokenizer, model = load_local_embedding_model(model_path)
+        
+        # 限制文本长度，防止内存溢出
+        if len(text) > 2000:
+            text = text[:2000]
+        
+        # Tokenize
+        inputs = tokenizer(
+            text, 
+            return_tensors="pt", 
+            padding=True, 
+            truncation=True, 
+            max_length=512
         )
-        embedding = response.data[0].embedding  # 注意这里用 .data[0].embedding
-        return embedding         # 直接转成Tensor，方便后续相似度计算
+        
+        # 获取 embedding（强制使用CPU）
+        with torch.no_grad():
+            outputs = model(**inputs)
+            # 使用 mean pooling
+            embeddings = outputs.last_hidden_state.mean(dim=1)
+            embedding = embeddings[0].cpu().numpy().tolist()
+        
+        return embedding
+    
     except Exception as e:
-        print(f"OpenAI API 请求出错了: {e}")
+        print(f"获取 embedding 时出错: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 class ChromaDBManager:
     def __init__(self, collection_name: str="my_json_collection", persist_dir: str = "./chroma_test"):

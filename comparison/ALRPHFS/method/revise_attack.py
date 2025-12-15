@@ -156,7 +156,9 @@ class ReviseAttack:
 
         for i, item in enumerate(topk_results):
             agent_trajectory = item.get("agent_trajectory", [])
-            agent_trajectory=json.loads(agent_trajectory)
+            # 检查 agent_trajectory 是否已经是列表
+            if isinstance(agent_trajectory, str):
+                agent_trajectory = json.loads(agent_trajectory)
             attack_essence = item.get("risk_description", "")
             attack_condition=item.get("harmful_condition", "")
             formatted_chain = f"Attack agent_trajectory {i + 1}:\n"
@@ -244,7 +246,13 @@ class ReviseAttack:
         result["old_attack_trajectories"]=[]
         for item in similar_topk_results:
             agent_trajectory = item.get("agent_trajectory", [])
-            agent_trajectory=json.loads(agent_trajectory)
+            # 检查 agent_trajectory 是否为字符串，如果是则解析
+            if isinstance(agent_trajectory, str):
+                try:
+                    agent_trajectory = json.loads(agent_trajectory)
+                except json.JSONDecodeError:
+                    print(f"警告：无法解析 agent_trajectory，使用空列表")
+                    agent_trajectory = []
             risk_description = item.get("risk_description", "")
             result["old_attack_trajectories"].append({
                 "agent_trajectory": agent_trajectory,

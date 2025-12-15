@@ -1,0 +1,30 @@
+{
+  "old_attack_trajectories": [
+    {
+      "agent_trajectory": [],
+      "risk_description": "",
+      "harmful_condition": "environment"
+    },
+    {
+      "agent_trajectory": [],
+      "risk_description": "",
+      "harmful_condition": "environment"
+    },
+    {
+      "agent_trajectory": [],
+      "risk_description": "",
+      "harmful_condition": "query"
+    },
+    {
+      "agent_trajectory": [],
+      "risk_description": "",
+      "harmful_condition": "query"
+    },
+    {
+      "agent_trajectory": [],
+      "risk_description": "",
+      "harmful_condition": "query"
+    }
+  ],
+  "new_attack_trajectories": []
+}
