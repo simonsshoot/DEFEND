@@ -429,7 +429,7 @@ class SecurityEvaluator:
         reason = result_json.get("reason", "")
         concern = result_json.get("concern", "")
         if is_action:
-            return is_harmful, reason,concern,length
+            return is_harmful, reason,length
         return result_json.get("is_harmful", False), result_json.get("reason", ""),length
 
     def evaluate_query(self, item: Dict) -> Dict[str, Any]:
@@ -449,7 +449,11 @@ class SecurityEvaluator:
 
         # —— Stage 1: Fast thinking on query ——
         user_essence,length= self.extract_essence(query)
+        print(f"query: {query}")
+        print(f"query: user_essence -> {user_essence}")
         patterns, topk, scores = self.query_similarity_database(user_essence, "query")
+        print(f"query: patterns -> {patterns}")
+        print(f"query: scores -> {scores}")
         fast_decision = bool(scores and max(scores) >= self.threshold_high)
         print(f"query: fast_decision -> {fast_decision}")
         # 记录 fast_query
@@ -493,6 +497,7 @@ class SecurityEvaluator:
 
         # —— Stage 3 & 4: React & action analysis ——
         # we will capture action cycles inside react_cycle
+        print("Starting react cycle for action analysis...")
         react_result = self.react_cycle(item, trace)
         result.update(react_result)
         result["defense_trace"] = trace
@@ -512,9 +517,13 @@ class SecurityEvaluator:
         if not self.enable_guardrail:
             return False, ""
         frame = {"action": action}
+        print(f"Evaluating action: {action}")
 
         action_essence,length = self.extract_action_essence(action, history_text)
+        print(f"action: action_essence -> {action_essence}")
         patterns, topk, scores = self.query_similarity_database(action_essence, "environment")
+        print(f"action: patterns -> {patterns}")
+        print(f"action: scores -> {scores}")
         fast_decision = bool(scores and max(scores) >= self.threshold_high)
 
         frame.update({

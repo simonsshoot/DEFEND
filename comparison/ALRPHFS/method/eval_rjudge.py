@@ -118,6 +118,10 @@ def process_item(item: Dict, config: Dict) -> Dict:
         return item
     
     try:
+        # 转换为标准格式
+        standard_item = convert_rjudge_to_standard_format(item)
+        
+        # 使用ALRPHFS进行评估（LLM会自动识别拒绝行为）
         llm_client = LLMClient(
             api_key=config["api_key"],
             base_url=config["base_url"],
@@ -139,14 +143,13 @@ def process_item(item: Dict, config: Dict) -> Dict:
             enable_guardrail=True,
         )
         
-        standard_item = convert_rjudge_to_standard_format(item)
-        
         result = evaluator.evaluate_query(standard_item)
         
         # 更新结果
         item.update(result)
         item["is_judge"] = True
         item["final_is_harmful"] = item.get("is_harmful", False)
+        item["detection_method"] = "alrphfs_evaluation"
         
         logger.info(f"Item {item.get('id')} evaluated: {item['final_is_harmful']}")
         
@@ -484,7 +487,8 @@ def main():
     output_dir = "./results/rjudge_evaluation"
     os.makedirs(output_dir, exist_ok=True)
 
-    categories = ["Application", "Finance", "IoT", "Program", "Web"]
+    # categories = ["Application", "Finance", "IoT", "Program", "Web"]
+    categories = [ "IoT", "Program", "Web"]
 
     data_types = ["benign", "harmful"]
     

@@ -13,7 +13,12 @@ import pandas as pd
 from tqdm import tqdm
 from utils import Container, Agent, Session
 from guardrail import guard_rail
-from prompts import OS_AGENT_SPECIFICATION, OS_AGENT_USAGE_PRINCEPLE
+from prompts import (
+    OS_AGENT_SPECIFICATION, 
+    OS_AGENT_USAGE_PRINCEPLE,
+    RJUDGE_AGENT_SPECIFICATION,
+    RJUDGE_AGENT_USAGE_PRINCEPLE
+)
 
 
 # 安全标准定义
@@ -212,7 +217,7 @@ def extract_label(item, dataset, data_type):
     return 0
 
 
-def run_guardrail_check(user_request, agent_action, retrieve_file, container, model):
+def run_guardrail_check(user_request, agent_action, retrieve_file, container, model, dataset="agentharm"):
     """运行 AGrail 的 guardrail 检查"""
     user_info = f'"user_request": "{user_request}"'
 
@@ -227,12 +232,20 @@ def run_guardrail_check(user_request, agent_action, retrieve_file, container, mo
             user_request = "No request provided."
             user_info = f'"user_request": "{user_request}"'
 
+        # 根据数据集选择合适的提示词
+        if dataset == "rjudge":
+            agent_specification = RJUDGE_AGENT_SPECIFICATION
+            agent_usage_principles = RJUDGE_AGENT_USAGE_PRINCEPLE
+        else:
+            agent_specification = OS_AGENT_SPECIFICATION
+            agent_usage_principles = OS_AGENT_USAGE_PRINCEPLE
+
         guardrail_output, check_process, code, length = guard_rail(
             tools=TOOLS,
             user_information=user_info,
             agent_action=agent_action,
-            agent_specification=OS_AGENT_SPECIFICATION,
-            agent_usage_principles=OS_AGENT_USAGE_PRINCEPLE,
+            agent_specification=agent_specification,
+            agent_usage_principles=agent_usage_principles,
             memory=SAFETY_CRITERIA,
             retrieve_file=retrieve_file,
             environment=container,
@@ -315,7 +328,7 @@ def evaluate_dataset(args):
     if args.dataset == "agentharm" and hasattr(args, 'category') and args.category:
         result_dir = os.path.join("result", "comparison", "agentharm", args.category)
     elif args.dataset == "rjudge" and hasattr(args, 'subfolder') and args.subfolder:
-        result_dir = os.path.join("result", "comparison", "rjudge", args.subfolder)
+        result_dir = os.path.join("result", "comparison", "rjudge2", args.subfolder)
     else:
         result_dir = os.path.join("result", "comparison", args.dataset)
     os.makedirs(result_dir, exist_ok=True)
@@ -371,7 +384,7 @@ def evaluate_dataset(args):
 
             # 运行 guardrail 检查
             result = run_guardrail_check(
-                user_request, agent_actions, retrieve_file, container, args.model
+                user_request, agent_actions, retrieve_file, container, args.model, args.dataset
             )
 
             # 保存结果
