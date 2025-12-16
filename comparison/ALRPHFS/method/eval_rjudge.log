@@ -1,0 +1,42 @@
+nohup: ignoring input
+2025-12-15 16:18:14,434 - __main__ - INFO - Loading data from /home/yx/yx_search/aisafety/DEFEND/data/R-Judge/Application/benign.json
+2025-12-15 16:18:14,436 - __main__ - INFO - Total items to process: 97
+2025-12-15 16:18:14,436 - __main__ - INFO - Loading existing progress from ./results/rjudge_evaluation/Application_benign_results.json
+================================================================================
+R-Judge数据集评估
+使用训练后的AgentHarm风险模式库
+================================================================================
+
+初始化数据库...
+数据库中的风险模式数量: 0
+
+数据库为空，正在尝试导入去重后的AgentHarm数据...
+找到数据文件: ./deduplicated_agentharm_patterns.json
+加载了 16 条去重数据
+正在加载本地 embedding 模型: /data/Content_Moderation/BAAI-bge-m3
+使用 CPU 进行 embedding 计算
+模型加载完成
+✓ 已导入 16 条数据到数据库
+  - attack_essence_agentharm: 16 条
+  - harmful_result_agentharm: 16 条
+
+================================================================================
+处理类别: Application
+================================================================================
+
+
+处理文件: /home/yx/yx_search/aisafety/DEFEND/data/R-Judge/Application/benign.json
+输出路径: ./results/rjudge_evaluation/Application_benign_results.json
+
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)

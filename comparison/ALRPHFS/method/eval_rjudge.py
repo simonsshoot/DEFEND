@@ -5,6 +5,7 @@ import sys
 import logging
 from typing import Dict, Any, List
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from collections import defaultdict
 
 sys.path.append('./environments')
 from defence_online import SecurityEvaluator, parse_envs
@@ -162,19 +163,24 @@ def process_item(item: Dict, config: Dict) -> Dict:
 def process_dataset(
     input_path: str,
     output_path: str,
+    data_type: str,
     config: Dict,
     max_workers: int = 3,
     save_interval: int = 5
-):
+) -> Dict[str, Any]:
     """
-    处理单个数据集文件
+    处理单个数据集文件并返回评估指标
     
     Args:
         input_path: 输入文件路径
         output_path: 输出文件路径
+        data_type: 数据类型（"benign" 或 "harmful"）
         config: 配置字典
         max_workers: 最大并行工作进程数
         save_interval: 保存间隔（处理多少条后保存一次）
+        
+    Returns:
+        评估指标字典
     """
     # 读取数据
     logger.info(f"Loading data from {input_path}")
@@ -190,7 +196,7 @@ def process_dataset(
             existing_data = json.load(f)
         # 合并已评估的结果
         for i, item in enumerate(existing_data):
-            if item.get("is_judge"):
+            if i < len(data) and item.get("is_judge"):
                 data[i] = item
     
     # 使用进程池并行处理
@@ -231,14 +237,177 @@ def process_dataset(
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     logger.info(f"Final results saved to {output_path}")
+    
+    # 计算指标
+    metrics = calculate_metrics(data, data_type)
+    
+    return metrics
+
+
+def calculate_metrics(results: List[Dict], data_type: str) -> Dict[str, Any]:
+    total = len(results)
+    if total == 0:
+        return {
+            "total": 0,
+            "accuracy": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+        }
+    
+    # 统计各种情况
+    true_positive = 0   # 正确识别为harmful
+    true_negative = 0   # 正确识别为benign
+    false_positive = 0  # 误报（benign被识别为harmful）
+    false_negative = 0  # 漏报（harmful被识别为benign）
+    
+    for item in results:
+        predicted_harmful = item.get("final_is_harmful", False)
+        
+        # R-Judge的label: 0=safe, 1=unsafe
+        # 或者根据data_type判断真实标签
+        if data_type == "harmful":
+            actual_harmful = True
+        else:
+            actual_harmful = False
+        
+        if actual_harmful and predicted_harmful:
+            true_positive += 1
+        elif not actual_harmful and not predicted_harmful:
+            true_negative += 1
+        elif not actual_harmful and predicted_harmful:
+            false_positive += 1
+        elif actual_harmful and not predicted_harmful:
+            false_negative += 1
+    
+    # 计算指标
+    accuracy = (true_positive + true_negative) / total if total > 0 else 0.0
+    
+    precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) > 0 else 0.0
+    recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) > 0 else 0.0
+    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+    
+    # 特异性（Specificity）：正确识别benign的能力
+    specificity = true_negative / (true_negative + false_positive) if (true_negative + false_positive) > 0 else 0.0
+    
+    metrics = {
+        "total": total,
+        "true_positive": true_positive,
+        "true_negative": true_negative,
+        "false_positive": false_positive,
+        "false_negative": false_negative,
+        "accuracy": round(accuracy, 4),
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1_score": round(f1_score, 4),
+        "specificity": round(specificity, 4),
+        "false_positive_rate": round(false_positive / total, 4) if total > 0 else 0.0,
+        "false_negative_rate": round(false_negative / total, 4) if total > 0 else 0.0
+    }
+    
+    return metrics
+
+
+def print_metrics(category: str, data_type: str, metrics: Dict[str, Any]):
+    """打印格式化的指标"""
+    print(f"\n{'='*60}")
+    print(f"类别: {category} | 数据类型: {data_type}")
+    print(f"{'='*60}")
+    print(f"总数据量: {metrics['total']}")
+    print(f"真阳性 (TP): {metrics['true_positive']}")
+    print(f"真阴性 (TN): {metrics['true_negative']}")
+    print(f"假阳性 (FP): {metrics['false_positive']}")
+    print(f"假阴性 (FN): {metrics['false_negative']}")
+    print(f"{'-'*60}")
+    print(f"准确率 (Accuracy):    {metrics['accuracy']:.2%}")
+    print(f"精确率 (Precision):   {metrics['precision']:.2%}")
+    print(f"召回率 (Recall):      {metrics['recall']:.2%}")
+    print(f"F1 分数:              {metrics['f1_score']:.2%}")
+    print(f"特异性 (Specificity): {metrics['specificity']:.2%}")
+    print(f"误报率 (FPR):         {metrics['false_positive_rate']:.2%}")
+    print(f"漏报率 (FNR):         {metrics['false_negative_rate']:.2%}")
+    print(f"{'='*60}\n")
+
+
+def save_summary_report(all_metrics: Dict, output_dir: str):
+
+    summary_file = os.path.join(output_dir, "evaluation_summary.json")
+    
+    with open(summary_file, 'w', encoding='utf-8') as f:
+        json.dump(all_metrics, f, ensure_ascii=False, indent=2)
+    
+    logger.info(f"Summary report saved to {summary_file}")
+    
+    # 生成Markdown报告
+    md_file = os.path.join(output_dir, "evaluation_summary.md")
+    
+    with open(md_file, 'w', encoding='utf-8') as f:
+        f.write("# R-Judge数据集评估报告\n\n")
+        f.write("## 使用的模型和配置\n\n")
+        f.write(f"- 风险模式库: attack_essence_agentharm（经过offline_train训练）\n")
+        f.write(f"- 高阈值: {THRESOLD_HIGH}\n")
+        f.write(f"- 低阈值: {THRESOLD_LOW}\n\n")
+        
+        f.write("## 各类别评估结果\n\n")
+        
+        # 按类别组织
+        categories = ["Application", "Finance", "IoT", "Program", "Web"]
+        
+        for category in categories:
+            if category not in all_metrics:
+                continue
+            
+            f.write(f"### {category}\n\n")
+            
+            # Benign评估
+            if "benign" in all_metrics[category]:
+                metrics = all_metrics[category]["benign"]
+                f.write("#### Benign数据评估\n\n")
+                f.write("| 指标 | 值 |\n")
+                f.write("|------|----|\n")
+                f.write(f"| 总数 | {metrics['total']} |\n")
+                f.write(f"| 准确率 | {metrics['accuracy']:.2%} |\n")
+                f.write(f"| 精确率 | {metrics['precision']:.2%} |\n")
+                f.write(f"| 召回率 | {metrics['recall']:.2%} |\n")
+                f.write(f"| F1分数 | {metrics['f1_score']:.2%} |\n")
+                f.write(f"| 误报率 | {metrics['false_positive_rate']:.2%} |\n\n")
+            
+            # Harmful评估
+            if "harmful" in all_metrics[category]:
+                metrics = all_metrics[category]["harmful"]
+                f.write("#### Harmful数据评估\n\n")
+                f.write("| 指标 | 值 |\n")
+                f.write("|------|----|\n")
+                f.write(f"| 总数 | {metrics['total']} |\n")
+                f.write(f"| 准确率 | {metrics['accuracy']:.2%} |\n")
+                f.write(f"| 精确率 | {metrics['precision']:.2%} |\n")
+                f.write(f"| 召回率 | {metrics['recall']:.2%} |\n")
+                f.write(f"| F1分数 | {metrics['f1_score']:.2%} |\n")
+                f.write(f"| 漏报率 | {metrics['false_negative_rate']:.2%} |\n\n")
+        
+        # 总体统计
+        f.write("## 总体统计\n\n")
+        
+        total_benign = sum(all_metrics[cat].get("benign", {}).get("total", 0) for cat in categories if cat in all_metrics)
+        total_harmful = sum(all_metrics[cat].get("harmful", {}).get("total", 0) for cat in categories if cat in all_metrics)
+        
+        avg_benign_accuracy = sum(all_metrics[cat].get("benign", {}).get("accuracy", 0) for cat in categories if cat in all_metrics) / len([c for c in categories if c in all_metrics and "benign" in all_metrics[c]]) if any("benign" in all_metrics.get(c, {}) for c in categories if c in all_metrics) else 0
+        avg_harmful_accuracy = sum(all_metrics[cat].get("harmful", {}).get("accuracy", 0) for cat in categories if cat in all_metrics) / len([c for c in categories if c in all_metrics and "harmful" in all_metrics[c]]) if any("harmful" in all_metrics.get(c, {}) for c in categories if c in all_metrics) else 0
+        
+        f.write(f"- 总Benign数据量: {total_benign}\n")
+        f.write(f"- 总Harmful数据量: {total_harmful}\n")
+        f.write(f"- Benign平均准确率: {avg_benign_accuracy:.2%}\n")
+        f.write(f"- Harmful平均准确率: {avg_harmful_accuracy:.2%}\n")
+    
+    logger.info(f"Markdown report saved to {md_file}")
 
 
 def main():
     print("=" * 80)
     print("R-Judge数据集评估")
+    print("使用训练后的AgentHarm风险模式库")
     print("=" * 80)
-    
-    # 配置参数
+
     config = {
         "api_key": API_KEY,
         "base_url": BASE_URL,
@@ -248,28 +417,87 @@ def main():
         "threshold_high": THRESOLD_HIGH,
         "threshold_low": THRESOLD_LOW
     }
+
+    # 初始化数据库管理器
+    print("\n初始化数据库...")
+    db_manager1 = HybridDBManager(
+        collection_name="attack_essence_agentharm",
+        persist_dir=CHROMA_PERSIST_DIR,
+        alpha=0.3,
+        bm25_storage_path=os.path.join(BM25_STORAGE_PATH, "attack_essence")
+    )
+    db_manager2 = ChromaDBManager(
+        collection_name="harmful_result_agentharm",
+        persist_dir=CHROMA_PERSIST_DIR
+    )
     
-    # R-Judge数据集目录
+    db_count = db_manager1.collection.count()
+    print(f"数据库中的风险模式数量: {db_count}")
+    
+    # 如果数据库为空，尝试从去重数据文件初始化
+    if db_count == 0:
+        print("\n数据库为空，正在尝试导入去重后的AgentHarm数据...")
+        
+        # 尝试多个可能的数据文件路径
+        possible_data_files = [
+            "./deduplicated_agentharm_patterns.json",
+            "../deduplicated_agentharm_patterns.json",
+            "./results/deduplicated_agentharm_patterns.json"
+        ]
+        
+        harmful_data = []
+        data_file_found = None
+        
+        for data_file in possible_data_files:
+            if os.path.exists(data_file):
+                print(f"找到数据文件: {data_file}")
+                with open(data_file, 'r', encoding='utf-8') as f:
+                    harmful_data = json.load(f)
+                data_file_found = data_file
+                break
+        
+        if not harmful_data:
+            print("\n" + "!" * 80)
+            print("错误：风险模式数据库为空且未找到去重数据文件！")
+            return
+        
+        print(f"加载了 {len(harmful_data)} 条去重数据")
+        
+        # 导入数据到数据库
+        imported_count = 0
+        for item in harmful_data:
+            if "attack_essence" not in item:
+                print(f"警告：数据项缺少 attack_essence 字段，跳过")
+                continue
+            
+            db_manager1.add_items("attack_essence", [item])
+            db_manager2.add_items("harmful_result", [item])
+            imported_count += 1
+        
+        print(f"✓ 已导入 {imported_count} 条数据到数据库")
+        print(f"  - attack_essence_agentharm: {db_manager1.collection.count()} 条")
+        print(f"  - harmful_result_agentharm: {db_manager2.collection.count()} 条")
+    else:
+        print(f"✓ 数据库已就绪，包含 {db_count} 个风险模式\n")
+
     data_dir = "/home/yx/yx_search/aisafety/DEFEND/data/R-Judge"
-    
-    # 输出目录
+
     output_dir = "./results/rjudge_evaluation"
     os.makedirs(output_dir, exist_ok=True)
-    
-    # R-Judge的5个类别
+
     categories = ["Application", "Finance", "IoT", "Program", "Web"]
-    
-    # 数据类型
+
     data_types = ["benign", "harmful"]
     
-    # 并行工作进程数
     max_workers = 3
+    all_metrics = {}
     
-    # 处理每个类别的每种数据类型
     for category in categories:
         print(f"\n{'=' * 80}")
         print(f"处理类别: {category}")
         print(f"{'=' * 80}\n")
+        
+        all_metrics[category] = {}
         
         for data_type in data_types:
             input_path = os.path.join(data_dir, category, f"{data_type}.json")
@@ -278,32 +506,83 @@ def main():
             if not os.path.exists(input_path):
                 logger.warning(f"文件不存在，跳过: {input_path}")
                 continue
-            
-            # 设置输出路径
+
             output_path = os.path.join(output_dir, f"{category}_{data_type}_results.json")
             
             print(f"\n处理文件: {input_path}")
             print(f"输出路径: {output_path}\n")
-            
-            # 处理数据集
+
             try:
-                process_dataset(
+                metrics = process_dataset(
                     input_path=input_path,
                     output_path=output_path,
+                    data_type=data_type,
                     config=config,
                     max_workers=max_workers,
                     save_interval=5
                 )
+                
+                # 存储指标
+                all_metrics[category][data_type] = metrics
+                
+                # 打印指标
+                print_metrics(category, data_type, metrics)
+                
                 print(f"✓ 完成: {category} - {data_type}")
+                
             except Exception as e:
                 logger.error(f"✗ 处理失败: {category} - {data_type}")
                 logger.error(f"错误信息: {e}")
                 import traceback
                 traceback.print_exc()
     
+    # 保存汇总报告
+    print("\n" + "=" * 80)
+    print("生成汇总报告...")
+    print("=" * 80 + "\n")
+    
+    save_summary_report(all_metrics, output_dir)
+    
+    # 打印总体统计
+    print("\n" + "=" * 80)
+    print("总体统计")
+    print("=" * 80 + "\n")
+    
+    total_benign = 0
+    total_harmful = 0
+    total_benign_correct = 0
+    total_harmful_correct = 0
+    
+    for category in categories:
+        if category not in all_metrics:
+            continue
+        
+        if "benign" in all_metrics[category]:
+            metrics = all_metrics[category]["benign"]
+            total_benign += metrics["total"]
+            total_benign_correct += metrics["true_negative"]
+        
+        if "harmful" in all_metrics[category]:
+            metrics = all_metrics[category]["harmful"]
+            total_harmful += metrics["total"]
+            total_harmful_correct += metrics["true_positive"]
+    
+    overall_accuracy = (total_benign_correct + total_harmful_correct) / (total_benign + total_harmful) if (total_benign + total_harmful) > 0 else 0
+    benign_accuracy = total_benign_correct / total_benign if total_benign > 0 else 0
+    harmful_accuracy = total_harmful_correct / total_harmful if total_harmful > 0 else 0
+    
+    print(f"总Benign数据量: {total_benign}")
+    print(f"总Harmful数据量: {total_harmful}")
+    print(f"Benign正确识别: {total_benign_correct} ({benign_accuracy:.2%})")
+    print(f"Harmful正确识别: {total_harmful_correct} ({harmful_accuracy:.2%})")
+    print(f"总体准确率: {overall_accuracy:.2%}")
+    
     print("\n" + "=" * 80)
     print("✓ R-Judge数据集评估完成！")
     print(f"结果保存在: {output_dir}")
+    print(f"  - 详细结果: *_results.json")
+    print(f"  - 汇总报告: evaluation_summary.json")
+    print(f"  - Markdown报告: evaluation_summary.md")
     print("=" * 80)
 
 
