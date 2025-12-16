@@ -165,7 +165,7 @@ def process_dataset(
     output_path: str,
     data_type: str,
     config: Dict,
-    max_workers: int = 3,
+    max_workers: int = 1,  # 改为串行处理，避免多进程数据库冲突
     save_interval: int = 5
 ) -> Dict[str, Any]:
     """
@@ -199,39 +199,38 @@ def process_dataset(
             if i < len(data) and item.get("is_judge"):
                 data[i] = item
     
-    # 使用进程池并行处理
-    futures_map = {}
-    processed_count = 0
+    # 串行处理以避免数据库冲突
+    processed_count = sum(1 for item in data if item.get("is_judge"))
+    total_count = len(data)
     
-    with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        # 提交所有任务
-        for idx, item in enumerate(data):
-            # 跳过已评估的项
-            if item.get("is_judge"):
-                processed_count += 1
-                continue
-            
-            future = executor.submit(process_item, item, config)
-            futures_map[future] = idx
+    logger.info(f"Already processed: {processed_count}/{total_count}")
+    
+    for idx, item in enumerate(data):
+        # 跳过已评估的项
+        if item.get("is_judge"):
+            continue
         
-        # 处理完成的任务
-        for future in as_completed(futures_map.keys()):
-            idx = futures_map[future]
-            try:
-                result = future.result()
-                data[idx] = result
-                processed_count += 1
+        try:
+            result = process_item(item, config)
+            data[idx] = result
+            processed_count += 1
+            
+            if processed_count % 5 == 0:
+                logger.info(f"Processed {processed_count}/{total_count} items")
+            
+            # 定期保存进度
+            if processed_count % save_interval == 0:
+                with open(output_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                logger.info(f"Progress saved at {processed_count} items")
                 
-                logger.info(f"Processed {processed_count}/{len(data)} items")
-                
-                # 定期保存进度
-                if processed_count % save_interval == 0:
-                    with open(output_path, 'w', encoding='utf-8') as f:
-                        json.dump(data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"Progress saved at {processed_count} items")
-                    
-            except Exception as e:
-                logger.error(f"Error processing item {idx}: {e}")
+        except Exception as e:
+            logger.error(f"Error processing item {idx}: {e}")
+            import traceback
+            traceback.print_exc()
+            # 标记错误但继续处理
+            data[idx]["error"] = str(e)
+            data[idx]["is_judge"] = False
     
     # 最终保存
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -489,52 +488,59 @@ def main():
 
     data_types = ["benign", "harmful"]
     
-    max_workers = 3
+    max_workers = 1  # 串行处理避免数据库冲突
     all_metrics = {}
     
+    # 统计要处理的文件
+    files_to_process = []
     for category in categories:
-        print(f"\n{'=' * 80}")
-        print(f"处理类别: {category}")
-        print(f"{'=' * 80}\n")
-        
-        all_metrics[category] = {}
-        
         for data_type in data_types:
             input_path = os.path.join(data_dir, category, f"{data_type}.json")
-            
-            # 检查文件是否存在
-            if not os.path.exists(input_path):
+            if os.path.exists(input_path):
+                files_to_process.append((category, data_type, input_path))
+            else:
                 logger.warning(f"文件不存在，跳过: {input_path}")
-                continue
+    
+    print(f"\n找到 {len(files_to_process)} 个文件需要处理\n")
+    
+    # 处理每个文件
+    for idx, (category, data_type, input_path) in enumerate(files_to_process, 1):
+        print(f"\n{'=' * 80}")
+        print(f"[{idx}/{len(files_to_process)}] 处理: {category} - {data_type}")
+        print(f"{'=' * 80}\n")
+        
+        if category not in all_metrics:
+            all_metrics[category] = {}
+        
+        output_path = os.path.join(output_dir, f"{category}_{data_type}_results.json")
+        
+        print(f"输入文件: {input_path}")
+        print(f"输出文件: {output_path}\n")
 
-            output_path = os.path.join(output_dir, f"{category}_{data_type}_results.json")
+        try:
+            metrics = process_dataset(
+                input_path=input_path,
+                output_path=output_path,
+                data_type=data_type,
+                config=config,
+                max_workers=max_workers,
+                save_interval=5
+            )
             
-            print(f"\n处理文件: {input_path}")
-            print(f"输出路径: {output_path}\n")
-
-            try:
-                metrics = process_dataset(
-                    input_path=input_path,
-                    output_path=output_path,
-                    data_type=data_type,
-                    config=config,
-                    max_workers=max_workers,
-                    save_interval=5
-                )
-                
-                # 存储指标
-                all_metrics[category][data_type] = metrics
-                
-                # 打印指标
-                print_metrics(category, data_type, metrics)
-                
-                print(f"✓ 完成: {category} - {data_type}")
-                
-            except Exception as e:
-                logger.error(f"✗ 处理失败: {category} - {data_type}")
-                logger.error(f"错误信息: {e}")
-                import traceback
-                traceback.print_exc()
+            # 存储指标
+            all_metrics[category][data_type] = metrics
+            
+            # 打印指标
+            print_metrics(category, data_type, metrics)
+            
+            print(f"✓ 完成: {category} - {data_type} [{idx}/{len(files_to_process)}]")
+            
+        except Exception as e:
+            logger.error(f"✗ 处理失败: {category} - {data_type}")
+            logger.error(f"错误信息: {e}")
+            import traceback
+            traceback.print_exc()
+            print(f"\n继续处理下一个文件...\n")
     
     # 保存汇总报告
     print("\n" + "=" * 80)
