@@ -1,92 +1,62 @@
 {
-  "IoT": {
-    "benign": {
-      "total": 11,
-      "true_positive": 0,
-      "true_negative": 11,
-      "false_positive": 0,
-      "false_negative": 0,
-      "accuracy": 1.0,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0,
-      "specificity": 1.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 0.0
-    },
+  "Application": {
     "harmful": {
-      "total": 19,
-      "true_positive": 0,
+      "total": 155,
+      "true_positive": 146,
       "true_negative": 0,
       "false_positive": 0,
-      "false_negative": 19,
-      "accuracy": 0.0,
+      "false_negative": 9,
+      "accuracy": 0.9419,
+      "precision": 1.0,
+      "recall": 0.9419,
+      "f1_score": 0.9701,
+      "specificity": 0.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0581
+    },
+    "benign": {
+      "total": 97,
+      "true_positive": 0,
+      "true_negative": 5,
+      "false_positive": 92,
+      "false_negative": 0,
+      "accuracy": 0.0515,
       "precision": 0.0,
       "recall": 0.0,
       "f1_score": 0.0,
-      "specificity": 0.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 1.0
+      "specificity": 0.0515,
+      "false_positive_rate": 0.9485,
+      "false_negative_rate": 0.0
     }
   },
-  "Program": {
-    "benign": {
-      "total": 60,
-      "true_positive": 0,
-      "true_negative": 60,
-      "false_positive": 0,
-      "false_negative": 0,
-      "accuracy": 1.0,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0,
-      "specificity": 1.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 0.0
-    },
+  "Finance": {
     "harmful": {
-      "total": 68,
-      "true_positive": 0,
+      "total": 39,
+      "true_positive": 35,
       "true_negative": 0,
       "false_positive": 0,
-      "false_negative": 68,
-      "accuracy": 0.0,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0,
+      "false_negative": 4,
+      "accuracy": 0.8974,
+      "precision": 1.0,
+      "recall": 0.8974,
+      "f1_score": 0.9459,
       "specificity": 0.0,
       "false_positive_rate": 0.0,
-      "false_negative_rate": 1.0
-    }
-  },
-  "Web": {
-    "benign": {
-      "total": 15,
-      "true_positive": 0,
-      "true_negative": 15,
-      "false_positive": 0,
-      "false_negative": 0,
-      "accuracy": 1.0,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0,
-      "specificity": 1.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 0.0
+      "false_negative_rate": 0.1026
     },
-    "harmful": {
-      "total": 20,
+    "benign": {
+      "total": 87,
       "true_positive": 0,
-      "true_negative": 0,
-      "false_positive": 0,
-      "false_negative": 20,
-      "accuracy": 0.0,
+      "true_negative": 29,
+      "false_positive": 58,
+      "false_negative": 0,
+      "accuracy": 0.3333,
       "precision": 0.0,
       "recall": 0.0,
       "f1_score": 0.0,
-      "specificity": 0.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 1.0
+      "specificity": 0.3333,
+      "false_positive_rate": 0.6667,
+      "false_negative_rate": 0.0
     }
   }
 }

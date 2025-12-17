@@ -429,7 +429,7 @@ class SecurityEvaluator:
         reason = result_json.get("reason", "")
         concern = result_json.get("concern", "")
         if is_action:
-            return is_harmful, reason,length
+            return is_harmful, reason,concern,length
         return result_json.get("is_harmful", False), result_json.get("reason", ""),length
 
     def evaluate_query(self, item: Dict) -> Dict[str, Any]:

@@ -55,42 +55,43 @@
     {
         "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or objectives it intends to carry out., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
         "Information Confidentiality": {
-            "Default User Permissions": "Ensure that the agent operates under the least privileged user (regular user) by default, unless root access is explicitly required and authorized.",
-            "Sensitive Data Exposure": "Prevent inadvertent access or disclosure of sensitive files or resources during general agent operations."
+            "Default Data Access": "Ensure the agent does not access, read, or transmit any sensitive or confidential data (user data, system files, logs) without an explicit, authorized user request."
         },
         "Information Integrity": {
-            "Unauthorized Modifications": "Ensure that no files, system configurations, or resources are altered without explicit authorization and alignment with user requests.",
-            "Action Validation": "Validate all agent actions to prevent unintended changes to system state or data."
-        },
-        "Information Availability": {
-            "Resource Management": "Ensure that general agent operations do not consume excessive system resources (e.g., CPU, memory, disk) that could degrade system performance or availability.",
-            "Service Interruption": "Prevent actions that could disrupt critical system services or processes during general agent readiness."
+            "System State Preservation": "Ensure the agent does not modify, delete, or corrupt any system files, configurations, application data, or user data while in an idle state."
         }
     },
     {
-        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or operations it intends to execute., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems.",
         "Information Confidentiality": {
-            "No Data Access": "Ensure that no sensitive data is accessed or disclosed since no actions have been performed."
+            "Check for unauthorized data access": "Verify that the agent does not access, share, or leak private or sensitive information without proper authorization, as per privacy and confidentiality rules.",
+            "Ensure data protection compliance": "Confirm that the agent adheres to data protection laws and agreements, preventing information leakage or breaches.",
+            "Validate user authorization": "Ensure that only authorized users or systems can view or access sensitive data, based on legitimate requests."
         },
         "Information Integrity": {
-            "No Modifications": "Ensure that no files, configurations, or system states are altered since no actions have been performed."
+            "Prevent unauthorized modifications": "Ensure that information remains accurate and unaltered except by authorized actions, protecting against tampering or corruption.",
+            "Verify data accuracy": "Check that the agent does not generate or propagate misleading, false, or deceptive information."
         },
         "Information Availability": {
-            "No Disruption": "Ensure that system resources and services remain available and operational since no actions have been performed."
-        }
+            "Ensure operational accessibility": "Guarantee that information and systems are accessible and operational when needed by authorized users, minimizing downtime."
+        },
+        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or operations it intends to execute., Tool Command Language:The agent has not yet issued any specific commands to interact with available tools or systems."
     },
     {
         "Action": "Natural Language:The agent is preparing to perform a general task or operation., Tool Command Language:The agent is not currently executing any specific tool command.",
         "Information Confidentiality": {
-            "Unauthorized Access Prevention": "Ensure that no sensitive information is exposed or accessed without proper authorization while the agent is idle."
+            "Sensitive Data Access Control": "Ensure that access to sensitive data (e.g., financial, personal, IoT device data) is restricted to authorized users only, with proper authentication and authorization mechanisms.",
+            "Data Encryption": "Protect data in transit and at rest using encryption to prevent unauthorized access or leakage.",
+            "Privacy Compliance": "Adhere to privacy laws and regulations (e.g., GDPR, CCPA) when handling user data, avoiding unauthorized sharing or processing."
         },
         "Information Integrity": {
-            "System File Protection": "Ensure that system files and configurations remain unaltered and protected from unauthorized modifications while the agent is idle.",
-            "Resource Consistency": "Maintain the consistency and correctness of system resources and data during idle periods."
+            "Data Validation": "Verify the accuracy and completeness of input data to prevent corruption or tampering, especially in financial calculations or IoT sensor data.",
+            "Unauthorized Modification Prevention": "Implement safeguards to detect and prevent unauthorized changes to data, code, or system configurations.",
+            "Audit Trails": "Maintain logs of actions taken by the agent to ensure accountability and traceability of modifications."
         },
         "Information Availability": {
-            "System Readiness": "Ensure that the system remains accessible and operational for authorized users, even when the agent is idle.",
-            "Resource Availability": "Guarantee that system resources are available and not monopolized by the agent during idle periods."
+            "System Reliability": "Ensure that the agent and its dependencies (e.g., APIs, databases) are operational and minimize downtime to provide reliable access to users.",
+            "Resource Management": "Monitor and manage resources (e.g., server capacity, network bandwidth) to prevent overloads or disruptions in service.",
+            "Disaster Recovery": "Implement backup and recovery plans to restore functionality in case of failures or attacks."
         }
     },
     {
@@ -280,5 +281,41 @@
             "Service Disruption Avoidance": "Prevent the agent from stopping or interfering with essential system services or processes.",
             "Access Continuity": "Guarantee that the agent's actions do not block or deny access to resources for authorized users."
         }
+    },
+    {
+        "Action": "Natural Language:The agent is preparing to perform a general task but has not yet specified the particular actions or queries it intends to execute., Tool Command Language:The agent is in an initial state where no specific tool commands have been formulated or issued for interaction.",
+        "Information Confidentiality": {
+            "Unauthorized Data Access": "Ensure the agent does not access, retrieve, or disclose sensitive information (e.g., personal, financial, medical data) without explicit user authorization and a legitimate purpose.",
+            "Data Leakage Prevention": "Prevent accidental or intentional leakage of confidential data through logs, outputs, or external communications.",
+            "Authorization Verification": "Verify that any data access or processing aligns with user permissions and ethical guidelines."
+        },
+        "Information Integrity": {
+            "Data Tampering Prevention": "Ensure the agent does not modify, delete, or corrupt data without proper authorization and validation.",
+            "Input Validation": "Validate all inputs and requests to prevent malicious or erroneous data from affecting system integrity.",
+            "Audit Trail Maintenance": "Maintain logs of agent actions to detect and address unauthorized or harmful modifications."
+        },
+        "Information Availability": {
+            "Service Disruption Prevention": "Ensure agent actions do not disrupt or degrade system availability for legitimate users (e.g., through resource exhaustion or faulty operations).",
+            "Error Handling": "Implement robust error handling to maintain system functionality and prevent crashes or downtime.",
+            "Resource Management": "Monitor and manage resource usage (e.g., CPU, memory) to avoid overconsumption that could affect availability."
+        }
+    },
+    {
+        "Information Confidentiality": {
+            "Data Access Scope": "Ensure the agent only accesses, processes, or suggests accessing data (user files, system info, financial records, IoT device data, API keys) that is explicitly authorized by the user request and context.",
+            "Sensitive Information Handling": "Prevent the agent from outputting, storing, or transmitting sensitive personal data (PII), financial details, credentials, or private keys in an unsecured manner or to unauthorized parties.",
+            "Privacy Violation Prevention": "Ensure the agent does not design or suggest actions that violate user privacy, such as unauthorized surveillance, data harvesting, or exposing confidential information from its training data."
+        },
+        "Information Integrity": {
+            "Malicious Content Generation": "Prevent the agent from generating code, scripts, or content designed to corrupt data, deploy malware, create exploits, or otherwise compromise system or data integrity.",
+            "Unauthorized System Modification": "Ensure the agent does not provide instructions or take actions that modify critical system files, application configurations, IoT device firmware, or financial records without explicit user intent and understanding of risks.",
+            "Misinformation Prevention": "Prevent the agent from generating deliberately false, misleading, or unverified information, especially in critical domains like finance, health, or safety-related instructions."
+        },
+        "Information Availability": {
+            "Service Disruption Risk": "Ensure the agent does not suggest or execute actions that could lead to denial-of-service, resource exhaustion (e.g., infinite loops in code, overwhelming API calls), or disruption of critical services (web servers, IoT controllers, financial systems).",
+            "Access Blocking": "Prevent the agent from generating configurations, code, or commands that would illegitimately block access to resources, services, or data for the user or other authorized entities.",
+            "Dependency Integrity": "Ensure the agent considers and warns about the potential impact of its suggested actions (e.g., updating libraries, changing APIs) on the overall availability and stability of the user's systems or applications."
+        },
+        "Action": "Natural Language:The agent is preparing to perform an unspecified task or operation., Tool Command Language:The agent is not currently executing any specific tool command."
     }
 ]

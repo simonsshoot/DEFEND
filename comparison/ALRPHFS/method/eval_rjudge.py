@@ -353,7 +353,8 @@ def save_summary_report(all_metrics: Dict, output_dir: str):
         f.write("## 各类别评估结果\n\n")
         
         # 按类别组织
-        categories = ["Application", "Finance", "IoT", "Program", "Web"]
+        # categories = ["Application", "Finance", "IoT", "Program", "Web"]
+        categories = [ "Application", "Finance"]
         
         for category in categories:
             if category not in all_metrics:
@@ -488,9 +489,10 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     # categories = ["Application", "Finance", "IoT", "Program", "Web"]
-    categories = [ "IoT", "Program", "Web"]
+    categories = ["Application", "Finance"]
 
-    data_types = ["benign", "harmful"]
+    # data_types = ["benign", "harmful"]
+    data_types = ["harmful", "benign"]
     
     max_workers = 1  # 串行处理避免数据库冲突
     all_metrics = {}
