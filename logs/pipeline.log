@@ -986,3 +986,127 @@ Error processing item 148: Error code: 400 - {'error': {'message': "This model's
 Error processing item 152: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 151652 tokens (149604 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
 2025-12-10 18:40:48 - pipeline - ERROR - 
 Error processing item 153: Error code: 400 - {'error': {'message': "This model's maximum context length is 131072 tokens. However, you requested 151575 tokens (149527 in the messages, 2048 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:49:53 - pipeline - ERROR - 
+Error processing item 0: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:50:05 - pipeline - ERROR - 
+Error processing item 1: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:50:18 - pipeline - ERROR - 
+Error processing item 2: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:50:36 - pipeline - ERROR - 
+Error processing item 3: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:50:47 - pipeline - ERROR - 
+Error processing item 4: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:50:59 - pipeline - ERROR - 
+Error processing item 5: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:51:11 - pipeline - ERROR - 
+Error processing item 6: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:51:29 - pipeline - ERROR - 
+Error processing item 7: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:51:42 - pipeline - ERROR - 
+Error processing item 8: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:51:55 - pipeline - ERROR - 
+Error processing item 9: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:52:08 - pipeline - ERROR - 
+Error processing item 10: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:52:20 - pipeline - ERROR - 
+Error processing item 11: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:52:33 - pipeline - ERROR - 
+Error processing item 12: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:52:45 - pipeline - ERROR - 
+Error processing item 13: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:52:58 - pipeline - ERROR - 
+Error processing item 14: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:53:10 - pipeline - ERROR - 
+Error processing item 15: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:53:26 - pipeline - ERROR - 
+Error processing item 16: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:53:39 - pipeline - ERROR - 
+Error processing item 17: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:53:57 - pipeline - ERROR - 
+Error processing item 18: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:54:13 - pipeline - ERROR - 
+Error processing item 19: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:54:26 - pipeline - ERROR - 
+Error processing item 20: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:54:43 - pipeline - ERROR - 
+Error processing item 21: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:54:55 - pipeline - ERROR - 
+Error processing item 22: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:55:06 - pipeline - ERROR - 
+Error processing item 23: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:55:19 - pipeline - ERROR - 
+Error processing item 24: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:55:36 - pipeline - ERROR - 
+Error processing item 25: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:55:53 - pipeline - ERROR - 
+Error processing item 26: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:04 - pipeline - ERROR - 
+Error processing item 27: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:16 - pipeline - ERROR - 
+Error processing item 28: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:28 - pipeline - ERROR - 
+Error processing item 29: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:29 - pipeline - ERROR - 
+Error processing item 0: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:41 - pipeline - ERROR - 
+Error processing item 30: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:51 - pipeline - ERROR - 
+Error processing item 1: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:56:53 - pipeline - ERROR - 
+Error processing item 31: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:57:10 - pipeline - ERROR - 
+Error processing item 32: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:57:27 - pipeline - ERROR - 
+Error processing item 33: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:57:39 - pipeline - ERROR - 
+Error processing item 34: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:57:51 - pipeline - ERROR - 
+Error processing item 35: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:58:02 - pipeline - ERROR - 
+Error processing item 36: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:58:20 - pipeline - ERROR - 
+Error processing item 37: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:58:33 - pipeline - ERROR - 
+Error processing item 38: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:58:49 - pipeline - ERROR - 
+Error processing item 39: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:59:01 - pipeline - ERROR - 
+Error processing item 40: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:59:14 - pipeline - ERROR - 
+Error processing item 41: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:59:27 - pipeline - ERROR - 
+Error processing item 42: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:59:39 - pipeline - ERROR - 
+Error processing item 43: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 18:59:52 - pipeline - ERROR - 
+Error processing item 44: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:00:13 - pipeline - ERROR - 
+Error processing item 45: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:00:27 - pipeline - ERROR - 
+Error processing item 46: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:00:39 - pipeline - ERROR - 
+Error processing item 47: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:00:51 - pipeline - ERROR - 
+Error processing item 48: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:01:09 - pipeline - ERROR - 
+Error processing item 49: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:01:25 - pipeline - ERROR - 
+Error processing item 50: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:01:39 - pipeline - ERROR - 
+Error processing item 51: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:01:51 - pipeline - ERROR - 
+Error processing item 52: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:02:02 - pipeline - ERROR - 
+Error processing item 53: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:02:14 - pipeline - ERROR - 
+Error processing item 54: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:02:30 - pipeline - ERROR - 
+Error processing item 55: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:02:42 - pipeline - ERROR - 
+Error processing item 56: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:03:00 - pipeline - ERROR - 
+Error processing item 57: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:03:17 - pipeline - ERROR - 
+Error processing item 58: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-29 19:03:29 - pipeline - ERROR - 
+Error processing item 59: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}

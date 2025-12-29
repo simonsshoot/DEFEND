@@ -4,7 +4,7 @@ import logging
 DEFAULT_MAX_TOKENS = 2048
 DEFAULT_TEMPERATURE = 0.0
 
-DEEPSEEK_API_KEY = "sk-bcb9f72045274fab98c083a1901dfa31"
+DEEPSEEK_API_KEY = "sk-1c8eacda13e04e7a984be6311326a5d0"
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 
 ANTHROPIC_API_KEY = "your_anthropic_api_key"
