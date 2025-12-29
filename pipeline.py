@@ -28,6 +28,7 @@ import numpy as np
 import torch
 import os
 import json
+import time
 from tqdm import tqdm
 import pandas as pd
 from typing import List, Dict, Any, Tuple
@@ -292,6 +293,89 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
         return []
 
 
+def save_misjudged_case(
+    args: argparse.Namespace,
+    index: int,
+    item: Dict[str, Any],
+    tarvodata: Dict[str, Any],
+    decision: str,
+    label: int,
+    risk_analysis: Dict[str, Any],
+    tool_set: List[Dict],
+    doubt_tool_result: List[Tuple[Dict, Dict, bool, bool, int]],
+    action_result: str,
+):
+    # 判断是否误判
+    # label=0表示harmful，应该判为unsafe
+    # label=1表示benign，应该判为safe
+    expected_decision = "safe" if label == 1 else "unsafe"
+    if decision == expected_decision or decision == "error":
+        return 
+    if label == 1 and decision == "unsafe":
+        misjudge_type = "benign_judged_harmful" 
+    elif label == 0 and decision == "safe":
+        misjudge_type = "harmful_judged_benign"  
+    else:
+        return
+    detail_dir = os.path.join("detail_results", args.dataset, misjudge_type)
+    os.makedirs(detail_dir, exist_ok=True)
+
+    misjudge_record = {
+        "index": index,
+        "misjudge_type": misjudge_type,
+        "original_data": item,
+        "processed_data": {
+            "request": tarvodata.get("request", ""),
+            "agent_actions": tarvodata.get("agent_actions", ""),
+            "user_identity": tarvodata.get("user_identity", ""),
+            "user_level": tarvodata.get("user_level", ""),
+            "init": tarvodata.get("init", ""),
+        },
+        
+        "label": {
+            "value": label,
+        },
+        "decision": {
+            "value": decision,
+        },
+
+        "risk_analysis": risk_analysis,
+        "generated_tools": [
+            {
+                "tool_name": tool.get("tool_name", ""),
+                "category": tool.get("category", ""),
+                "tool_description": tool.get("tool_description", ""),
+            }
+            for tool in tool_set
+        ],
+        "doubt_tool_details": [
+            {
+                "tool_name": result[0].get("tool_name", ""),
+                "category": result[0].get("category", ""),
+                "doubt_result": {
+                    "is_safe": result[1].get("is_safe", ""),
+                    "reason": result[1].get("reason", ""),
+                },
+                "is_optimized": result[2],
+                "execution_result": result[3],
+                "had_risk": result[4] > 0,
+            }
+            for result in doubt_tool_result
+        ],
+
+        "action_result": action_result,
+
+    }
+    
+    jsonl_filename="misjudged_cases.jsonl"
+    file_path = os.path.join(detail_dir, jsonl_filename)
+    with open(file_path, "a", encoding="utf-8") as f:
+        json_record = json.dumps(misjudge_record, ensure_ascii=False)
+        f.write(json_record + "\n")
+
+    logger.info(f"Saved misjudged case {index} to JSONL file: {file_path}")
+
+
 def pipeline(
     args: argparse.Namespace, data: Dict[str, Any], container: Container
 ) -> Tuple[
@@ -300,6 +384,7 @@ def pipeline(
     Dict[str, Any],
     List[Tuple[Dict, Dict, bool, bool, int]],
     Dict[str, Any],
+    str,
 ]:
     # Step 1: 数据预处理
     if args.need_simulate:
@@ -321,7 +406,7 @@ def pipeline(
         present_tools = get_present_tools(args.dataset, tarvodata)
 
     tarevoagent = TarevoAgent(
-        args.tarevo_model, args.risk_memory, args.permission_policy
+        args.tarevo_model, args.risk_memory, args.permission_policy, dataset=args.dataset
     )
 
     if "user_level" not in tarvodata:
@@ -351,7 +436,7 @@ def pipeline(
     final_result = agent_action_result[-1] if len(agent_action_result) > 0 else ""
 
     # Step 3: DoubtAgent - 工具质疑和最终决策
-    doubtagent = DoubtAgent(args.doubt_model, args.tool_memory, args.permission_policy)
+    doubtagent = DoubtAgent(args.doubt_model, args.tool_memory, args.permission_policy, dataset=args.dataset)
     """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
     # new add
     doubt_tool_result = doubtagent.doubt_tool(
@@ -368,7 +453,7 @@ def pipeline(
 
     decision = "unsafe" if is_unsafe else "safe"
 
-    return tool_set, decision, risk_analysis, doubt_tool_result, tarvodata
+    return tool_set, decision, risk_analysis, doubt_tool_result, tarvodata, final_result
 
 
 def run(args: argparse.Namespace):
@@ -401,6 +486,13 @@ def run(args: argparse.Namespace):
     if args.restart and os.path.exists(result_path):
         logger.info(f"Restart mode: removing existing results at {result_path}")
         os.remove(result_path)
+        if os.path.exists("detail_results"):
+            import shutil
+            shutil.rmtree("detail_results")
+        if os.path.exists(args.tool_memory):
+            os.remove(args.tool_memory)
+        if os.path.exists(args.risk_memory):
+            os.remove(args.risk_memory)
 
     if os.path.exists(result_path):
         existing_df = pd.read_csv(result_path)
@@ -428,7 +520,7 @@ def run(args: argparse.Namespace):
 
         try:
             container = Container()
-            tool_set, decision, risk_analysis, doubt_tool_result, tarvodata = pipeline(
+            tool_set, decision, risk_analysis, doubt_tool_result, tarvodata, final_result = pipeline(
                 args, item, container
             )
 
@@ -488,6 +580,19 @@ def run(args: argparse.Namespace):
             )
             df.at[index, "decision"] = decision
             df.at[index, "risk_detected"] = 1 if decision == "unsafe" else 0
+
+            save_misjudged_case(
+                args=args,
+                index=index,
+                item=item,
+                tarvodata=tarvodata,
+                decision=decision,
+                label=label,
+                risk_analysis=risk_analysis,
+                tool_set=tool_set,
+                doubt_tool_result=doubt_tool_result,
+                action_result=final_result,
+            )
 
             update_lifelong_library(args, risk_analysis, tool_set, doubt_tool_result)
 

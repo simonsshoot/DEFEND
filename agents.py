@@ -21,6 +21,7 @@ from agents_prompts import (
     SANDBOX_TOOL_PROMPT,
     SANDBOX_ACTION_PROMPT,
 )
+from specific_prompt import get_specific_prompt_supplement, compose_prompt
 from configs import (
     DEEPSEEK_BASE_URL,
     DEFAULT_TEMPERATURE,
@@ -220,10 +221,12 @@ class TarevoAgent(Agent):
         model_name,
         risk_memory_path: str = "lifelong_library/risks.json",
         permission_policy_path: str = "permission_policy.json",
+        dataset: str = "",
     ):
         super().__init__(model_name, logger="tarevo_agent_logger")
         self.risk_memory_path = risk_memory_path
         self.permission_policy_path = permission_policy_path
+        self.dataset = dataset  # 添加数据集属性
 
     def __load_riskmemory(self):
         with open(self.risk_memory_path, "r") as f:
@@ -311,12 +314,17 @@ class TarevoAgent(Agent):
         """
         permission_policy = self.__load_permission_policy(user_level)
 
-        prompt = RISK_ANALYSIS_PROMPT.format(
+        # 获取基础提示词
+        base_prompt = RISK_ANALYSIS_PROMPT.format(
             request=request,
             agent_actions=agent_actions,
             risk_categories=risk_categories,
             user_level=user_level,
         )
+        
+        # 获取特定数据集的补充提示词并组合
+        supplement = get_specific_prompt_supplement("RISK_ANALYSIS", self.dataset)
+        prompt = compose_prompt(base_prompt, supplement)
 
         system_prompt = "你是一个专业而严谨的安全专家，专注于风险分析。"
 
@@ -364,12 +372,17 @@ class TarevoAgent(Agent):
     ) -> Dict[str, Any]:
         permission_policy = self.__load_permission_policy(user_level)
 
-        prompt = TOOL_PLAN_PROMPT.format(
+        # 获取基础提示词
+        base_prompt = TOOL_PLAN_PROMPT.format(
             request=user_request,
             agent_actions=agent_actions,
             risk_analysis=json.dumps(risk, indent=2, ensure_ascii=False),
             user_level=user_level,
         )
+        
+        # 获取特定数据集的补充提示词并组合
+        supplement = get_specific_prompt_supplement("TOOL_PLAN", self.dataset)
+        prompt = compose_prompt(base_prompt, supplement)
 
         system_prompt = "你是一个安全工具开发专家，专注于设计防护工具。"
 
@@ -752,10 +765,12 @@ class DoubtAgent(Agent):
         model_name,
         tool_memory_path: str = "lifelong_library/tool_memory.json",
         permission_policy_path: str = "permission_policy.json",
+        dataset: str = "",
     ):
         super().__init__(model_name, logger="double_agent_logger")
         self.tool_memory_path = tool_memory_path
         self.permission_policy_path = permission_policy_path
+        self.dataset = dataset  # 添加数据集属性
 
     def __load_toolmemory(self):
         with open(self.tool_memory_path, "r") as f:
@@ -1127,13 +1142,20 @@ class DoubtAgent(Agent):
                         )
                         f.write("=" * 80 + "\n\n")
                 return tool_set, True
-        prompt = DOUBT_DECISION_PROMPT.format(
+        
+        # 获取基础提示词
+        base_prompt = DOUBT_DECISION_PROMPT.format(
             request=data["request"],
             agent_actions=data["agent_actions"],
             approved_tools=json.dumps(tool_set, indent=2, ensure_ascii=False),
             action_result=action_result,
             user_level=user_level,
         )
+        
+        # 获取特定数据集的补充提示词并组合
+        supplement = get_specific_prompt_supplement("DOUBT_DECISION", self.dataset)
+        prompt = compose_prompt(base_prompt, supplement)
+        
         messages = [
             {
                 "role": "system",

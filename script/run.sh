@@ -49,3 +49,7 @@ nohup python pipeline.py --restart --debug_mode --dataset rjudge_benign --risk_m
 
 ===========================safeOS风险数据集运行====================================
 nohup python pipeline.py --restart --debug_mode --need_simulate --dataset safeOS_harmful --risk_memory lifelong_library/risks_safeOS_harmful.json --tool_memory lifelong_library/tools_safeOS_harmful.json --debug_doubt_tool_path debugs/safeOS_harmful.log --debug_decision_path debugs/safeOS_harmful_decision.log --debug_file /home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl > logs/run_safeOS_harmful.log 2>&1 &
+
+
+
+python pipeline.py --dataset "rjudge_Program_benign" --risk_memory "lifelong_library/rjudge/risks_rjudge_Program.json" --tool_memory "lifelong_library/rjudge/safety_tools_rjudge_Program.json" --simulate_model "deepseek-chat" --tarevo_model "deepseek-chat" --optim_model "deepseek-chat" --doubt_model "deepseek-chat" --sandbox_model "deepseek-chat" --seed 44 --restart --debug_file "data/R-Judge/Program/simulate_benign.jsonl" --fail_tool_debug "debugs/rjudge/fail_tool_rjudge_Program_benign.json" --debug_doubt_tool_path "debugs/rjudge/debug_doubt_tool_rjudge_Program_benign.log" --debug_decision_path "debugs/rjudge/debug_decision_rjudge_Program_benign.log"

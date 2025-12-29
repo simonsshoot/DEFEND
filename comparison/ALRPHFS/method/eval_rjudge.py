@@ -485,7 +485,7 @@ def main():
 
     data_dir = "/home/yx/yx_search/aisafety/DEFEND/data/R-Judge"
 
-    output_dir = "./results/rjudge_evaluation"
+    output_dir = "./result2/rjudge_evaluation"
     os.makedirs(output_dir, exist_ok=True)
 
     # categories = ["Application", "Finance", "IoT", "Program", "Web"]

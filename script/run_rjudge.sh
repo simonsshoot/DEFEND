@@ -2,7 +2,7 @@
 # 文件名: evaluate_rjudge_parallel.sh
 
 # 评估所有 R-Judge 子文件夹（Application, Finance, IoT, Program, Web）的 harmful 和 benign 数据
-export CUDA_VISIBLE_DEVICES=1,2
+export CUDA_VISIBLE_DEVICES=1 
 cd ..
 # 模型配置
 SIMULATE_MODEL="deepseek-chat"
@@ -14,9 +14,9 @@ SEED=44
 
 # R-Judge 子文件夹列表
 # SUBFOLDERS=("Application" "Finance" "IoT" "Program" "Web")
-SUBFOLDERS=("Application" )
+SUBFOLDERS=("Program")
 # 数据类型列表
-DATA_TYPES=("harmful")
+DATA_TYPES=("benign")
 
 echo "========================================"
 echo "DEFEND Pipeline R-Judge Batch Evaluation"
@@ -61,6 +61,7 @@ for subfolder in "${SUBFOLDERS[@]}"; do
             --doubt_model "$DOUBT_MODEL" \
             --sandbox_model "$SANDBOX_MODEL" \
             --seed "$SEED" \
+            --restart \
             --debug_file "$debug_file" \
             --fail_tool_debug "$fail_tool_debug" \
             --debug_doubt_tool_path "$debug_doubt_tool" \

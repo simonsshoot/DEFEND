@@ -423,6 +423,9 @@ def evaluate_dataset(args):
 
     # 统计结果
     print_statistics(df, args.dataset, args.data_type)
+    
+    # 保存误判数据的详细信息
+    save_misclassified_details(df, args)
 
     return result_path
 
@@ -490,6 +493,83 @@ def print_statistics(df, dataset, data_type):
         f"  False Negative (harmful→safe): {false_negative} ({false_negative/valid_count*100:.2f}%)"
     )
     print(f"{'='*60}\n")
+
+
+def save_misclassified_details(df, args):
+    """保存误判数据的详细信息到detail_results文件夹"""
+    # 过滤掉错误的项
+    valid_df = df[df["decision"] != "error"].copy()
+    
+    if len(valid_df) == 0:
+        print("No valid results to analyze for misclassifications.")
+        return
+    
+    # 识别误判项
+    # False Positive: label=1 (benign) 但 decision=unsafe
+    false_positives = valid_df[(valid_df["label"] == 1) & (valid_df["decision"] == "unsafe")]
+    
+    # False Negative: label=0 (harmful) 但 decision=safe
+    false_negatives = valid_df[(valid_df["label"] == 0) & (valid_df["decision"] == "safe")]
+    
+    if len(false_positives) == 0 and len(false_negatives) == 0:
+        print("\n✓ No misclassifications found! Perfect accuracy!")
+        return
+    
+    # 创建详细结果目录
+    if args.dataset == "agentharm" and hasattr(args, 'category') and args.category:
+        detail_dir = os.path.join("detail_results", "agentharm", args.category)
+    elif args.dataset == "rjudge" and hasattr(args, 'subfolder') and args.subfolder:
+        detail_dir = os.path.join("detail_results", "rjudge", args.subfolder)
+    else:
+        detail_dir = os.path.join("detail_results", args.dataset)
+    
+    os.makedirs(detail_dir, exist_ok=True)
+    
+    # 保存False Positives (benign误判为harmful)
+    if len(false_positives) > 0:
+        fp_path = os.path.join(detail_dir, f"false_positives_{args.data_type}_{args.model}.jsonl")
+        with open(fp_path, "w", encoding="utf-8") as f:
+            for idx, row in false_positives.iterrows():
+                record = {
+                    "index": int(row["index"]),
+                    "type": "false_positive",
+                    "description": "Benign data misclassified as harmful",
+                    "true_label": "benign (safe)",
+                    "predicted": "harmful (unsafe)",
+                    "user_request": str(row["user_request"]),
+                    "agent_actions": str(row["agent_actions"]),
+                    "guardrail_output": str(row["guardrail_output"]),
+                    "check_process": str(row["check_process"]),
+                    "code": str(row["code"]),
+                    "token_length": int(row["token_length"]) if pd.notna(row["token_length"]) else 0,
+                }
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        print(f"\n✗ False Positives saved: {fp_path}")
+        print(f"  Count: {len(false_positives)} (benign → unsafe)")
+    
+    # 保存False Negatives (harmful误判为benign)
+    if len(false_negatives) > 0:
+        fn_path = os.path.join(detail_dir, f"false_negatives_{args.data_type}_{args.model}.jsonl")
+        with open(fn_path, "w", encoding="utf-8") as f:
+            for idx, row in false_negatives.iterrows():
+                record = {
+                    "index": int(row["index"]),
+                    "type": "false_negative",
+                    "description": "Harmful data misclassified as benign",
+                    "true_label": "harmful (unsafe)",
+                    "predicted": "benign (safe)",
+                    "user_request": str(row["user_request"]),
+                    "agent_actions": str(row["agent_actions"]),
+                    "guardrail_output": str(row["guardrail_output"]),
+                    "check_process": str(row["check_process"]),
+                    "code": str(row["code"]),
+                    "token_length": int(row["token_length"]) if pd.notna(row["token_length"]) else 0,
+                }
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        print(f"\n✗ False Negatives saved: {fn_path}")
+        print(f"  Count: {len(false_negatives)} (harmful → safe)")
+
+    print(f"  Total misclassified: {len(false_positives) + len(false_negatives)}/{len(valid_df)}")
 
 
 def main():
