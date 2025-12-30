@@ -204,8 +204,14 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 
         return present_tools
 
-    elif dataset == "agentharm" or dataset == "agentharm_benign" or \
-         (dataset.startswith("agentharm_") and ("_harmful" in dataset or "_benign" in dataset)):
+    elif (
+        dataset == "agentharm"
+        or dataset == "agentharm_benign"
+        or (
+            dataset.startswith("agentharm_")
+            and ("_harmful" in dataset or "_benign" in dataset)
+        )
+    ):
         # AgentHarm数据集，从target_functions中提取工具（支持整体和按类别）
         import sys
 
@@ -283,12 +289,17 @@ def get_present_tools(dataset: str, data: Dict[str, Any]) -> List[Dict]:
 
             traceback.print_exc()
             return []
-    
+
     elif dataset.startswith("rjudge_"):
         # R-Judge 数据集不需要提取 present_tools
         # 因为 agent_actions 已经包含了所有执行的操作
         return []
-    
+
+    elif dataset == "assebench":
+        # ASSEBench 数据集不需要提取 present_tools
+        # 因为 agent_actions 已经包含了所有执行的操作
+        return []
+
     else:
         return []
 
@@ -310,11 +321,11 @@ def save_misjudged_case(
     # label=1表示benign，应该判为safe
     expected_decision = "safe" if label == 1 else "unsafe"
     if decision == expected_decision or decision == "error":
-        return 
+        return
     if label == 1 and decision == "unsafe":
-        misjudge_type = "benign_judged_harmful" 
+        misjudge_type = "benign_judged_harmful"
     elif label == 0 and decision == "safe":
-        misjudge_type = "harmful_judged_benign"  
+        misjudge_type = "harmful_judged_benign"
     else:
         return
     detail_dir = os.path.join("detail_results", args.dataset, misjudge_type)
@@ -331,14 +342,12 @@ def save_misjudged_case(
             "user_level": tarvodata.get("user_level", ""),
             "init": tarvodata.get("init", ""),
         },
-        
         "label": {
             "value": label,
         },
         "decision": {
             "value": decision,
         },
-
         "risk_analysis": risk_analysis,
         "generated_tools": [
             {
@@ -362,12 +371,10 @@ def save_misjudged_case(
             }
             for result in doubt_tool_result
         ],
-
         "action_result": action_result,
-
     }
-    
-    jsonl_filename="misjudged_cases.jsonl"
+
+    jsonl_filename = "misjudged_cases.jsonl"
     file_path = os.path.join(detail_dir, jsonl_filename)
     with open(file_path, "a", encoding="utf-8") as f:
         json_record = json.dumps(misjudge_record, ensure_ascii=False)
@@ -406,7 +413,10 @@ def pipeline(
         present_tools = get_present_tools(args.dataset, tarvodata)
 
     tarevoagent = TarevoAgent(
-        args.tarevo_model, args.risk_memory, args.permission_policy, dataset=args.dataset
+        args.tarevo_model,
+        args.risk_memory,
+        args.permission_policy,
+        dataset=args.dataset,
     )
 
     if "user_level" not in tarvodata:
@@ -436,7 +446,9 @@ def pipeline(
     final_result = agent_action_result[-1] if len(agent_action_result) > 0 else ""
 
     # Step 3: DoubtAgent - 工具质疑和最终决策
-    doubtagent = DoubtAgent(args.doubt_model, args.tool_memory, args.permission_policy, dataset=args.dataset)
+    doubtagent = DoubtAgent(
+        args.doubt_model, args.tool_memory, args.permission_policy, dataset=args.dataset
+    )
     """doublt_tool_result:(tool_info, clean_response, is_optimized, execution_result)"""
     # new add
     doubt_tool_result = doubtagent.doubt_tool(
@@ -488,6 +500,7 @@ def run(args: argparse.Namespace):
         os.remove(result_path)
         if os.path.exists("detail_results"):
             import shutil
+
             shutil.rmtree("detail_results")
         if os.path.exists(args.tool_memory):
             os.remove(args.tool_memory)
@@ -520,9 +533,14 @@ def run(args: argparse.Namespace):
 
         try:
             container = Container()
-            tool_set, decision, risk_analysis, doubt_tool_result, tarvodata, final_result = pipeline(
-                args, item, container
-            )
+            (
+                tool_set,
+                decision,
+                risk_analysis,
+                doubt_tool_result,
+                tarvodata,
+                final_result,
+            ) = pipeline(args, item, container)
 
             need_tools = risk_analysis.get("need_tools", "no")
             if need_tools == "yes":
@@ -537,7 +555,7 @@ def run(args: argparse.Namespace):
                 # risky_tools 是该工具是否曾被识别为有风险的标志（0或1）
                 if risky_tools > 0:
                     risky_tools_count += 1
-                
+
                 if normalize_is_safe(doubt_result.get("is_safe", "")) == True:
                     if is_optimized:
                         optimized_tool += 1
@@ -558,10 +576,16 @@ def run(args: argparse.Namespace):
             if args.dataset == "asb_harmful" or args.dataset == "asb_benign":
                 input_text = item.get("instruction", "")
                 label = item.get("fulfillable", 0)
-            elif args.dataset in ["agentharm", "agentharm_benign"] or \
-                 (args.dataset.startswith("agentharm_") and ("_harmful" in args.dataset or "_benign" in args.dataset)):
+            elif args.dataset in ["agentharm", "agentharm_benign"] or (
+                args.dataset.startswith("agentharm_")
+                and ("_harmful" in args.dataset or "_benign" in args.dataset)
+            ):
                 input_text = item.get("prompt", "")
-                label = 0 if ("agentharm" == args.dataset or "_harmful" in args.dataset) else 1
+                label = (
+                    0
+                    if ("agentharm" == args.dataset or "_harmful" in args.dataset)
+                    else 1
+                )
             elif args.dataset.startswith("rjudge_"):
                 # R-Judge 数据集处理
                 input_text = tarvodata.get("request", "")

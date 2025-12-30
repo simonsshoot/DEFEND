@@ -1,0 +1,1 @@
+nohup python pipeline.py --restart --debug_mode --dataset assebench --risk_memory lifelong_library/risks_assebench.json --tool_memory lifelong_library/tools_assebench.json --debug_doubt_tool_path debugs/assebench.log --debug_decision_path debugs/assebench_decision.log --restart --debug_file data/ASSEBench/dataset/simulate_assebench.jsonl > logs/assebench/run_assebench.log 2>&1 &
