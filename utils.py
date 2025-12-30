@@ -19,7 +19,11 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
     对于 R-Judge 和 ASSEBench 数据集，直接读取原始数据（已包含用户请求和代理操作）
     """
     # R-Judge 和 ASSEBench 数据集不需要模拟数据，直接读取原始数据并包装
-    if data_type.startswith("rjudge_") or data_type == "assebench":
+    if (
+        data_type.startswith("rjudge_")
+        or data_type == "assebench"
+        or data_type.startswith("assebench_")
+    ):
         return read_data(data_type)
 
     agentharm_categories = [
@@ -32,7 +36,7 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
         "Hate",
         "Sexual",
     ]
-    
+
     for category in agentharm_categories:
         if data_type == f"agentharm_{category}_harmful":
             simulated_data_path = f"data/agentharm/{category}/harmful_simulate.jsonl"
@@ -51,9 +55,13 @@ def read_simulated_data(data_type: str) -> List[Dict[str, Any]]:
                 "/home/beihang/yx/DEFEND/data/agentharm/benign_simulate.jsonl"
             )
         elif data_type == "asb_benign":
-            simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl"
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/ASB/benign_simulate.jsonl"
+            )
         elif data_type == "asb_harmful":
-            simulated_data_path = "/home/beihang/yx/DEFEND/data/ASB/harmful_simulate.jsonl"
+            simulated_data_path = (
+                "/home/beihang/yx/DEFEND/data/ASB/harmful_simulate.jsonl"
+            )
         elif data_type == "safeOS_harmful":
             simulated_data_path = (
                 "/home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl"
@@ -107,7 +115,7 @@ def read_data(data_type: str):
         "Hate",
         "Sexual",
     ]
-    
+
     for category in agentharm_categories:
         if data_type == f"agentharm_{category}_harmful":
             data_path = f"data/agentharm/{category}/harmful.json"
@@ -123,11 +131,11 @@ def read_data(data_type: str):
             if isinstance(data, dict) and "behaviors" in data:
                 data = data["behaviors"]
             return data
-    
+
     # 支持 R-Judge 按子文件夹读取
     # 格式: rjudge_<subfolder>_harmful 或 rjudge_<subfolder>_benign
     rjudge_subfolders = ["Application", "Finance", "IoT", "Program", "Web"]
-    
+
     for subfolder in rjudge_subfolders:
         if data_type == f"rjudge_{subfolder}_harmful":
             data_path = f"data/R-Judge/{subfolder}/harmful.json"
@@ -149,7 +157,7 @@ def read_data(data_type: str):
                 wrapped_item = data_wrapper(item, data_type)
                 wrapped_data.append(wrapped_item)
             return wrapped_data
-    
+
     # 添加 ASSEBench 数据集支持
     if data_type == "assebench":
         data_path = "data/ASSEBench/dataset/security50.json"
@@ -161,7 +169,21 @@ def read_data(data_type: str):
             wrapped_item = data_wrapper(item, data_type)
             wrapped_data.append(wrapped_item)
         return wrapped_data
-    
+
+    # 支持 ASSEBench 按 split 文件读取
+    if data_type.startswith("assebench_"):
+        split_name = data_type.replace("assebench_", "")
+        data_path = f"data/ASSEBench/split/{split_name}.json"
+        if not os.path.exists(data_path):
+            raise FileNotFoundError(f"ASSEBench split file not found: {data_path}")
+        with open(data_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        wrapped_data = []
+        for item in data:
+            wrapped_item = data_wrapper(item, "assebench")
+            wrapped_data.append(wrapped_item)
+        return wrapped_data
+
     if data_type == "safeOS_harmful":
         data_path = "/home/beihang/yx/DEFEND/data/os.json"
     elif data_type == "environment":
@@ -258,8 +280,12 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         # 初始化为空，将由SimulateAgent生成
         target_data["agent_actions"] = ""
         target_data["init"] = ""
-    elif agent_type == "agentharm" or agent_type == "agentharm_benign" or \
-         agent_type.startswith("agentharm_") and ("_harmful" in agent_type or "_benign" in agent_type):
+    elif (
+        agent_type == "agentharm"
+        or agent_type == "agentharm_benign"
+        or agent_type.startswith("agentharm_")
+        and ("_harmful" in agent_type or "_benign" in agent_type)
+    ):
         # AgentHarm数据格式（支持整体和按类别）
         target_data = {}
         target_data["request"] = data.get("prompt", "")
@@ -359,10 +385,12 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
                     # 提取代理的操作和思考
                     action = turn.get("action", "")
                     thought = turn.get("thought", "")
-                    
+
                     # 组合thought和action
                     if thought and action:
-                        agent_actions_list.append(f"Thought: {thought}\nAction: {action}")
+                        agent_actions_list.append(
+                            f"Thought: {thought}\nAction: {action}"
+                        )
                     elif thought:
                         agent_actions_list.append(f"Thought: {thought}")
                     elif action:
@@ -371,10 +399,12 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
                     # 提取环境/工具的返回结果
                     env_content = turn.get("content", "")
                     if env_content:
-                        environment_responses.append(f"Environment Response: {env_content}")
+                        environment_responses.append(
+                            f"Environment Response: {env_content}"
+                        )
 
             target_data["request"] = user_content
-            
+
             # 将代理操作和环境响应交织在一起，更真实地反映交互过程
             if environment_responses:
                 # 如果有environment响应，将它们插入到对应的action之后
@@ -404,7 +434,9 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         # 保留 ASSEBench 原始信息
         target_data["assebench_id"] = data.get("id")
         target_data["assebench_profile"] = data.get("profile", "")
-        target_data["assebench_application_scenario"] = data.get("application_scenario", "")
+        target_data["assebench_application_scenario"] = data.get(
+            "application_scenario", ""
+        )
         target_data["assebench_risk_type"] = data.get("risk_type", "")
         target_data["assebench_failure_mode"] = data.get("failure_mode", "")
         target_data["assebench_ambiguous"] = data.get("ambiguous", 0)

@@ -101,3 +101,13 @@
 2025-12-29 21:09:02 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
 2025-12-29 21:54:22 - double_agent_logger - WARNING - Failed to extract valid JSON from response
 2025-12-29 21:54:22 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-30 18:46:36 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-30 18:46:36 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-30 19:21:23 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-30 19:21:23 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 6 column 454 (char 678)
+2025-12-30 19:21:55 - double_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Invalid \escape: line 6 column 614 (char 838)
+2025-12-30 19:22:27 - double_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Invalid \escape: line 6 column 583 (char 807)
+2025-12-30 19:22:27 - double_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-30 19:22:27 - double_agent_logger - ERROR - Failed to parse auto-optimized tool after retries: Invalid \escape: line 6 column 583 (char 807)
+2025-12-30 19:25:52 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-30 19:25:52 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 6 column 2608 (char 2816)
