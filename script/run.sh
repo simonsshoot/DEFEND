@@ -47,6 +47,9 @@ nohup python pipeline.py --restart --debug_mode --dataset rjudge_harmful --risk_
 ===========================R-Judge良性数据集运行(无模拟)====================================
 nohup python pipeline.py --restart --debug_mode --dataset rjudge_benign --risk_memory lifelong_library/risks_rjudge_benign.json --tool_memory lifelong_library/tools_rjudge_benign.json --debug_doubt_tool_path debugs/rjudge_benign.log --debug_decision_path debugs/rjudge_benign_decision.log > logs/run_rjudge_benign.log 2>&1 &
 
+===========================ASSEBench数据集运行(无模拟)====================================
+nohup python pipeline.py --restart --debug_mode --dataset assebench --risk_memory lifelong_library/risks_assebench.json --tool_memory lifelong_library/tools_assebench.json --debug_doubt_tool_path debugs/assebench.log --debug_decision_path debugs/assebench_decision.log --debug_file data/ASSEBench/dataset/simulate_assebench.jsonl > logs/run_assebench.log 2>&1 &
+
 ===========================safeOS风险数据集运行====================================
 nohup python pipeline.py --restart --debug_mode --need_simulate --dataset safeOS_harmful --risk_memory lifelong_library/risks_safeOS_harmful.json --tool_memory lifelong_library/tools_safeOS_harmful.json --debug_doubt_tool_path debugs/safeOS_harmful.log --debug_decision_path debugs/safeOS_harmful_decision.log --debug_file /home/beihang/yx/DEFEND/data/safeOS/harmful_simulate.jsonl > logs/run_safeOS_harmful.log 2>&1 &
 
