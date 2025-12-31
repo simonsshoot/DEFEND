@@ -33,6 +33,9 @@ def calc_acc(
 # ------------- 使用示例 -------------
 if __name__ == "__main__":
     acc = calc_acc(
-        "/home/beihang/yx/DEFEND/results/assebench/first_temp.csv"
+        "/home/beihang/yx/DEFEND/results/assebench_Autonomous_Navigation_Robotics/deepseek-chat_deepseek-chat_deepseek-chat.csv"
     )  # 换成自己的文件名
     print(f"Accuracy = {acc:.4f}")
+# python kkk.py \
+#   --csv results/assebench_Autonomous_Navigation_Robotics/deepseek-chat_deepseek-chat_deepseek-chat.csv \
+#   --dataset assebench_Autonomous_Navigation_Robotics

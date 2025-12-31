@@ -14,7 +14,7 @@ SEED=44
 
 # R-Judge 子文件夹列表
 # SUBFOLDERS=("Application" "Finance" "IoT" "Program" "Web")
-SUBFOLDERS=("Program")
+SUBFOLDERS=("Application")
 # 数据类型列表
 DATA_TYPES=("benign")
 

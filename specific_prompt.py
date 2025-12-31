@@ -211,6 +211,9 @@ def get_specific_prompt_supplement(prompt_name: str, dataset: str) -> str:
         else:
             return ""
 
+    # new for debug
+    return ""
+
     # R-Judge 数据集
     if not dataset.startswith("rjudge_"):
         return ""

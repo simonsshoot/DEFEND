@@ -1110,3 +1110,13 @@ Error processing item 57: Error code: 401 - {'error': {'message': 'Authenticatio
 Error processing item 58: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
 2025-12-29 19:03:29 - pipeline - ERROR - 
 Error processing item 59: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****fa31 is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+2025-12-30 22:51:26 - pipeline - ERROR - 
+Error processing item 3: Request timed out.
+2025-12-30 22:52:04 - pipeline - ERROR - 
+Error processing item 4: Request timed out.
+2025-12-30 23:03:14 - pipeline - ERROR - 
+Error processing item 7: Request timed out.
+2025-12-30 23:03:40 - pipeline - ERROR - 
+Error processing item 6: Connection error.
+2025-12-30 23:32:26 - pipeline - ERROR - 
+Error processing item 14: Connection error.
