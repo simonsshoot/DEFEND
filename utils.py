@@ -312,32 +312,51 @@ def data_wrapper(data: Dict[str, Any], agent_type: str) -> Dict[str, Any]:
         target_data["init"] = ""
 
     elif agent_type.startswith("rjudge_"):
-        # R-Judge 数据集格式
         target_data = {}
-
-        # 从 contents 中提取用户请求和代理操作
         contents = data.get("contents", [])
         if contents and len(contents) > 0:
-            # contents 是一个列表，每个元素是一轮对话
-            first_round = contents[0]
-
-            # 提取用户请求
+            # 提取第一个用户请求作为主要请求
             user_content = ""
             agent_actions_list = []
-
-            for turn in first_round:
-                role = turn.get("role", "")
-                if role == "user":
-                    user_content = turn.get("content", "")
-                elif role == "agent":
-                    # 提取代理的操作
-                    action = turn.get("action", "")
-                    thought = turn.get("thought", "")
-                    if action:
-                        agent_actions_list.append(action)
+            environment_responses = []  # 存储environment的返回结果
+            for round_idx, round_turns in enumerate(contents):
+                for turn in round_turns:
+                    role = turn.get("role", "")
+                    if role == "user":
+                        if not user_content:
+                            user_content = turn.get("content", "")
+                    elif role == "agent":
+                        action = turn.get("action", "")
+                        thought = turn.get("thought", "")
+                        if thought and action:
+                            agent_actions_list.append(
+                                f"Thought: {thought}\nAction: {action}"
+                            )
+                        elif thought:
+                            agent_actions_list.append(f"Thought: {thought}")
+                        elif action:
+                            agent_actions_list.append(f"Action: {action}")
+                    elif role == "environment":
+                        env_content = turn.get("content", "")
+                        if env_content:
+                            environment_responses.append(
+                                f"Environment Response: {env_content}"
+                            )
 
             target_data["request"] = user_content
-            target_data["agent_actions"] = "\n".join(agent_actions_list)
+
+            if environment_responses:
+                # 如果有environment响应，将它们插入到对应的action之后
+                full_interaction = []
+                env_idx = 0
+                for i, action in enumerate(agent_actions_list):
+                    full_interaction.append(action)
+                    if env_idx < len(environment_responses):
+                        full_interaction.append(environment_responses[env_idx])
+                        env_idx += 1
+                target_data["agent_actions"] = "\n---\n".join(full_interaction)
+            else:
+                target_data["agent_actions"] = "\n---\n".join(agent_actions_list)
         else:
             target_data["request"] = ""
             target_data["agent_actions"] = ""

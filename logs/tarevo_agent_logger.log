@@ -883,3 +883,127 @@
 2025-12-31 03:20:57 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
 2025-12-31 03:20:57 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
 2025-12-31 03:20:57 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:13:41 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:13:41 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:14:46 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:14:46 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:15:51 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:15:51 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:15:51 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 16:15:51 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:25:33 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:25:33 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:32:11 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:32:11 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:33:16 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:33:16 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:34:22 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:34:22 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:34:22 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 16:34:22 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:36:44 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:36:44 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:45:09 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:45:09 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:46:15 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:46:15 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:47:19 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 16:47:19 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 16:47:19 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 16:47:19 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:05:53 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:05:53 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:10:47 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:10:47 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:11:50 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:11:50 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:17:20 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:17:20 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:18:24 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:18:24 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:19:28 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:19:28 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:19:28 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 17:19:28 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:26:47 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:26:47 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 17:40:44 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 15 column 441 (char 2485)
+2025-12-31 17:45:05 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 17:45:05 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:02:32 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:02:32 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:03:32 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:03:32 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:04:33 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:04:33 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:04:33 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 18:04:33 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:35:59 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:35:59 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:37:04 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:37:04 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:53:02 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Unterminated string starting at: line 8 column 20 (char 262)
+2025-12-31 18:54:07 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:54:07 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:58:49 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:58:49 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 18:59:54 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 18:59:54 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:00:59 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:00:59 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:00:59 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 19:00:59 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:10:16 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 22 column 1779 (char 5084)
+2025-12-31 19:11:21 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:11:21 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:19:34 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:28:30 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:28:30 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:33:39 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:33:39 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:34:44 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:34:44 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:35:49 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:35:49 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:35:49 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 19:35:49 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:52:22 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:52:22 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:53:27 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:53:27 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:54:32 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:54:32 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:54:32 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 19:54:32 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 19:56:17 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 19:56:17 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:07:52 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Unterminated string starting at: line 8 column 20 (char 267)
+2025-12-31 20:17:15 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:17:15 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:18:20 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:18:20 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:19:25 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:19:25 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:19:25 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 20:19:25 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:21:43 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:21:43 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:24:48 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 8 column 380 (char 779)
+2025-12-31 20:35:10 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:35:10 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 20:55:01 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 20:55:01 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:03:35 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:03:35 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:04:39 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:04:39 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:05:43 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:05:43 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:05:43 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2025-12-31 21:05:43 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:24:56 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:24:56 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:40:21 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:40:21 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 21:41:26 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 21:41:26 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)

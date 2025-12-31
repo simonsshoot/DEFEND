@@ -495,9 +495,9 @@ def run(args: argparse.Namespace):
         args.dataset,
         f"{args.tarevo_model}_{args.optim_model}_{args.doubt_model}.csv",
     )
-    if args.restart and os.path.exists(result_path):
-        logger.info(f"Restart mode: removing existing results at {result_path}")
-        os.remove(result_path)
+    if args.restart:
+        if os.path.exists(result_path):
+            os.remove(result_path)
         if os.path.exists("detail_results"):
             import shutil
 
@@ -506,6 +506,13 @@ def run(args: argparse.Namespace):
             os.remove(args.tool_memory)
         if os.path.exists(args.risk_memory):
             os.remove(args.risk_memory)
+        misjudge_types = ["benign_judged_harmful", "harmful_judged_benign"]
+        for misjudge_type in misjudge_types:
+            detail_dir = os.path.join("detail_results", args.dataset, misjudge_type)
+            jsonl_filename = "misjudged_cases.jsonl"
+            file_path = os.path.join(detail_dir, jsonl_filename)
+            if os.path.exists(file_path):
+                os.remove(file_path)
 
     if os.path.exists(result_path):
         existing_df = pd.read_csv(result_path)
