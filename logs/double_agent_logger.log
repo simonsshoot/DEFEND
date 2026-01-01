@@ -207,3 +207,30 @@
 2025-12-31 22:08:20 - double_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
 2025-12-31 22:08:20 - double_agent_logger - ERROR - Failed to parse auto-optimized tool after retries: Expecting value: line 1 column 1 (char 0)
 2025-12-31 22:24:50 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 23:13:12 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2025-12-31 23:13:12 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2025-12-31 23:55:43 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 6 column 3492 (char 3732)
+2026-01-01 00:45:46 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Unterminated string starting at: line 6 column 16 (char 241)
+2026-01-01 00:46:38 - double_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Unterminated string starting at: line 6 column 16 (char 243)
+2026-01-01 00:51:28 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 00:51:28 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 00:52:31 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 00:52:31 - double_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 00:53:35 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 00:53:35 - double_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 00:53:35 - double_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2026-01-01 00:53:35 - double_agent_logger - ERROR - Failed to parse auto-optimized tool after retries: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:23:55 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:23:55 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid control character at: line 3 column 471 (char 494)
+2026-01-01 01:31:05 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:31:05 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:32:09 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:32:09 - double_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:33:07 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:33:07 - double_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:33:07 - double_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2026-01-01 01:33:07 - double_agent_logger - ERROR - Failed to parse auto-optimized tool after retries: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:55:13 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:55:13 - double_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-01 01:56:12 - double_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-01 01:56:12 - double_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
