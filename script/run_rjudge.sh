@@ -14,9 +14,9 @@ SEED=44
 
 # R-Judge 子文件夹列表
 # SUBFOLDERS=("Application" "Finance" "IoT" "Program" "Web")
-SUBFOLDERS=("Web")
+SUBFOLDERS=("Application")
 # 数据类型列表
-DATA_TYPES=("benign")
+DATA_TYPES=("harmful")
 
 echo "========================================"
 echo "DEFEND Pipeline R-Judge Batch Evaluation"

@@ -498,10 +498,6 @@ def run(args: argparse.Namespace):
     if args.restart:
         if os.path.exists(result_path):
             os.remove(result_path)
-        if os.path.exists("detail_results"):
-            import shutil
-
-            shutil.rmtree("detail_results")
         if os.path.exists(args.tool_memory):
             os.remove(args.tool_memory)
         if os.path.exists(args.risk_memory):
