@@ -10,3 +10,8 @@
 2025-12-07 14:13:54 - sandbox_agent_logger - ERROR - Error executing AgentSafeBench tool analyze_traffic_packets: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
 2025-12-07 23:30:02 - sandbox_agent_logger - WARNING - Failed to extract valid JSON from response
 2025-12-07 23:30:02 - sandbox_agent_logger - ERROR - Error simulating AgentHarm tool convert_pdf_to_text: Expecting value: line 1 column 1 (char 0)
+2026-01-02 22:44:45 - sandbox_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Unterminated string starting at: line 2 column 13 (char 14)
+2026-01-02 22:45:46 - sandbox_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Unterminated string starting at: line 2 column 13 (char 14)
+2026-01-02 22:46:53 - sandbox_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Unterminated string starting at: line 2 column 13 (char 14)
+2026-01-02 22:46:53 - sandbox_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2026-01-02 22:46:53 - sandbox_agent_logger - ERROR - Failed to parse sandbox execute action result after retries: Unterminated string starting at: line 2 column 13 (char 14)
