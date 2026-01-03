@@ -31,9 +31,7 @@ SEED=44
 #     "Task_Automation"
 # )
 SPLITS=(
-    "Evaluation_Diagnosis_Support"
-    "Financial_Operations"
-    "Health_Wellness_Support"
+    "Information_Retrieval_Analysis"
 )
 echo "========================================"
 echo "DEFEND Pipeline ASSEBench Batch Evaluation"
