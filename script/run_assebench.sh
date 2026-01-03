@@ -31,6 +31,7 @@ SEED=44
 #     "Task_Automation"
 # )
 SPLITS=(
+    "Health_Wellness_Support"
     "Information_Retrieval_Analysis"
 )
 echo "========================================"
