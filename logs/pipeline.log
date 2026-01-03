@@ -1360,3 +1360,5 @@ Error processing item 153: Error code: 402 - {'error': {'message': 'Insufficient
 Error processing item 154: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}
 2026-01-02 23:08:22 - pipeline - ERROR - 
 Error processing item 67: Connection error.
+2026-01-03 10:41:23 - pipeline - ERROR - 
+Error processing item 8: UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=60)
