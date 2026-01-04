@@ -33,6 +33,8 @@ SEED=44
 SPLITS=(
     "Health_Wellness_Support"
     "Information_Retrieval_Analysis"
+    "IT System_Network_Operations"
+    "Legal_Compliance_ Audit"
 )
 echo "========================================"
 echo "DEFEND Pipeline ASSEBench Batch Evaluation"

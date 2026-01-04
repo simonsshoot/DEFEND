@@ -2008,3 +2008,44 @@
 2026-01-03 22:43:18 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
 2026-01-03 22:43:18 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
 2026-01-03 22:44:19 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Invalid \escape: line 22 column 890 (char 4765)
+2026-01-04 01:20:13 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting ',' delimiter: line 15 column 646 (char 2057)
+2026-01-04 01:54:53 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting ',' delimiter: line 15 column 1516 (char 4676)
+2026-01-04 02:04:14 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:04:14 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:07:02 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:07:02 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:11:58 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:11:58 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:24:06 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting ',' delimiter: line 22 column 1602 (char 5583)
+2026-01-04 02:31:52 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting ',' delimiter: line 8 column 1042 (char 1336)
+2026-01-04 02:36:51 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:36:51 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:40:29 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:40:29 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:41:45 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:48:47 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:48:47 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:49:46 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:49:46 - tarevo_agent_logger - WARNING - JSON 解析失败（第 2/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:50:44 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:50:44 - tarevo_agent_logger - WARNING - JSON 解析失败（第 3/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:50:44 - tarevo_agent_logger - ERROR - JSON 解析失败，已达最大重试次数 3
+2026-01-04 02:50:44 - tarevo_agent_logger - ERROR - Failed to parse safety tool definition after retries: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:52:01 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:52:01 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 02:52:38 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Invalid \escape: line 8 column 320 (char 568)
+2026-01-04 02:54:23 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 02:54:23 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 03:02:10 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 03:02:10 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 03:11:07 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Unterminated string starting at: line 15 column 20 (char 2630)
+2026-01-04 03:12:47 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 03:12:47 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 03:44:57 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 03:44:57 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 03:45:21 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 03:45:21 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 03:46:24 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 03:46:24 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
+2026-01-04 04:14:28 - tarevo_agent_logger - WARNING - Failed to extract valid JSON from response
+2026-01-04 04:14:28 - tarevo_agent_logger - WARNING - JSON 解析失败（第 1/3 次）: Expecting value: line 1 column 1 (char 0)
